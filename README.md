@@ -50,6 +50,16 @@
 
 - dagger2组织项目的API，DB，Helper，presenter,activity，实现松耦合，项目结构一目了然。
 
+##关于我
+
+- 一个爱好编程，享受编程的小辕，以前做javaee开发，用php开发过自己的个人网站：http://justgogo.biz，目前正在找工作，如有相关职位请联系我
+
+- 联系方式：
+- 
+  微信 ：sheng_droid
+
+  Email ：1392100700@qq.com
+
 ##版权声明
 
 本项目为开源项目，项目接入了果壳网、知乎日报、猫眼电影的API，所有最终解释权归API的提供方所有。
