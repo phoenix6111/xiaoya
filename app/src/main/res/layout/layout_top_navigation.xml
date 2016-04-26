@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_height"
+        app:stl_customTabTextLayoutId="@layout/custom_tab"
+        app:stl_customTabTextViewId="@id/custom_text"
+        app:stl_titleOffset="auto_center"
+        app:stl_defaultTabTextMinWidth="80dp"
+        app:stl_indicatorColor="@color/colorPrimary"
+        app:stl_indicatorCornerRadius="1.5dp"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="3dp"
+        android:background="@drawable/tab_bg"
+        app:stl_dividerColor="#f7f7f7"
+        app:stl_defaultTabTextSize="13sp"
+        app:stl_underlineThickness="0.5dp"
+        app:stl_underlineColor="#ccc"
+        android:visibility="visible" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/inner_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

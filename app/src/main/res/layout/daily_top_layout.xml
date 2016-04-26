@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="256dp">
+
+    <ImageView
+        android:id="@+id/iv_top_pic"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:background="@color/gray_light"
+        android:scaleType="centerCrop"/>
+   <!-- <com.facebook.drawee.iView.SimpleDraweeView
+        android:id="@+id/iv_top_pic"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:background="@color/gray_light"
+        card_view:adjustViewBounds="true"
+        card_view:cropToPadding="true"/>-->
+    <!--<com.facebook.drawee.iView.SimpleDraweeView
+        android:id="@+id/iv_top_pic"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:background="@color/gray_light" />-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/shadow_layer_top" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@mipmap/shadow_layer_bottom" />
+
+</RelativeLayout>

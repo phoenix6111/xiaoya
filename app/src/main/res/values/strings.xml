@@ -1,0 +1,213 @@
+<resources>
+    <string name="app_name">闲暇</string>
+    <string name="app_version">1.0.1</string>
+
+    <string name="open">drawer_open</string>
+    <string name="close">drawer_close</string>
+
+    <!--author info-->
+    <string name="auth_name">wanghaisheng</string>
+    <string name="auth_email">1392100700@qq.com</string>
+
+    <!--知乎-->
+    <string name="daily">知乎</string>
+
+    <string name="nodata">暂无数据</string>
+
+    <string name="loadmore">正在加载中。。。</string>
+    <string name="title_activity_test">TestActivity</string>
+
+    <string name="collection">收藏</string>
+    <string name="night_mode">夜间模式</string>
+    <string name="feedback">反馈</string>
+    <string name="setup">设置</string>
+    <string name="about">关于</string>
+
+    <string name="science">科学</string>
+    <string name="read">阅读</string>
+    <string name="movie">电影</string>
+
+    <string name="tab_daily">百科</string>
+    <string name="tab_science">果壳</string>
+    <string name="tab_movie">电影</string>
+    <string name="tab_me">我</string>
+
+    <string name="id_language">language</string>
+    <string name="id_swipe_back">swipe_back</string>
+    <string name="text_search">搜索</string>
+
+    <string-array name="langs" translatable="false">
+        <item>English</item>
+        <item>简体中文</item>
+        <item>繁體中文</item>
+    </string-array>
+
+    <string-array name="search">
+        <item>@string/text_search_by_keyword</item>
+        <item>@string/text_search_by_category</item>
+    </string-array>
+
+    <string-array name="swipe_back">
+        <item>@string/text_anywhere</item>
+        <item>@string/text_left_only</item>
+    </string-array>
+
+    <string name="setting">设置</string>
+    <string name="text_auto_refresh">自动刷新</string>
+    <string name="text_auto_refresh_summary">在WIFI下自动从网络加载数据</string>
+    <string name="text_clear_cache">清除缓存</string>
+    <string name="text_clear_cache_summary">清除"闲暇"的缓存</string>
+    <string name="text_language">语言</string>
+    <string name="text_night_mode">夜间模式</string>
+    <string name="text_no_pic_mode">无图模式</string>
+    <string name="text_no_pic_mode_summary">仅在WIFI下加载图片</string>
+    <string name="text_preference">偏好</string>
+    <string name="text_shake_to_return">摇晃返回</string>
+    <string name="text_network">网络</string>
+    <string name="text_author">作者</string>
+    <string name="text_clear_cache_successful">缓存清除成功!</string>
+    <string name="text_exit_confirm">退出确认</string>
+    <string name="text_exit_confirm_summary">按两次返回键退出应用</string>
+    <string name="notify_exit_confirm">再按一次退出</string>
+    <string name="text_search_by_category">按类别搜索</string>
+    <string name="text_search_by_keyword">按关键字搜索</string>
+    <string name="text_attention">注意</string>
+    <string name="text_attention_summary">此应用禁止用于商业目的</string>
+    <string name="text_author_github">作者 GitHub</string>
+    <string name="text_blog">博客</string>
+    <string name="text_check_update">检查更新</string>
+    <string name="text_copyright">版权</string>
+    <string name="text_current_version">当前版本</string>
+    <string name="text_data">数据</string>
+    <string name="text_data_summary">所有数据均来自公开的API,版权属于原作者</string>
+    <string name="text_good_job">点个赞</string>
+    <string name="text_good_job_summary">去https://github.com/MummyDing/Leisure给个star吧！</string>
+    <string name="text_share_leisure">分享闲暇</string>
+    <string name="text_email">邮箱</string>
+    <string name="notify_find_new_version">发现新版本　</string>
+    <string name="notify_current_is_latest">已经是最新版本</string>
+    <string name="notif_info_copied">信息已添加至剪切板,你可以将其粘贴到编辑区域</string>
+    <string name="text_share_info">欢迎使用“闲暇”,它集"知乎日报"、"果壳科学人"、"新华网新闻"以及"豆瓣图书"于一体,满足你日常休闲阅读需求,你可以到http://justgogo.biz下载</string>
+    <string name="text_demo_video">演示视频</string>
+    <string name="text_app_intro">应用简介</string>
+    <string name="notify_remove_from_collection">成功从收藏移除!</string>
+    <string name="text_swipe_to_return">滑动返回</string>
+    <string name="text_share_from">分享自</string>
+    <string name="text_left_only">仅左边有效</string>
+    <string name="text_hot"> 热度 </string>
+    <string name="hint_share_to">分享到</string>
+    <string name="notify_add_to_collection">成功添加到收藏</string>
+    <string name="text_anywhere">任意位置有效</string>
+    <string name="text_day_mode">日间模式</string>
+    <string name="hint_fail_check_update">获取版本信息失败，请检查网络设置</string>
+    <string name="share">分享</string>
+    <string name="auth_blog">http://justgogo.biz</string>
+    <string name="auth_github">https://github.com/sheng-xiaoya</string>
+    <string name="text_license">License</string>
+
+    <string name="settings_thread_sort">帖子排序方式</string>
+    <string name="settings_text_size">字体大小</string>
+    <string name="settings_md_colors">主题颜色</string>
+    <string name="settings_auto_update">自动更新应用</string>
+    <string name="settings_swipeback_edgemode">手势返回</string>
+    <string name="settings_dt_swipeback_edgemode">设置手势方向</string>
+    <string name="settings_auto_notification">是否接受通知</string>
+    <string name="settings_general_settings">常规</string>
+    <string name="settings_notification_settings">通知</string>
+    <string name="category_read">阅读</string>
+    <string name="settings_load_pic">是否加载图片</string>
+    <string name="settings_load_pic_summary">默认加载列表和内容图片</string>
+    <string name="category_other">其他</string>
+    <string name="settings_pic_path">图片保存路径</string>
+    <string name="settings_clear_cache">清空缓存</string>
+
+    <string-array name="sortType">
+        <item>按发帖时间</item>
+        <item>按回帖时间</item>
+    </string-array>
+
+    <string-array name="swipeBackEdgeMode">
+        <item>向左</item>
+        <item>向右</item>
+        <!--<item>全部</item>-->
+    </string-array>
+
+    <string-array name="txtSizeNum">
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
+
+
+    <string-array name="prefValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+    </string-array>
+
+    <string-array name="mdColorNames">
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Deep purple</item>
+        <item>Indigo</item>
+        <item>Blue</item>
+        <item>Light blue</item>
+        <item>Cyan</item>
+        <item>Teal</item>
+        <item>Green</item>
+        <item>Light green</item>
+        <item>Lime</item>
+        <item>Yellow</item>
+        <item>Amber</item>
+        <item>Orange</item>
+        <item>Deep orange</item>
+        <item>Brown</item>
+        <item>Grey</item>
+        <item>Blue grey</item>
+    </string-array>
+
+    <string name="back_button_label">Back</string>
+    <string name="next_button_label">Next</string>
+
+    <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
+    <string name="skip_button_label">Skip</string>
+
+    <string name="refresh">刷新</string>
+    <string name="copy">复制</string>
+    <string name="feedback_title_hint">标题</string>
+    <string name="feedback_content_hint">内容</string>
+
+    <string name="feedback_title">提交反馈</string>
+    <string name="feedback_content">反馈内容</string>
+    <string name="action_select_img">选择照片</string>
+    <string name="action_post">提交反馈</string>
+
+    <!--图片选择器-->
+    <string name="str_all_img">所有图片</string>
+    <string name="error_view_str">无法连接到服务器</string>
+    <string name="str_daily">百科</string>
+    <string name="str_science">果壳</string>
+    <string name="str_movie">电影</string>
+    <string name="str_me">我</string>
+</resources>

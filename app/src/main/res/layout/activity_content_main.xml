@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0">
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="@drawable/tab_bg">
+        <wanghaisheng.com.xiaoya.widget.ColorIconWithText
+            android:id="@+id/tab_science"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            app:normal_icon="@mipmap/science_normal"
+            app:focused_icon="@mipmap/science_focus"
+            app:text_icon="@mipmap/science_focus"
+            app:text="@string/tab_science"
+            app:text_size="13sp"
+            app:text_color="@color/tab_focus_text_color"/>
+
+        <wanghaisheng.com.xiaoya.widget.ColorIconWithText
+            android:id="@+id/tab_daily"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            app:text_icon="@mipmap/daily_focus"
+            app:normal_icon="@mipmap/daily_normal"
+            app:focused_icon="@mipmap/daily_focus"
+            app:text="@string/tab_daily"
+            app:text_size="13sp"
+            app:text_color="@color/tab_focus_text_color"/>
+
+        <wanghaisheng.com.xiaoya.widget.ColorIconWithText
+            android:id="@+id/tab_movie"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            app:text_icon="@mipmap/movie_focus"
+            app:normal_icon="@mipmap/movie_normal"
+            app:focused_icon="@mipmap/movie_focus"
+            app:text="@string/tab_movie"
+            app:text_size="13sp"
+            app:text_color="@color/tab_focus_text_color"/>
+
+        <wanghaisheng.com.xiaoya.widget.ColorIconWithText
+            android:id="@+id/tab_me"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="2dp"
+            app:text_icon="@mipmap/me_focus"
+            app:normal_icon="@mipmap/me_normal"
+            app:focused_icon="@mipmap/me_focus"
+            app:text="@string/tab_me"
+            app:text_size="13sp"
+            app:text_color="@color/tab_focus_text_color"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

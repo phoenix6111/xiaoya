@@ -1,0 +1,64 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#4886f3</item>
+        <item name="colorPrimaryDark">#4179da</item>
+        <item name="colorAccent">#4886f3</item>
+        <!--<item name="actionBarStyle">@style/AppActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>&lt;!&ndash;去除actionbar下阴影：&ndash;&gt;
+        <item name="elevation">0dp</item>-->
+    </style>
+    <style name="AppTheme" parent="BaseAppTheme"></style>
+    <style name="AppTheme.Detail" parent="AppTheme"></style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="NightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorNightPrimary</item>
+        <item name="colorPrimaryDark">@color/colorNightPrimaryDark</item>
+        <item name="colorAccent">@color/colorNightAccent</item>
+        <item name="background">@color/colorNightPrimary</item>
+        <item name="barTitleColor">@color/white</item>
+        <item name="barColor">@color/colorNightPrimaryDark</item>
+        <item name="textColor">@color/white</item>
+        <item name="textLight">@color/colorTextLight</item>
+        <item name="textBright">@color/colorNightPrimary</item>
+        <item name="dividerColor">@color/dividerColor</item>
+    </style>
+
+    <style name="AppTheme.TransparentActivity">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ItemBackagroundBorderless">
+        <item name="android:background">@drawable/rv_selector</item>
+    </style>
+
+    <style name="SwipeBackLayout">
+        <item name="edge_size">0dp</item>
+    </style>
+
+    <style name="expandedToolbarTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--image select animation-->
+    <style name="anim_dir_popwindow">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+
+</resources>
