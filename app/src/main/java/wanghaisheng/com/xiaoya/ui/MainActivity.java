@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mAdapter);
+
     }
 
     private void initView() {

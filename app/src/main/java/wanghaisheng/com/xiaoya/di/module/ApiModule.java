@@ -6,6 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
+import wanghaisheng.com.xiaoya.api.guokr.ArticleApi;
 import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
 import wanghaisheng.com.xiaoya.utils.RequestHelper;
@@ -28,6 +29,12 @@ public class ApiModule {
     @Singleton
     public ScienceApi provideScienceApi() {
         return new ScienceApi();
+    }
+
+    @Provides
+    @Singleton
+    public ArticleApi provideArticleApi() {
+        return new ArticleApi();
     }
 
     @Provides

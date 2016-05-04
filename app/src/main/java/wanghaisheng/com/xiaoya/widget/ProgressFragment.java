@@ -25,7 +25,7 @@ public class ProgressFragment extends Fragment {
     public boolean isPrepare = false;
 
     //Override this method to change content iView
-    public View onCreateContentView(LayoutInflater inflater) {
+    public View onCreateContentView(LayoutInflater inflater,ViewGroup container) {
         return null;
     }
 
@@ -49,7 +49,7 @@ public class ProgressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup main = (ViewGroup) inflater.inflate(R.layout.epf_layout, container, false);
 
-        View content = onCreateContentView(inflater);
+        View content = onCreateContentView(inflater,container);
         View error = onCreateContentErrorView(inflater);
         View empty = onCreateContentEmptyView(inflater);
         View progress = onCreateProgressView(inflater);

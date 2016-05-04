@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -39,6 +40,8 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
     @Inject @Singleton
     public ScienceListPresenter(){}
 
+    private Subscription subscription;
+
     /**
      * 从数据库加载
      * @param channel science的channel
@@ -54,22 +57,22 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Article>>() {
-                    @Override
-                    public void call(List<Article> articles) {
-                        LogUtils.v(articles);
-                        iView.hideLoading();
-                        iView.renderDbData(articles);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        LogUtils.d(throwable.getMessage());
-                        iView.error("数据访问异常，请重试");
-                        iView.hideLoading();
-                    }
-                });
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Action1<List<Article>>() {
+            @Override
+            public void call(List<Article> articles) {
+//                        LogUtils.v(articles);
+                iView.hideLoading();
+                iView.renderDbData(articles);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                LogUtils.d(throwable.getMessage());
+                iView.error("数据访问异常，请重试");
+                iView.hideLoading();
+            }
+        });
 
     }
 
@@ -93,7 +96,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
         if(showLoading) {
             iView.showLoading();
         }
-        scienceApi.getScienceByChannel(channel,0,limit)
+        subscription = scienceApi.getScienceByChannel(channel,0,limit)
                 .subscribe(new Subscriber<Science>() {
                     @Override
                     public void onCompleted() {
@@ -141,7 +144,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
 
 
     public void loadMoreData(String channel,int offset) {
-        scienceApi.getScienceByChannel(channel,offset,limit)
+        subscription = scienceApi.getScienceByChannel(channel,offset,limit)
                 .subscribe(new Subscriber<Science>() {
                     @Override
                     public void onCompleted() {
@@ -256,7 +259,13 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
 
     @Override
     public void detachView() {
+        if(null != subscription) {
+            subscription.unsubscribe();
+        }
 
+        if(null == iView) {
+            iView = null;
+        }
     }
 
 }

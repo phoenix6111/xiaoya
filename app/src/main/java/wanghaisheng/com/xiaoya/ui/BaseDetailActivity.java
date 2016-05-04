@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,8 +48,8 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     protected ProgressBarCircularIndeterminate progressBar;
 //    @Bind(R.id.webview)
     protected XiaoYaWebView webView;
-    @Bind(R.id.scrollView)
-    protected NestedScrollView scrollView;
+    @Bind(R.id.webview_container)
+    protected FrameLayout webviewContainer;
     @Bind(R.id.btnReload)
     protected Button reloadBtn;
 
@@ -71,12 +71,12 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         ButterKnife.bind(this);
 
         webView = new XiaoYaWebView(this);
-        NestedScrollView.LayoutParams layoutParams = new NestedScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         webView.setLayoutParams(layoutParams);
         webView.setBackgroundColor(ContextCompat.getColor(mAppContext,R.color.window_color));
-        scrollView.removeAllViews();
-        scrollView.addView(webView);
+        webviewContainer.removeAllViews();
+        webviewContainer.addView(webView);
 
         webView.setCallBack(this);
 
@@ -92,8 +92,6 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
                     hideLoading();
                 }
             }
-
-
         });
 
         initUIAndDatas();
@@ -104,7 +102,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     @Override
     public void showLoading() {
         rlProgress.setVisibility(View.VISIBLE);
-        scrollView.setVisibility(View.GONE);
+        webviewContainer.setVisibility(View.GONE);
         rlError.setVisibility(View.GONE);
     }
 
@@ -120,7 +118,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     @Override
     public void hideLoading() {
         rlProgress.setVisibility(View.GONE);
-        scrollView.setVisibility(View.VISIBLE);
+        webviewContainer.setVisibility(View.VISIBLE);
         rlError.setVisibility(View.GONE);
     }
 
@@ -137,7 +135,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         if(isCollected){
             mMenuItem.setIcon(R.mipmap.star_focus);
         }else {
-            mMenuItem.setIcon(R.mipmap.star_normal);
+            mMenuItem.setIcon(R.mipmap.start_black);
         }
     }
 
@@ -178,7 +176,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     @Override
     public void onError(String error) {
         rlProgress.setVisibility(View.GONE);
-        scrollView.setVisibility(View.GONE);
+        webviewContainer.setVisibility(View.GONE);
         rlError.setVisibility(View.VISIBLE);
         tvError.setText(error);
     }
@@ -208,6 +206,6 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
             webView.destroy();
         }
         super.onDestroy();
-
+        System.exit(0);
     }
 }

@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -35,6 +36,8 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
 
     @Inject @Singleton
     public MovieListPresenter() {}
+
+    private Subscription subscription;
 
     /**
      * 根据themeId从数据库查询数据
@@ -81,7 +84,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
         if(showLoading) {
             iView.showLoading();
         }
-        movieApi.getMovieByType(offset,limit)
+        subscription = movieApi.getMovieByType(offset,limit)
                 .subscribe(new Subscriber<MovieList>() {
                     public void onCompleted() {
                         //如果是第一次从远程加载，则不显示loadmore的下拉框
@@ -118,7 +121,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
     }
 
     public void loadMoreData(int offset,int limit) {
-        movieApi.getMovieByType(offset,limit)
+        subscription = movieApi.getMovieByType(offset,limit)
                 .subscribe(new Subscriber<MovieList>() {
                     @Override
                     public void onCompleted() {
@@ -161,6 +164,9 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
 
     @Override
     public void detachView() {
+        if(null != subscription) {
+            subscription.unsubscribe();
+        }
         if(iView != null) {
             iView = null;
         }

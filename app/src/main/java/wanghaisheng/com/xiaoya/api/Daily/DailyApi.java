@@ -18,10 +18,10 @@ import wanghaisheng.com.xiaoya.beans.Story;
 public class DailyApi extends BaseApi {
     private static final String BASE_URL = "http://news-at.zhihu.com/api/4/";
 
-    public static final int[] THEME_ID = {1,11,4,5,10,8};
+    public static final int[] THEME_ID = {1,11,4,5,10};
     public static final String[] THEME_NAME = {
             "最新推荐","不许无聊",
-            "设计日报","大公司日报","互联网安全","体育日报"
+            "设计日报","大公司日报","互联网安全"
     };
 //    public static final String THEME_DAILY_BASE_URL = "http://news-at.zhihu.com/api/4/theme/:id";
 //    public static final String THEME_DAILY_BASE_URL = "http://news-at.zhihu.com/api/4/";

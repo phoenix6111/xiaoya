@@ -20,13 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity"/>
-        <activity android:name=".ui.daily.StoryDetailActivity"/>
-        <activity android:name=".ui.daily.ThemeStoryDetailActivity"/>
-        <activity android:name=".ui.science.ScienceDetailActivity"/>
+        <activity android:name=".ui.daily.StoryDetailActivity" android:process=":webviewProgress"/>
+        <activity android:name=".ui.science.ScienceDetailActivity" android:process=":webviewProgress"/>
         <activity android:name=".ui.movie.MovieDetailActivity"/>
         <activity android:name=".ui.setting.SettingActivity"/>
         <activity android:name=".ui.collection.BaseCollectionActivity"/>
-        <activity android:name=".ui.other.BrowserActivity"/>
+        <activity android:name=".ui.other.BrowserActivity" android:process=":webviewProgress"/>
         <activity android:name=".ui.me.FeedbackActivity"/>
         <activity android:name=".ui.me.SelectImageActivity"/>
     </application>

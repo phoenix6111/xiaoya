@@ -1,8 +1,10 @@
 package wanghaisheng.com.xiaoya.api.guokr;
 
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
+import wanghaisheng.com.xiaoya.beans.Article;
 import wanghaisheng.com.xiaoya.beans.Science;
 
 /**

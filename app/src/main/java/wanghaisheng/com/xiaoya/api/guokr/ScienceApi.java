@@ -13,6 +13,7 @@ public class ScienceApi extends BaseApi{
     public static final String[] CHANNEL_TAG = {"hot","frontier","review","interview","visual","brief","fact","techb"};
     public static final String[] CHANNEL_TITLE = {"热点","前沿","评论","专访","视觉","速读","谣言粉碎机","商业科技"};
 
+
     private ScienceService scienceService;
 
     public ScienceApi() {
@@ -31,4 +32,6 @@ public class ScienceApi extends BaseApi{
         return scienceService.getArticleByChannel("by_channel",channelKey,offset,limit)
                     .compose(SchedulersCompat.<Science>applyIoSchedulers());
     }
+
+
 }

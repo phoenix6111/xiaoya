@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -36,6 +37,9 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
     private DailyListView dailyListView;
     private int lastDateTime = 0;
     private boolean isFirst = true;
+
+    private Subscription dailySubscriber;
+
     @Inject @Singleton
     public StoryListPresenter() {
 
@@ -85,8 +89,8 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
                 .subscribe(new Action1<List<Story>>() {
                     @Override
                     public void call(List<Story> stories) {
-                        LogUtils.v("theme id..........................."+themeId);
-                        LogUtils.v(stories);
+//                        LogUtils.v("theme id..........................."+themeId);
+//                        LogUtils.v(stories);
                         dailyListView.hideLoading();
                         dailyListView.renderDbData(stories);
                     }
@@ -152,10 +156,11 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
         };
 
         if(themeId==DailyApi.THEME_ID[0]) {
-            dailyApi.getDaily(lastDateTime)
+            dailySubscriber = dailyApi.getDaily(lastDateTime)
                     .subscribe(subscriber);
+
         } else {
-            dailyApi.getDailyByTheme(themeId)
+            dailySubscriber = dailyApi.getDailyByTheme(themeId)
                     .subscribe(subscriber);
         }
 
@@ -237,7 +242,7 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
 
     public void loadMoreStories() {
 
-        dailyApi.getDaily(lastDateTime)
+        dailySubscriber = dailyApi.getDaily(lastDateTime)
                 .subscribe(new Subscriber<Daily>() {
                     @Override
                     public void onCompleted() {
@@ -259,12 +264,17 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
 
     @Override
     public void detachView() {
+        if(null != dailySubscriber) {
+            dailySubscriber.unsubscribe();
+        }
+
         if(this.iView != null) {
             this.iView = null;
         }
         if(this.dailyListView!=null) {
             this.dailyListView = null;
         }
+
     }
 
     public void attachDailyListView(DailyListView dailyListView) {

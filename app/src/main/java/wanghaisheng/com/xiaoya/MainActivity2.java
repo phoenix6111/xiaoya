@@ -54,6 +54,8 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
+
         //setupOptionsMenu();
         initView();
         initDatas();

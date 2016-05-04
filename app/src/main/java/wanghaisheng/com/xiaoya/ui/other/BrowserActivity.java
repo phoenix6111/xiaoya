@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebResourceError;
 
 import javax.inject.Inject;
 
@@ -20,7 +19,6 @@ import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.BaseSwipeBackActivity;
 import wanghaisheng.com.xiaoya.utils.StringHelper;
 import wanghaisheng.com.xiaoya.utils.ToastHelper;
-import wanghaisheng.com.xiaoya.widget.XiaoYaWebView;
 
 /**
  * Created by sheng on 2016/4/21.
@@ -126,4 +124,10 @@ public class BrowserActivity extends BaseSwipeBackActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        System.exit(0);
+    }
 }

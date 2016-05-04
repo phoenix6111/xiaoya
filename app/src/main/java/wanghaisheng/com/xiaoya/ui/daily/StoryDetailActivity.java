@@ -1,19 +1,20 @@
 package wanghaisheng.com.xiaoya.ui.daily;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.beans.Story;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryDetailPresenter;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryDetailView;
 import wanghaisheng.com.xiaoya.ui.BaseDetailActivity;
-import wanghaisheng.com.xiaoya.utils.DisplayHelper;
 
 /**
  * Created by sheng on 2016/4/15.
@@ -21,6 +22,8 @@ import wanghaisheng.com.xiaoya.utils.DisplayHelper;
 public class StoryDetailActivity extends BaseDetailActivity implements StoryDetailView {
     /*@Bind(R.id.story_title)
     TextView titleView;*/
+    @Bind(R.id.img_avatar)
+    SimpleDraweeView storyAvatar;
     @Inject
     StoryDetailPresenter presenter;
 
@@ -48,7 +51,7 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
 
     @Override
     protected int getLayoutId() {
-        return R.layout.story_detail;
+        return R.layout.common_detail;
     }
 
     @Override
@@ -57,14 +60,17 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
         initToolbar(mToolbar);
         presenter.attachView(this);
 
-        //将webview上移，去除广告
-        int height = DisplayHelper.getScreenHeight(mAppContext);
-        int marginHeight = (int)(height*0.12f);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(0,-marginHeight,0,0);
-        webView.setLayoutParams(layoutParams);
+        if(null != story.getImages()) {
+            //imageUtil.loadImage(this,story.getImages().get(0),storyAvatar);
+            storyAvatar.setImageURI(Uri.parse(story.getImages().get(0)));
+        } else if(null != story.getImage()) {
+            //imageUtil.loadImage(this,story.getImage(),storyAvatar);
+            storyAvatar.setImageURI(Uri.parse(story.getImage()));
+        }
 
-        presenter.loadEntityDetail(story.getId(),this);
+        if(checkNetWork()) {
+            presenter.loadEntityDetail(story.getId());
+        }
 
         presenter.checkIfCollected(story);
     }
@@ -94,6 +100,15 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
         webView.loadUrl(story.getShare_url());
         //当webview加载网页信息时显示progress
         showLoading();
+    }
+
+    /**
+     * 根据presenter获取的网页html代码，加载网页数据
+     * @param webPageStr
+     */
+    @Override
+    public void renderWebview(String webPageStr) {
+        webView.loadDataWithBaseURL("file:///android_asset/",webPageStr,"text/html", "utf-8", null);
     }
 
     @Override

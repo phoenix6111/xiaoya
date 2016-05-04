@@ -41,14 +41,13 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
 
     protected boolean firstLoad = true;
 
+    protected View rootView;
 
     //初始化UI相关的属性
     @Override
     public void initUI(View view) {
         mFragmentComponent.inject(this);
 
-//        pullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) view.findViewById(R.id.pullLoadMoreRecyclerView);
-//        myRecyclerView = pullLoadMoreRecyclerView.getRecyclerView();
         myRecyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
         mLayoutManager = getRecyclerViewLayoutManager(view);
         myRecyclerView.setLayoutManager(mLayoutManager);
@@ -82,6 +81,7 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
         });
 
     }
+
 
     //设置recyclerview的布局管理器，如果子类要改变recyclerview的布局，则修改此方法的返回值
     public RecyclerView.LayoutManager getRecyclerViewLayoutManager(View view) {
@@ -159,7 +159,7 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
             LogUtils.v("into empty.......................................");
             loadNewFromNet();
         } else {
-            LogUtils.d("from database not empty...");
+//            LogUtils.d("from database not empty...");
             mDatas.clear();
             mDatas.addAll(datas);
 //            LogUtils.d(mDatas);

@@ -1,7 +1,5 @@
 package wanghaisheng.com.xiaoya.presenter.movie;
 
-import android.content.Context;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -27,7 +25,7 @@ public class MovieDetailPresenter extends BaseDetailPresenter<Movie,MovieDetailV
     public MovieDetailPresenter(){}
 
     @Override
-    public void loadEntityDetail(int entityId, Context context) {
+    public void loadEntityDetail(int entityId) {
 
     }
 

@@ -1,7 +1,5 @@
 package wanghaisheng.com.xiaoya.presenter.science;
 
-import android.content.Context;
-
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
@@ -10,9 +8,12 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import wanghaisheng.com.xiaoya.api.guokr.ArticleApi;
 import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
 import wanghaisheng.com.xiaoya.beans.Article;
+import wanghaisheng.com.xiaoya.beans.ArticleResult;
 import wanghaisheng.com.xiaoya.db.ArticleCollection;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
 import wanghaisheng.com.xiaoya.db.DBArticle;
@@ -30,13 +31,67 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
     DBArticleDao articleDao;
     @Inject
     ArticleCollectionDao articleCollectionDao;
+    @Inject
+    ArticleApi articleApi;
 
     @Inject @Singleton
     public ScienceDetailPresenter() {}
 
     @Override
-    public void loadEntityDetail(int entityId, Context context) {
+    public void loadEntityDetail(int entityId) {
+        articleApi.getArticleDetail(entityId)
+                .subscribe(new Action1<ArticleResult>() {
+                    @Override
+                    public void call(ArticleResult result) {
+//                        LogUtils.v(article);
+                        String webPageStr = buildPageStr(result.getResult());
+                        LogUtils.v(webPageStr);
+                        iView.renderWebview(webPageStr);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.v(throwable);
+                    }
+                });
+    }
 
+    private String buildPageStr(Article article) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<head>\n" +
+                "    <meta charset=\"UTF-8\"/>\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge,chrome=1\"/>\n" +
+                "    <meta name=\"viewport\"\n" +
+                "          content=\"width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no\"/>");
+        sb.append("<title>")
+                .append(article.getTitle())
+                .append("</title>");
+        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"article_detail.css\" /></head><body></head>\n" +
+                "<body>\n" +
+                "<div class=\"container article-page\">\n" +
+                "    <div class=\"main\">\n" +
+                "        <div class=\"content\">\n" +
+                "<div class=\"content-th\">\n" +
+                        "                <h1 itemprop=\"http://purl.org/dc/terms/title\" id=\"articleTitle\">"+article.getTitle()+"</h1>\n" +
+                        "                <p itemprop=\"http://rdfs.org/sioc/ns#note\" class=\"ghide\"></p>\n" +
+                        "                <div class=\"content-th-info\">\n" +
+                        "                        <a itemprop=\"http://rdfs.org/sioc/ns#has_creator\" title=\"Zach St. George\" href=\"\" data-ukey=\"\">Zach St. George</a>\n" +
+                        "                    <span>发表于 &nbsp;"+article.getDate_published()+"</span>             \n" +
+                        "                </div>\n" +
+                        "            </div>"+
+
+                "            <div class=\"content-txt\" id=\"articleContent\">\n" +
+                "                <div class=\"document\">");
+        sb.append(article.getContent());
+        sb.append("</div>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>");
+
+        return sb.toString();
     }
 
     //收藏article

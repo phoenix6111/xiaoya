@@ -9,6 +9,9 @@ import android.view.View;
 import com.apkfuns.logutils.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
@@ -39,6 +42,8 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
     //调用API的offset
     private int offset;
 
+    public static final String ARG_DATAS = "arg_datas";
+
     /**
      * 根据channel初始化fragment
      * @param channel
@@ -61,7 +66,12 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
 
     @Override
     public void getBundle(Bundle bundle) {
+        LogUtils.d("getBundler..................");
         this.channel = bundle.getString(ARG_CHANNEL);
+        if(null != bundle.getSerializable(ARG_DATAS)) {
+            LogUtils.d("bundler not null........................");
+            this.mDatas = (List<Article>) bundle.getSerializable(ARG_DATAS);
+        }
     }
 
 
@@ -104,32 +114,39 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
 
     @Override
     public void loadNewFromNet() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             presenter.loadNewFromNet(channel,true);
         }
     }
 
     @Override
     public void onRefreshData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             presenter.loadNewFromNet(channel,false);
         }
     }
 
     @Override
     public void onLoadMoreData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             presenter.loadMoreData(channel,offset);
         }
     }
 
     @Override
     public void initData() {
+        LogUtils.d("sciencelistfragment initData................");
+
         this.firstLoad = prefsUtil.get(ARG_SCIENCE_LIST_FIRST_LOAD,false);
         myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         presenter.attachView(this);
         //一开始从数据库加载缓存数据
-        presenter.loadFromDb(channel);
+//        if(ListUtils.isEmpty(mDatas)) {
+//            LogUtils.d("science list load from db................");
+            if(null != presenter) {
+                presenter.loadFromDb(channel);
+            }
+//        }
         //presenter.loadNewFromNet(channel);
     }
 
@@ -140,6 +157,13 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         if(checkNetWork()) {
             presenter.loadNewFromNet(channel,true);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        LogUtils.d("ScienceListFragment onSaveInstancestate...............");
+        outState.putSerializable(ARG_DATAS, (Serializable) mDatas);
     }
 
     @Override
@@ -161,4 +185,12 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         }
 
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Bundle bundle = getArguments();
+        bundle.putSerializable(ARG_DATAS, (Serializable) mDatas);
+    }
+
 }

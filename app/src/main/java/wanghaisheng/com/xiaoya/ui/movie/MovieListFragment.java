@@ -75,7 +75,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
 
     @Override
     public void loadNewFromNet() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             offset = 0;
             presenter.loadNewFromNet(offset,MovieListPresenter.LIMIT,true);
             offset += MovieListPresenter.LIMIT;
@@ -84,7 +84,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
 
     @Override
     public void onRefreshData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             offset = 0;
             presenter.loadNewFromNet(offset,MovieListPresenter.LIMIT,false);
             offset += MovieListPresenter.LIMIT;
@@ -93,7 +93,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
 
     @Override
     public void onLoadMoreData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             presenter.loadMoreData(offset,MovieListPresenter.LIMIT);
             offset += MovieListPresenter.LIMIT;
         }
@@ -111,6 +111,8 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
 
     @Override
     public void initData() {
+        LogUtils.d("Movie List Fragment initData...........");
+
         this.firstLoad = prefsUtil.get(ARG_MOVIE_LIST_FIRST_LOAD,false);
         myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         presenter.attachView(this);

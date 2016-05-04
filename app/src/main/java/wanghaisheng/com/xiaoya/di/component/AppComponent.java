@@ -10,6 +10,7 @@ import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.api.Navigator;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
+import wanghaisheng.com.xiaoya.api.guokr.ArticleApi;
 import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
@@ -83,6 +84,7 @@ public interface AppComponent {
     //API
     DailyApi getDailyApi();
     ScienceApi getScienceApi();
+    ArticleApi getArticleApi();
     MovieApi getMovieApi();
     FeedbackApi getFeedbackApi();
 

@@ -1,7 +1,5 @@
 package wanghaisheng.com.xiaoya.presenter.daily;
 
-import android.content.Context;
-
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
@@ -47,7 +45,7 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
     /**
      * 通过DailyApi加载Story的详细数据
      */
-    public void loadEntityDetail(int storyId, Context context) {
+    public void loadEntityDetail(int storyId) {
         dailyApi.getStory(storyId)
                 .subscribe(new Subscriber<Story>(){
                     @Override
@@ -63,9 +61,30 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
 
                     @Override
                     public void onNext(Story story) {
-                        iView.renderEntityView(story);
+//                        iView.renderEntityView(story);
+                        String webPageContent = buildPageStr(story);
+                        LogUtils.v(webPageContent);
+                        iView.renderWebview(webPageContent);
                     }
                 });
+    }
+
+    /**
+     * 根据story的数据，拼接html数据
+     * @param story
+     * @return
+     */
+    private String buildPageStr(Story story) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"><meta name=\"viewport\" content=\"user-scalable=no, width=device-width\">");
+        sb.append("<title>")
+            .append(story.getTitle())
+            .append("</title>");
+        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"story_detail.css\" /></head><body>");
+        sb.append(story.getBody());
+        sb.append("</body></html>");
+
+        return sb.toString();
     }
 
     //收藏story

@@ -2,10 +2,7 @@ package wanghaisheng.com.xiaoya.ui.science;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -18,16 +15,15 @@ import wanghaisheng.com.xiaoya.beans.Article;
 import wanghaisheng.com.xiaoya.presenter.science.ScienceDetailPresenter;
 import wanghaisheng.com.xiaoya.presenter.science.ScienceDetailView;
 import wanghaisheng.com.xiaoya.ui.BaseDetailActivity;
-import wanghaisheng.com.xiaoya.utils.DisplayHelper;
 
 /**
  * Created by sheng on 2016/4/16.
  */
-public class ScienceDetailActivity extends BaseDetailActivity implements ScienceDetailView {
-    @Bind(R.id.science_avatar)
+public class ScienceDetailActivity extends BaseDetailActivity implements ScienceDetailView{
+    private static final String TAG = "ScienceDetailActivity";
+
+    @Bind(R.id.img_avatar)
     SimpleDraweeView topPicView;
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
 
     private Article article;
     private String imgUrl;
@@ -66,7 +62,7 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
 
     @Override
     protected int getLayoutId() {
-        return R.layout.science_detail;
+        return R.layout.common_detail;
     }
 
     @Override
@@ -75,24 +71,15 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
         ButterKnife.bind(this);
         presenter.attachView(this);
 
-        //将webview上移，去除广告
-        int height = DisplayHelper.getScreenHeight(mAppContext);
-        int marginHeight = (int)(height*0.2f);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(0,-marginHeight,0,0);
-        webView.setLayoutParams(layoutParams);
-
-        imgUrl = article.getImage_info().getUrl();
-        //imageUtil.loadImage(this,imgUrl,topPicView);
-        topPicView.setImageURI(Uri.parse(imgUrl));
-        collapsingToolbarLayout.setTitle(article.getTitle());
+        if(null != article.getImage_info()) {
+            imgUrl = article.getImage_info().getUrl();
+            //imageUtil.loadImage(this,imgUrl,topPicView);
+            topPicView.setImageURI(Uri.parse(imgUrl));
+        }
         //检测是否有网络连接再加载数据
         if(checkNetWork()) {
-            webView.loadUrl(article.getUrl());
-            showLoading();
+            presenter.loadEntityDetail(article.getId());
         }
-
-        //presenter.loadEntityDetail(story.getId(),this);
 
     }
 
@@ -115,5 +102,14 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
             this.presenter = null;
         }
         super.onDestroy();
+    }
+
+    /**
+     * 根据presenter获取的网页html代码，加载网页数据
+     * @param webPageStr
+     */
+    @Override
+    public void renderWebview(String webPageStr) {
+        webView.loadDataWithBaseURL("file:///android_asset/",webPageStr,"text/html", "utf-8", null);
     }
 }

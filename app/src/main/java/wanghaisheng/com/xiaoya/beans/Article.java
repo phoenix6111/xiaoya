@@ -19,6 +19,36 @@ public class Article extends Entity implements Serializable{
          */
     private String Info;
     private String[] channel_keys;
+
+    private String small_image;
+
+    public String getSmall_image() {
+        return small_image;
+    }
+
+    public void setSmall_image(String small_image) {
+        this.small_image = small_image;
+    }
+
+    public String getResource_url() {
+        return resource_url;
+    }
+
+    public void setResource_url(String resource_url) {
+        this.resource_url = resource_url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    private String resource_url;
+    private String content;
+
     private boolean is_collected;
 
     class Author implements Serializable {

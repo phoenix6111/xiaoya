@@ -3,6 +3,7 @@ package wanghaisheng.com.xiaoya.ui.daily;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.apkfuns.logutils.LogUtils;
@@ -39,6 +40,19 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
     @Inject
     PrefsUtil prefsUtil;
 
+    private String lastDateTime;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        LogUtils.d("onsaveinstancestate................");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
+
     public static DailyListFragment newInstance(int themeId) {
         DailyListFragment fragment = new DailyListFragment();
         Bundle bundle = new Bundle();
@@ -60,7 +74,7 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
     @Override
     public void getBundle(Bundle bundle) {
         this.themeId = getArguments().getInt(ARG_THEME);
-        LogUtils.v("themeId........................."+themeId);
+//        LogUtils.v("themeId........................."+themeId);
     }
 
     @Override
@@ -83,15 +97,9 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
                     @Override
                     public void onClick(View v) {
                         LogUtils.v(" daily list onclicked..........................");
-                        if(themeId == DailyApi.THEME_ID[0]) {
-                            Intent intent = new Intent(getActivity(),StoryDetailActivity.class);
-                            intent.putExtra(ARG_STORY,story);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(getActivity(),ThemeStoryDetailActivity.class);
-                            intent.putExtra(ARG_STORY,story);
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(getActivity(),StoryDetailActivity.class);
+                        intent.putExtra(ARG_STORY,story);
+                        startActivity(intent);
                     }
                 });
             }
@@ -101,11 +109,15 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
 
     @Override
     public void loadNewFromNet() {
-        presenter.loadNewestFromNet(themeId,true);
+        if(checkNetWork() && (null != presenter)) {
+            presenter.loadNewestFromNet(themeId,true);
+        }
     }
 
     @Override
     public void initData() {
+        LogUtils.d("DailyListFragment initData.............");
+
         this.firstLoad = prefsUtil.get(ARG_DAILY_LIST_FIRST_LOAD,false);
 
         myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -126,14 +138,14 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
 
     @Override
     public void onRefreshData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             presenter.loadNewestFromNet(themeId,false);
         }
     }
 
     @Override
     public void onLoadMoreData() {
-        if(checkNetWork()) {
+        if(checkNetWork()&&(null !=presenter)) {
             if(themeId!=1) {
                 setCanLoadMore(false);
                 onLoadMoreComplete();

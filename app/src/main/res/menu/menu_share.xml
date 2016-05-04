@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="@string/collection" android:id="@+id/menu_collect"
-        app:showAsAction="always" android:icon="@mipmap/star_normal"/>
+        app:showAsAction="always" android:icon="@mipmap/start_black"/>
     <item android:title="@string/share" android:id="@+id/menu_share"
         app:showAsAction="always" android:icon="@mipmap/share"/>
 </menu>

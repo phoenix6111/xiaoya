@@ -11,4 +11,6 @@ public interface StoryDetailView extends BaseDetailView{
 
     void renderEntityView(Story story);
 
+    void renderWebview(String webPageStr);
+
 }

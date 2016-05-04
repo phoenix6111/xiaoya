@@ -6,6 +6,7 @@ import dagger.Component;
 import wanghaisheng.com.xiaoya.di.scopes.PerFragment;
 import wanghaisheng.com.xiaoya.di.module.FragmentModule;
 import wanghaisheng.com.xiaoya.ui.BaseFragment;
+import wanghaisheng.com.xiaoya.ui.BaseRecyclerFragment;
 import wanghaisheng.com.xiaoya.ui.collection.DailyCollectionFragment;
 import wanghaisheng.com.xiaoya.ui.collection.ScienceCollectionFragment;
 import wanghaisheng.com.xiaoya.ui.daily.DailyListFragment;
@@ -45,5 +46,7 @@ public interface FragmentComponent {
     void inject(ScienceCollectionFragment scienceCollectionFragment);
 
     void inject(BrowserFragment browserFragment);
+
+    void inject(BaseRecyclerFragment baseRecyclerFragment);
 
 }

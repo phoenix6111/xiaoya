@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
+
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.AppContext;
@@ -26,7 +28,7 @@ import wanghaisheng.com.xiaoya.widget.ProgressFragment;
 /**
  * Created by sheng on 2016/4/13.
  */
-public abstract class BaseFragment extends ProgressFragment{
+public abstract class BaseRecyclerFragment extends ProgressFragment{
     protected FragmentComponent mFragmentComponent;
     private TextView tvError, tvEmpty, tvLoading;
     private Button btnReload;
@@ -36,6 +38,8 @@ public abstract class BaseFragment extends ProgressFragment{
     @Inject
     protected NetWorkHelper netWorkHelper;
 
+    protected View rootView;
+    protected boolean isFirstLoaded = true;
 
     //初始化dagger2注入
     public abstract void initInjector();
@@ -59,11 +63,16 @@ public abstract class BaseFragment extends ProgressFragment{
                 .appComponent(((AppContext)getActivity().getApplication()).getAppComponent())
                 .build();
         mFragmentComponent.inject(this);
+
         initInjector();
 
         getBundle(getArguments());
 
-        initUI(view);
+        /*if (isFirstLoaded) {
+            initData();
+            isFirstLoaded = false;
+        }*/
+
         initData();
 
         super.onViewCreated(view, savedInstanceState);
@@ -72,7 +81,24 @@ public abstract class BaseFragment extends ProgressFragment{
 
     @Override
     public View onCreateContentView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(getLayoutId(),container, false);
+        if(null == rootView) {
+            LogUtils.d("rootview not null");
+            rootView = inflater.inflate(getLayoutId(),container,false);
+            initUI(rootView);
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(null != rootView) {
+            ViewGroup parent = (ViewGroup) rootView.getParent();
+            if (null != parent) {
+                parent.removeView(rootView);
+            }
+        }
     }
 
     @Override
@@ -125,6 +151,11 @@ public abstract class BaseFragment extends ProgressFragment{
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.d("BaseRecyclerView destory.................");
+    }
 
     public void setErrorText(String text) {
         tvError.setText(text);

@@ -54,7 +54,7 @@ public class AppContext extends Application{
 
         /*Thread.setDefaultUncaughtExceptionHandler(AppException
                 .getAppExceptionHandler(this));*/
-        CrashHandler.getInstance().init(getApplicationContext());
+        //CrashHandler.getInstance().init(getApplicationContext());
     }
 
     public AppComponent getAppComponent() {
