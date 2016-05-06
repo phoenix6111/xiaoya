@@ -1,57 +1,45 @@
 package wanghaisheng.com.xiaoya.ui;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+
+import java.lang.reflect.Field;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.presenter.base.BaseDetailView;
+import wanghaisheng.com.xiaoya.ui.empty.EmptyLayout;
 import wanghaisheng.com.xiaoya.utils.ShareHelper;
-import wanghaisheng.com.xiaoya.widget.ProgressBarCircularIndeterminate;
 import wanghaisheng.com.xiaoya.widget.XiaoYaWebView;
 
 /**
  * Created by sheng on 2016/4/15.
  */
 public abstract class BaseDetailActivity extends BaseSwipeBackActivity implements XiaoYaWebView.XiaoYaWebViewCallBack,BaseDetailView {
-    @Bind(R.id.tvLoading)
-    protected TextView tvLoading;
-    @Bind(R.id.progress_container)
-    protected LinearLayout progressContainer;
-    @Bind(R.id.rlProgress)
-    protected RelativeLayout rlProgress;
-    @Bind(R.id.rlError)
-    protected RelativeLayout rlError;
-    @Bind(R.id.tvError)
-    protected TextView tvError;
-    @Bind(R.id.progress_view)
-    protected ProgressBarCircularIndeterminate progressBar;
-//    @Bind(R.id.webview)
+
+    @Bind(R.id.empty_layout)
+    protected EmptyLayout emptyLayout;
+    protected int mStoreEmptyState = -1;//保存EmptyLayout的状态信息
+
     protected XiaoYaWebView webView;
     @Bind(R.id.webview_container)
     protected FrameLayout webviewContainer;
-    @Bind(R.id.btnReload)
-    protected Button reloadBtn;
 
     @Inject
     ShareHelper shareHelper;
@@ -60,15 +48,12 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     protected MenuItem mMenuItem;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
+        setConfigCallback((WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
 
-    @Override
-    public void initUiAndListener() {
         mActivityComponent.inject(this);
-        ButterKnife.bind(this);
 
         webView = new XiaoYaWebView(this);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -94,21 +79,18 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
             }
         });
 
-        initUIAndDatas();
-    }
-
-    public abstract void initUIAndDatas();
-
-    @Override
-    public void showLoading() {
-        rlProgress.setVisibility(View.VISIBLE);
-        webviewContainer.setVisibility(View.GONE);
-        rlError.setVisibility(View.GONE);
+        emptyLayout = (EmptyLayout) findViewById(R.id.empty_layout);
+        emptyLayout.setOnLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onReloadClick();
+            }
+        });
     }
 
     public boolean checkNetWork() {
         if(!netWorkHelper.isAvailableNetwork()) {
-            onError("无网络连接，请连接后重试。。");
+            error(ERROR_TYPE_NETWORK,null);
             return false;
         } else {
             return true;
@@ -117,11 +99,43 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
 
     @Override
     public void hideLoading() {
-        rlProgress.setVisibility(View.GONE);
+        emptyLayout.dismiss();
         webviewContainer.setVisibility(View.VISIBLE);
-        rlError.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showLoading() {
+        emptyLayout.setNetworkLoading();
+        webviewContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void error(int errorType,String errMsg) {
+        switch (errorType) {
+            case ERROR_TYPE_NETWORK:
+                emptyLayout.setNetworkError();
+                break;
+            case ERROR_TYPE_NODATA:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodata();
+                break;
+            case ERROR_TYPE_NODATA_ENABLE_CLICK:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodataEnableClick();
+                break;
+            default:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodata();
+                break;
+        }
+        webviewContainer.setVisibility(View.GONE);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,6 +153,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -147,7 +162,6 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         } else {
             //presenter.collectStory(story.getId());
             collect();
-
         }
 
         return true;
@@ -168,23 +182,12 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         //this.hideLoading();
     }
 
-    @OnClick(R.id.btnReload)
-    public void onClick(Button button) {
-        webView.reload();
-    }
-
-    @Override
-    public void onError(String error) {
-        rlProgress.setVisibility(View.GONE);
-        webviewContainer.setVisibility(View.GONE);
-        rlError.setVisibility(View.VISIBLE);
-        tvError.setText(error);
-    }
+    public abstract void onReloadClick();
 
     @Override
     public void onError(WebResourceError error) {
         LogUtils.v("web view onerror.................");
-        onError("加载错误，请重试");
+        error(ERROR_TYPE_NODATA_ENABLE_CLICK,null);
     }
 
     public void uncollectSuccess() {
@@ -204,8 +207,32 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
             webView.removeAllViews();
             webView.setVisibility(View.GONE);
             webView.destroy();
+            webView.releaseAllWebViewCallback();
+//            webView = null;
+            webviewContainer.removeView(webView);
         }
+
+        setConfigCallback(null);
+
         super.onDestroy();
-        System.exit(0);
+    }
+
+    public void setConfigCallback(WindowManager windowManager) {
+        try {
+            Field field = WebView.class.getDeclaredField("mWebViewCore");
+            field = field.getType().getDeclaredField("mBrowserFrame");
+            field = field.getType().getDeclaredField("sConfigCallback");
+            field.setAccessible(true);
+            Object configCallback = field.get(null);
+
+            if (null == configCallback) {
+                return;
+            }
+
+            field = field.getType().getDeclaredField("mWindowManager");
+            field.setAccessible(true);
+            field.set(configCallback, windowManager);
+        } catch(Exception e) {
+        }
     }
 }

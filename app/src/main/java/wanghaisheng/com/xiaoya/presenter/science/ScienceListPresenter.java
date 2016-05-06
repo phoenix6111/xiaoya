@@ -1,5 +1,7 @@
 package wanghaisheng.com.xiaoya.presenter.science;
 
+import android.accounts.NetworkErrorException;
+
 import com.apkfuns.logutils.LogUtils;
 
 import java.util.ArrayList;
@@ -8,25 +10,25 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
+import wanghaisheng.com.xiaoya.api.SchedulersCompat;
+import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.beans.Article;
 import wanghaisheng.com.xiaoya.beans.Science;
+import wanghaisheng.com.xiaoya.datasource.ScienceData;
 import wanghaisheng.com.xiaoya.db.ArticleCollection;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
 import wanghaisheng.com.xiaoya.db.DBArticle;
 import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 
 /**
  * Created by sheng on 2016/4/16.
  */
-public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListView> {
+public class ScienceListPresenter extends BaseListPresenter<Article, ScienceListView> {
     @Inject
     ScienceApi scienceApi;
 
@@ -36,129 +38,109 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
     DBArticleDao articleDao;
     @Inject
     ArticleCollectionDao articleCollectionDao;
+//    @Inject
+//    CacheManager cacheManager;
+    @Inject
+    ScienceData scienceData;
 
-    @Inject @Singleton
-    public ScienceListPresenter(){}
-
-    private Subscription subscription;
-
-    /**
-     * 从数据库加载
-     * @param channel science的channel
-     */
-    public void loadFromDb(final String channel) {
-        //LogUtils.v("load newest stories...........................................................");
-        //先从数据库里面查
-        iView.showLoading();
-        Observable.create(new Observable.OnSubscribe<List<Article>>() {
-            @Override
-            public void call(Subscriber<? super List<Article>> subscriber) {
-                subscriber.onNext(loadNewestFromDb(channel));
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Action1<List<Article>>() {
-            @Override
-            public void call(List<Article> articles) {
-//                        LogUtils.v(articles);
-                iView.hideLoading();
-                iView.renderDbData(articles);
-            }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                LogUtils.d(throwable.getMessage());
-                iView.error("数据访问异常，请重试");
-                iView.hideLoading();
-            }
-        });
-
-    }
+    @Inject
+    @Singleton
+    public ScienceListPresenter() {}
 
     /**
-     * 一开始从数据库里面查，显示到界面，然后再从网络查最新的数据
-     */
-    private List<Article> loadNewestFromDb(String channel) {
-//        LogUtils.v("channel keys ==========>"+channel);
-        List<DBArticle> dbArticles = articleDao.queryBuilder().where(DBArticleDao.Properties.Channel_keys.eq(channel)).list();
-//        LogUtils.v(dbArticles);
-        return convertArticles(dbArticles);
-    }
-
-
-    /**
-     * 从API查询最新数据
+     * 第一次加载数据时调用，三级缓存：memory,disk,network
      * @param channel
-     * @param showLoading
      */
-    public void loadNewFromNet(String channel, final boolean showLoading) {
-        if(showLoading) {
-            iView.showLoading();
-        }
-        subscription = scienceApi.getScienceByChannel(channel,0,limit)
+    public void firstLoadData(final String channel) {
+        iView.showLoading();
+
+        LogUtils.d(scienceData.getDataSourceText());
+
+        subscription = scienceData.subscribeData(channel)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Science>() {
                     @Override
                     public void onCompleted() {
-                        //如果是第一次从远程加载，则不显示loadmore的下拉框
-                        if(showLoading) {
-                            iView.hideLoading();
-                        }
+                        iView.hideLoading();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        if(showLoading) {
-                            iView.hideLoading();
+                        LogUtils.d(e);
+                        iView.hideLoading();
+                        if(e instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
                         }
-                        LogUtils.d(e.getMessage());
-                        iView.error("数据访问异常，请重试");
                     }
 
                     @Override
                     public void onNext(Science science) {
-                        int resultOffset = getResultOffset(science);
-                        iView.setExtraData(resultOffset);
-                        List<Article> datas = science.getResult();
-//                        LogUtils.d(datas);
-                        if(showLoading) {
-                            iView.renderNetData(datas);
-//                            LogUtils.v("it the first  inner inner+++++++++++" + isFirst + ".....................");
-                        } else {
-                            iView.refreshComplete(datas);
-                        }
+                        iView.hideLoading();
+                        iView.renderFirstLoadData(science);
+                    }
+                });
+    }
 
-                        saveToDb(datas);
+
+    /**
+     * 加载最新数据
+     * @param channel
+     */
+    public void loadNewestData(String channel) {
+        subscription = scienceData.network(channel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Science>() {
+                    @Override
+                    public void call(Science science) {
+                        iView.refreshComplete(science);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.d(throwable);
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 });
     }
 
     private int getResultOffset(Science science) {
         //如果API返回的总数据量大于offset+limit，则表示还有数据，否则表示没有更多数据
-        if(science.getTotal()>science.getOffset()+science.getLimit()) {
-            return science.getOffset()+science.getLimit();
+        if (science.getTotal() > science.getOffset() + science.getLimit()) {
+            return science.getOffset() + science.getLimit();
         }
 
         return -1;
     }
 
-
-    public void loadMoreData(String channel,int offset) {
-        subscription = scienceApi.getScienceByChannel(channel,offset,limit)
-                .subscribe(new Subscriber<Science>() {
+    /**
+     * 加载更多
+     * @param channel
+     * @param offset
+     */
+    public void loadMoreData(String channel, int offset) {
+        subscription = scienceApi.getScienceByChannel(channel, offset, limit)
+                .compose(SchedulersCompat.<Science>applyIoSchedulers())
+                .subscribe(new Action1<Science>() {
                     @Override
-                    public void onCompleted() {
-
+                    public void call(Science science) {
+                        science.setOffset(getResultOffset(science));
+                        iView.loadMoreComplete(science);
                     }
-
+                }, new Action1<Throwable>() {
                     @Override
-                    public void onError(Throwable e) {
-                        iView.error("数据访问异常，请重试");
-                    }
-
-                    @Override
-                    public void onNext(Science science) {
-                        iView.loadMoreComplete(science.getResult());
+                    public void call(Throwable throwable) {
+                        LogUtils.d(throwable.getStackTrace());
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 });
     }
@@ -169,7 +151,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
         dbArticle.setTitle(article.getTitle());
         dbArticle.setUrl(article.getUrl());
         dbArticle.setDate_published(article.getDate_published());
-        if(null != article.getImage_info()) {
+        if (null != article.getImage_info()) {
             dbArticle.setImage(article.getImage_info().getUrl());
         }
         dbArticle.setDescription(article.getSummary());
@@ -187,7 +169,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
         articleCollection.setTitle(article.getTitle());
         articleCollection.setUrl(article.getUrl());
         articleCollection.setDate_published(article.getDate_published());
-        if(null != article.getImage_info()) {
+        if (null != article.getImage_info()) {
             articleCollection.setImage(article.getImage_info().getUrl());
         }
         articleCollection.setDescription(article.getSummary());
@@ -198,32 +180,9 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
         return articleCollection;
     }
 
-    private void saveToDb(List<Article> articles) {
-        if(articles == null || articles.isEmpty()){
-            return;
-        }
-
-        //删除daily表的全部数据
-        String channel = articles.get(0).getChannel_keys()[0];
-        List<DBArticle> oldArticles = articleDao.queryBuilder().where(DBArticleDao.Properties.Channel_keys.eq(channel)).list();
-        articleDao.deleteInTx(oldArticles);
-
-        final List<DBArticle> dbArticles = convertDBArticles(articles);
-        //批量保存daily数据
-        articleDao.getSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                for(int i=0; i<dbArticles.size(); i++){
-                    DBArticle dbArticle = dbArticles.get(i);
-                    articleDao.insertOrReplace(dbArticle);
-                }
-            }
-        });
-    }
-
     private List<DBArticle> convertDBArticles(List<Article> articles) {
         List<DBArticle> dbArticles = new ArrayList<>();
-        for(int i=0; i<articles.size(); i++) {
+        for (int i = 0; i < articles.size(); i++) {
             dbArticles.add(convertArticleToDBArticle(articles.get(i)));
         }
 
@@ -232,7 +191,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
 
     private Article convertDBArticleToArticle(DBArticle dbArticle) {
         Article article = new Article();
-        article.setId(Integer.valueOf(dbArticle.getId()+""));
+        article.setId(Integer.valueOf(dbArticle.getId() + ""));
         article.setTitle(dbArticle.getTitle());
         article.setInfo(dbArticle.getInfo());
         article.setChannel_keys(new String[]{dbArticle.getChannel_keys()});
@@ -250,7 +209,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
 
     private List<Article> convertArticles(List<DBArticle> dbArticles) {
         List<Article> articles = new ArrayList<>();
-        for(int i=0; i<dbArticles.size(); i++) {
+        for (int i = 0; i < dbArticles.size(); i++) {
             articles.add(convertDBArticleToArticle(dbArticles.get(i)));
         }
 
@@ -259,11 +218,11 @@ public class ScienceListPresenter extends BaseListPresenter<Article,ScienceListV
 
     @Override
     public void detachView() {
-        if(null != subscription) {
+        if (null != subscription) {
             subscription.unsubscribe();
         }
 
-        if(null == iView) {
+        if (null == iView) {
             iView = null;
         }
     }

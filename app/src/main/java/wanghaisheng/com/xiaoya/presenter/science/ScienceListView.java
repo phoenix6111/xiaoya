@@ -1,12 +1,15 @@
 package wanghaisheng.com.xiaoya.presenter.science;
 
-import wanghaisheng.com.xiaoya.beans.Article;
+import wanghaisheng.com.xiaoya.beans.Science;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 
 /**
  * Created by sheng on 2016/4/16.
  */
-public interface ScienceListView extends BaseListView<Article>{
+public interface ScienceListView extends BaseListView{
 
-    void setExtraData(int offset);
+    void renderFirstLoadData(Science datas);
+    void refreshComplete(Science datas);
+    void loadMoreComplete(Science datas);
+
 }

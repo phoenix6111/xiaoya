@@ -21,7 +21,7 @@ public class BaseDailyFragment extends BaseTopNagigationFragment {
             @Override
             public Fragment getItem(int position) {
 
-                return DailyListFragment.newInstance(DailyApi.THEME_ID[position]);
+                return StoryListFragment.newInstance(DailyApi.THEME_ID[position]);
             }
         };
 

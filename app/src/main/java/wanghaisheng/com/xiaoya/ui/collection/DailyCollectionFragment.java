@@ -62,10 +62,6 @@ public class DailyCollectionFragment extends BaseListFragment<Story> implements 
         return mAdapter;
     }
 
-    @Override
-    public void loadNewFromNet() {
-
-    }
 
     @Override
     public void onRefreshData() {
@@ -83,7 +79,12 @@ public class DailyCollectionFragment extends BaseListFragment<Story> implements 
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
+    public void getSavedBundle(Bundle bundle) {
+
+    }
+
+    @Override
+    public void initView(View view) {
 
     }
 
@@ -107,8 +108,12 @@ public class DailyCollectionFragment extends BaseListFragment<Story> implements 
     }
 
     @Override
+    public void error(String err) {
+
+    }
+
+    @Override
     public void onReloadClicked() {
-        super.onReloadClicked();
         presenter.loadStoryFromDb(page);
     }
 

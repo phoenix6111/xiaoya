@@ -2,7 +2,6 @@ package wanghaisheng.com.xiaoya.api.movie;
 
 import rx.Observable;
 import wanghaisheng.com.xiaoya.api.BaseApi;
-import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.beans.MovieList;
 
 /**
@@ -24,8 +23,8 @@ public class MovieApi extends BaseApi{
     }
 
     public Observable<MovieList> getMovieByType(int offset, int limit) {
-        return movieService.getMovieByType(TYPE_TAGS[0],offset,limit)
-                .compose(SchedulersCompat.<MovieList>applyIoSchedulers());
+        return movieService.getMovieByType(TYPE_TAGS[0],offset,limit);
+//                .compose(SchedulersCompat.<MovieList>applyIoSchedulers());
     }
 
     public static String getMovieDetailUrl(String movieId) {

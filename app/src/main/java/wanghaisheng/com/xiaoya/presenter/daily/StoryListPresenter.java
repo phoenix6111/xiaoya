@@ -1,205 +1,133 @@
 package wanghaisheng.com.xiaoya.presenter.daily;
 
+import android.accounts.NetworkErrorException;
+
 import com.apkfuns.logutils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import rx.Observable;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
+import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.beans.Daily;
 import wanghaisheng.com.xiaoya.beans.Story;
+import wanghaisheng.com.xiaoya.datasource.DailyData;
 import wanghaisheng.com.xiaoya.db.DBStory;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
-import wanghaisheng.com.xiaoya.presenter.base.Presenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 
 /**
  * Created by sheng on 2016/4/14.
  */
-public class StoryListPresenter extends Presenter<Story,TopDailyView> {
+public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
 
     @Inject
     DailyApi dailyApi;
+    @Inject
+    DailyData dailyData;
     @Inject
     DBStoryDao storyDao;
     /*@Inject
     StoryCollectionDao storyCollection;*/
 
-    private DailyListView dailyListView;
-    private int lastDateTime = 0;
-    private boolean isFirst = true;
-
-    private Subscription dailySubscriber;
-
-    @Inject @Singleton
+    @Inject
     public StoryListPresenter() {
 
     }
 
-    /**
-     * 查询顶部viewpager的数据，暂时无用
-     */
-    public void loadTopStories() {
-        dailyApi.getDaily(lastDateTime).subscribe(new Subscriber<Daily>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                LogUtils.v(e);
-                LogUtils.v("error................................................");
-                //dailyListView.error("数据访问异常，请稍后重试");
-            }
-
-            @Override
-            public void onNext(Daily daily) {
-                LogUtils.v(daily);
-                iView.renderStories(daily.getTop_stories());
-            }
-        });
-    }
 
     /**
-     * 根据themeId从数据库查询数据
+     * 第一次加载数据时调用，三级缓存：memory,disk,network
      * @param themeId
      */
-    public void loadFromDb(final int themeId) {
-        //LogUtils.v("load newest stories...........................................................");
-        //先从数据库里面查
-        dailyListView.showLoading();
-        Observable.create(new Observable.OnSubscribe<List<Story>>() {
-            @Override
-            public void call(Subscriber<? super List<Story>> subscriber) {
-                subscriber.onNext(loadNewestFromDb(themeId));
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io())
+    public void firstLoadData(final int themeId) {
+        iView.showLoading();
+
+        LogUtils.d(dailyData.getDataSourceText());
+
+        subscription = dailyData.subscribeData(themeId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<Daily>() {
+                @Override
+                public void onCompleted() {
+                    iView.hideLoading();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    LogUtils.d(e);
+                    iView.hideLoading();
+                    if(e instanceof NetworkErrorException) {
+                        iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                    } else {
+                        iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                    }
+                }
+
+                @Override
+                public void onNext(Daily daily) {
+                    iView.hideLoading();
+                    iView.renderFirstLoadData(daily);
+                }
+            });
+    }
+
+
+    /**
+     * 加载最新数据
+     * @param themeId
+     */
+    public void loadNewestData(final int themeId) {
+        subscription = dailyData.network(themeId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Story>>() {
+                .subscribe(new Action1<Daily>() {
                     @Override
-                    public void call(List<Story> stories) {
-//                        LogUtils.v("theme id..........................."+themeId);
-//                        LogUtils.v(stories);
-                        dailyListView.hideLoading();
-                        dailyListView.renderDbData(stories);
+                    public void call(Daily daily) {
+                        iView.refreshComplete(daily);
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtils.d(throwable.getMessage());
-                        dailyListView.hideLoading();
-                        dailyListView.error("数据访问异常，请刷新后重试");
+                        LogUtils.d(throwable);
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 });
-
-    }
-
-    public void loadNewestFromNet(final int themeId, final boolean showLoading) {
-        if(showLoading) {
-            dailyListView.showLoading();
-        }
-        Subscriber<Daily> subscriber = new Subscriber<Daily>() {
-            @Override
-            public void onCompleted() {
-                //如果是第一次从远程加载，则不显示loadmore的下拉框
-                if(showLoading) {
-                    dailyListView.hideLoading();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                LogUtils.v(e);
-                if(showLoading) {
-                    dailyListView.hideLoading();
-                }
-                dailyListView.error("数据访问异常，请刷新重试");
-
-            }
-
-            @Override
-            public void onNext(Daily daily) {
-//                        LogUtils.v("it the first+++++++++++"+isFirst+".....................");
-                List<Story> stories = daily.getStories();
-                if(themeId!=1&&!ListUtils.isEmpty(stories)) {
-                    stories.remove(0);
-                }
-//                LogUtils.v("theme id ........."+themeId);
-//                LogUtils.v(stories);
-                if(isFirst) {
-                    isFirst = false;
-                    dailyListView.renderNetData(stories);
-//                            LogUtils.v("it the first  inner inner+++++++++++" + isFirst + ".....................");
-                } else {
-                    dailyListView.refreshComplete(stories);
-                }
-                //                    LogUtils.v("inner inner+++++++++++" + isFirst + ".....................");
-//                        LogUtils.v(daily.getStories());
-
-                if(!ListUtils.isEmpty(stories)) {
-                    saveToDb(stories,themeId);
-                    lastDateTime = daily.getDate();
-                }
-
-            }
-        };
-
-        if(themeId==DailyApi.THEME_ID[0]) {
-            dailySubscriber = dailyApi.getDaily(lastDateTime)
-                    .subscribe(subscriber);
-
-        } else {
-            dailySubscriber = dailyApi.getDailyByTheme(themeId)
-                    .subscribe(subscriber);
-        }
-
-
-    }
-
-
-    /**
-     * 一开始从数据库里面查，显示到界面，然后再从网络查最新的数据
-     */
-    private List<Story> loadNewestFromDb(int themeId) {
-        List<DBStory> dbStories = storyDao.queryBuilder().where(DBStoryDao.Properties.Theme_id.eq(themeId)).list();
-        return convertDailyToStory(dbStories);
     }
 
     /**
-     * 将最新数据写入数据库，先将旧的数据全部删除，数据库只保存最新的数据
-     * @param stories
+     * 加载更多
+     * @param lastDateTime
      */
-    private void saveToDb(final List<Story> stories,int themeId) {
-        if(stories == null || stories.isEmpty()){
-            return;
-        }
-
-        //删除daily表的全部themeId数据
-        List<DBStory> oldStories = storyDao.queryBuilder().where(DBStoryDao.Properties.Theme_id.eq(themeId)).list();
-        storyDao.deleteInTx(oldStories);
-        final List<DBStory> dbStories = convertStoryToDBStory(stories,themeId);
-        //批量保存daily数据
-        storyDao.getSession().runInTx(new Runnable() {
-            @Override
-            public void run() {
-                for(int i=0; i<stories.size(); i++){
-                    DBStory dbStory = dbStories.get(i);
-                    storyDao.insertOrReplace(dbStory);
-                }
-            }
-        });
-
+    public void loadMoreData(int lastDateTime) {
+        subscription = dailyApi.getDaily(lastDateTime)
+                .compose(SchedulersCompat.<Daily>applyIoSchedulers())
+                .subscribe(new Action1<Daily>() {
+                    @Override
+                    public void call(Daily daily) {
+                        iView.loadMoreComplete(daily);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.d(throwable);
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
+                    }
+                });
     }
 
     private List<DBStory> convertStoryToDBStory(List<Story> stories,int themeId) {
@@ -240,45 +168,6 @@ public class StoryListPresenter extends Presenter<Story,TopDailyView> {
         return stories;
     }
 
-    public void loadMoreStories() {
 
-        dailySubscriber = dailyApi.getDaily(lastDateTime)
-                .subscribe(new Subscriber<Daily>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        dailyListView.error("加载数据出错");
-                    }
-
-                    @Override
-                    public void onNext(Daily daily) {
-                        dailyListView.loadMoreComplete(daily.getStories());
-                        lastDateTime = daily.getDate();
-                    }
-                });
-    }
-
-    @Override
-    public void detachView() {
-        if(null != dailySubscriber) {
-            dailySubscriber.unsubscribe();
-        }
-
-        if(this.iView != null) {
-            this.iView = null;
-        }
-        if(this.dailyListView!=null) {
-            this.dailyListView = null;
-        }
-
-    }
-
-    public void attachDailyListView(DailyListView dailyListView) {
-        this.dailyListView = dailyListView;
-    }
 
 }

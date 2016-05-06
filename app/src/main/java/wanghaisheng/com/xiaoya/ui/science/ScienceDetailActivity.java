@@ -2,6 +2,7 @@ package wanghaisheng.com.xiaoya.ui.science;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -9,7 +10,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.beans.Article;
 import wanghaisheng.com.xiaoya.presenter.science.ScienceDetailPresenter;
@@ -46,6 +46,13 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
     }
 
     @Override
+    public void onReloadClick() {
+        if(checkNetWork()) {
+            presenter.loadEntityDetail(article.getId());
+        }
+    }
+
+    @Override
     protected boolean isApplyStatusBarTranslucency() {
         return true;
     }
@@ -65,23 +72,6 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
         return R.layout.common_detail;
     }
 
-    @Override
-    public void initUIAndDatas() {
-        initToolbar(mToolbar);
-        ButterKnife.bind(this);
-        presenter.attachView(this);
-
-        if(null != article.getImage_info()) {
-            imgUrl = article.getImage_info().getUrl();
-            //imageUtil.loadImage(this,imgUrl,topPicView);
-            topPicView.setImageURI(Uri.parse(imgUrl));
-        }
-        //检测是否有网络连接再加载数据
-        if(checkNetWork()) {
-            presenter.loadEntityDetail(article.getId());
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,5 +101,26 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
     @Override
     public void renderWebview(String webPageStr) {
         webView.loadDataWithBaseURL("file:///android_asset/",webPageStr,"text/html", "utf-8", null);
+    }
+
+    @Override
+    public void initView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(mToolbar);
+    }
+
+    @Override
+    public void initData() {
+        presenter.attachView(this);
+
+        if(null != article.getImage_info()) {
+            imgUrl = article.getImage_info().getUrl();
+            //imageUtil.loadImage(this,imgUrl,topPicView);
+            topPicView.setImageURI(Uri.parse(imgUrl));
+        }
+        //检测是否有网络连接再加载数据
+        if(checkNetWork()) {
+            presenter.loadEntityDetail(article.getId());
+        }
     }
 }

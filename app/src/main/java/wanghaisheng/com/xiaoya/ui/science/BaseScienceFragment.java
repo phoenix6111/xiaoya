@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 
 import java.util.List;
 
-import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
+import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.ui.BaseTopNagigationFragment;
 import wanghaisheng.com.xiaoya.ui.PagerAdapter;
 import wanghaisheng.com.xiaoya.utils.ArrayUtils;

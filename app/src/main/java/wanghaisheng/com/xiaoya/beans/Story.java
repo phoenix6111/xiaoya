@@ -1,15 +1,13 @@
 package wanghaisheng.com.xiaoya.beans;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sheng on 2016/4/12.
  */
-public class Story extends Entity implements Parcelable {
+public class Story extends Entity implements Serializable {
     public int id;
 
     public String title;
@@ -103,46 +101,4 @@ public class Story extends Entity implements Parcelable {
         isCollected = collected;
     }
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.title);
-        dest.writeInt(this.type);
-        dest.writeStringList(this.images);
-        dest.writeString(this.image);
-        dest.writeString(this.body);
-        dest.writeStringList(this.css);
-        dest.writeString(this.share_url);
-        dest.writeByte(isCollected ? (byte) 1 : (byte) 0);
-    }
-
-    protected Story(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
-        this.type = in.readInt();
-        this.images = in.createStringArrayList();
-        this.image = in.readString();
-        this.body = in.readString();
-        this.css = in.createStringArrayList();
-        this.share_url = in.readString();
-        this.isCollected = in.readByte() != 0;
-    }
-
-    public static final Creator<Story> CREATOR = new Creator<Story>() {
-        @Override
-        public Story createFromParcel(Parcel source) {
-            return new Story(source);
-        }
-
-        @Override
-        public Story[] newArray(int size) {
-            return new Story[size];
-        }
-    };
 }

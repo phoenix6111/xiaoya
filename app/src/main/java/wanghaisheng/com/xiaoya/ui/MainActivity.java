@@ -58,21 +58,26 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private static final int INDEX_THREE = 2;
     private static final int INDEX_FOUR = 3;
 
-    @Override
-    public void initUiAndListener() {
-        ButterKnife.bind(this);
 
+    @Override
+    public void initView() {
         fragmentTitle = new String[]{getString(R.string.str_science),getString(R.string.str_daily)
                 ,getString(R.string.str_movie),getString(R.string.str_me)};
 
-        //setupOptionsMenu();
-        initView();
-        initDatas();
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle(fragmentTitle[0]);
 
+        mTabIndicators.add(tabScience);
+        mTabIndicators.add(tabDaily);
+        mTabIndicators.add(tabMovie);
+        mTabIndicators.add(tabMe);
+
+        //默认第一个tab为选中状态
+        tabScience.setIconAlpha(1.0f);
     }
 
-    private void initDatas() {
-
+    @Override
+    public void initData() {
         mFragments.add(BaseScienceFragment.newInstance());
         mFragments.add(BaseDailyFragment.newInstance());
         mFragments.add(MovieListFragment.newInstance());
@@ -97,21 +102,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mAdapter);
-
-    }
-
-    private void initView() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(fragmentTitle[0]);
-
-        mTabIndicators.add(tabScience);
-        mTabIndicators.add(tabDaily);
-        mTabIndicators.add(tabMovie);
-        mTabIndicators.add(tabMe);
-
-        //默认第一个tab为选中状态
-        tabScience.setIconAlpha(1.0f);
-
     }
 
     @Override

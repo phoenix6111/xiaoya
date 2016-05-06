@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.beans.Article;
+import wanghaisheng.com.xiaoya.beans.Science;
 import wanghaisheng.com.xiaoya.component.baseadapter.ViewHolder;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
@@ -29,10 +30,7 @@ import wanghaisheng.com.xiaoya.utils.PrefsUtil;
  */
 public class ScienceListFragment extends BaseListFragment<Article> implements ScienceListView {
     public static final String ARG_CHANNEL = "channel";
-    private String channel;
     public static final String ARG_ARTICLE = "article";
-
-    public static final String ARG_SCIENCE_LIST_FIRST_LOAD = "science_list_first_load";
 
     @Inject
     ScienceListPresenter presenter;
@@ -41,6 +39,8 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
 
     //调用API的offset
     private int offset;
+    private String channel;//article所属的channel
+    private boolean hasMore;//是否还有更多
 
     public static final String ARG_DATAS = "arg_datas";
 
@@ -58,15 +58,14 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         return fragment;
     }
 
-
     @Override
     public void initInjector() {
         mFragmentComponent.inject(this);
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
-        LogUtils.d("getBundler..................");
+    public void getSavedBundle(Bundle bundle) {
+//        LogUtils.d("getBundler..................");
         this.channel = bundle.getString(ARG_CHANNEL);
         if(null != bundle.getSerializable(ARG_DATAS)) {
             LogUtils.d("bundler not null........................");
@@ -74,10 +73,8 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         }
     }
 
-
     @Override
     public CommonAdapter<Article> initAdapter() {
-//        LogUtils.v("sciencelistfragment ......................init adapter.........");
         mAdapter = new CommonAdapter<Article>(getActivity(), R.layout.science_item_layout,mDatas) {
             @Override
             public void convert(ViewHolder holder, final Article article) {
@@ -106,26 +103,22 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
             }
         };
 
-//        LogUtils.v("after new adapter ................");
-//        LogUtils.v(mAdapter);
-
         return mAdapter;
     }
 
-    @Override
-    public void loadNewFromNet() {
-        if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadNewFromNet(channel,true);
-        }
-    }
-
+    /**
+     * 当下拉刷新数据时
+     */
     @Override
     public void onRefreshData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadNewFromNet(channel,false);
+            presenter.loadNewestData(channel);
         }
     }
 
+    /**
+     * 当上拉加载更多时
+     */
     @Override
     public void onLoadMoreData() {
         if(checkNetWork()&&(null !=presenter)) {
@@ -133,29 +126,32 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         }
     }
 
+
+    @Override
+    public void initView(View view) {
+
+    }
+
     @Override
     public void initData() {
-        LogUtils.d("sciencelistfragment initData................");
+//        LogUtils.d("sciencelistfragment initData................");
 
-        this.firstLoad = prefsUtil.get(ARG_SCIENCE_LIST_FIRST_LOAD,false);
         myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-        presenter.attachView(this);
-        //一开始从数据库加载缓存数据
-//        if(ListUtils.isEmpty(mDatas)) {
-//            LogUtils.d("science list load from db................");
-            if(null != presenter) {
-                presenter.loadFromDb(channel);
-            }
-//        }
-        //presenter.loadNewFromNet(channel);
+
+        if(null != presenter) {
+            presenter.attachView(this);
+            presenter.firstLoadData(channel);
+        }
+
     }
 
     @Override
     public void onReloadClicked() {
-        super.onReloadClicked();
 //        presenter.loadFromDb(channel);
         if(checkNetWork()) {
-            presenter.loadNewFromNet(channel,true);
+            if(null != presenter) {
+                presenter.firstLoadData(channel);
+            }
         }
     }
 
@@ -173,17 +169,56 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
             presenter.detachView();
             this.presenter = null;
         }
+        offset = 0;
+
+    }
+
+    /**
+     * 当第一次加载数据完成时调用
+     * @param datas
+     */
+    @Override
+    public void renderFirstLoadData(Science datas) {
+//        LogUtils.d("renderFirstLoadData......");
+//        LogUtils.d(datas);
+        if(null != datas) {
+            offset = ScienceListPresenter.limit;
+            if (null != datas.getResult()) {
+                mDatas.clear();
+                mDatas.addAll(datas.getResult());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
+    /**
+     * 当刷新完成时调用
+     * @param datas
+     */
+    @Override
+    public void refreshComplete(Science datas) {
+        onRefreshComplete();
+        if(null != datas) {
+            offset = ScienceListPresenter.limit;
+            if (null != datas.getResult()) {
+                mDatas.clear();
+                mDatas.addAll(datas.getResult());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
-    public void setExtraData(int tempOffset) {
-        if(tempOffset>0) {
-            this.offset = tempOffset;
-        } else {
-            this.offset = this.offset + ScienceListPresenter.limit;
-            setCanLoadMore(false);
+    public void loadMoreComplete(Science datas) {
+        onLoadMoreComplete();
+        if(null != datas) {
+            offset = datas.getOffset();
+            if (null != datas.getResult()) {
+                mDatas.addAll(datas.getResult());
+                mAdapter.notifyDataSetChanged();
+            }
         }
-
     }
 
     @Override

@@ -5,14 +5,14 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.di.component.DaggerFragmentComponent;
@@ -20,16 +20,12 @@ import wanghaisheng.com.xiaoya.di.component.FragmentComponent;
 import wanghaisheng.com.xiaoya.di.module.FragmentModule;
 import wanghaisheng.com.xiaoya.utils.ImageUtil;
 import wanghaisheng.com.xiaoya.utils.NetWorkHelper;
-import wanghaisheng.com.xiaoya.widget.ProgressBarCircularIndeterminate;
-import wanghaisheng.com.xiaoya.widget.ProgressFragment;
 
 /**
  * Created by sheng on 2016/4/13.
  */
-public abstract class BaseFragment extends ProgressFragment{
+public abstract class BaseFragment extends Fragment implements BaseFragmentInterface{
     protected FragmentComponent mFragmentComponent;
-    private TextView tvError, tvEmpty, tvLoading;
-    private Button btnReload;
 
     @Inject
     protected ImageUtil imageUtil;
@@ -44,13 +40,7 @@ public abstract class BaseFragment extends ProgressFragment{
     public abstract int getLayoutId();
 
     //得到Activity传进来的值
-    public abstract void getBundle(Bundle bundle);
-
-    //初始化控件
-    public abstract void initUI(View view);
-
-    //在监听器之前把数据准备好
-    public abstract void initData();
+    public abstract void getSavedBundle(Bundle bundle);
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -61,55 +51,32 @@ public abstract class BaseFragment extends ProgressFragment{
         mFragmentComponent.inject(this);
         initInjector();
 
-        getBundle(getArguments());
+        ButterKnife.bind(this,view);
 
-        initUI(view);
+        beforeInitView(view);
+
+        initView(view);
         initData();
 
         super.onViewCreated(view, savedInstanceState);
     }
 
-
     @Override
-    public View onCreateContentView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(getLayoutId(),container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if(null != args) {
+            getSavedBundle(args);
+        }
     }
 
+    @Nullable
     @Override
-    public View onCreateContentErrorView(LayoutInflater inflater) {
-        View error = inflater.inflate(R.layout.error_view_layout, null);
-        tvError = (TextView) error.findViewById(R.id.tvError);
-        error.findViewById(R.id.btnReload).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onReloadClicked();
-            }
-        });
-        return error;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(getLayoutId(), container, false);
+        return view;
     }
 
-    @Override
-    public View onCreateContentEmptyView(LayoutInflater inflater) {
-        View empty = inflater.inflate(R.layout.empty_view_layout, null);
-        tvEmpty = (TextView) empty.findViewById(R.id.tvEmpty);
-        btnReload = (Button) empty.findViewById(R.id.btnReload);
-        empty.findViewById(R.id.btnReload).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onReloadClicked();
-            }
-        });
-        return empty;
-    }
-
-    @Override
-    public View onCreateProgressView(LayoutInflater inflater) {
-        View loading = inflater.inflate(R.layout.loading_view_layout, null);
-        tvLoading = (TextView) loading.findViewById(R.id.tvLoading);
-        ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) loading.findViewById(R.id.progress_view);
-        progressBar.setBackgroundColor(getThemeColor(getActivity()));
-        return loading;
-    }
 
     public int getThemeColor(Context mContext) {
         int materialBlue = mContext.getResources().getColor(R.color.md_green_500);
@@ -126,38 +93,6 @@ public abstract class BaseFragment extends ProgressFragment{
     }
 
 
-    public void setErrorText(String text) {
-        tvError.setText(text);
-    }
-
-    public void setErrorText(int textResId) {
-        setErrorText(getString(textResId));
-    }
-
-    public void setEmptyText(String text) {
-        tvEmpty.setText(text);
-    }
-
-    public void setEmptyButtonVisible(int visible) {
-        btnReload.setVisibility(visible);
-    }
-
-    public void setEmptyText(int textResId) {
-        setEmptyText(getString(textResId));
-    }
-
-    public void setLoadingText(String text) {
-        tvLoading.setText(text);
-    }
-
-    public void setLoadingText(int textResId) {
-        setLoadingText(getString(textResId));
-    }
-
-    //Override this to reload
-    public void onReloadClicked() {
-
-    }
 
 
 }

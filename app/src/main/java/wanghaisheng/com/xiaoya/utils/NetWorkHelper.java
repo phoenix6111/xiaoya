@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import wanghaisheng.com.xiaoya.BaseApplication;
+
 /**
  * by sll
  */
@@ -62,6 +64,36 @@ public class NetWorkHelper {
             mNetWorkType = NETWORKTYPE_INVALID;
         }
         return mNetWorkType;
+    }
+
+    public boolean isNetworkAvailable()
+    {
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        ConnectivityManager connectivityManager = (ConnectivityManager) BaseApplication.context().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null)
+        {
+            return false;
+        }
+        else
+        {
+            // 获取NetworkInfo对象
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            if (networkInfo != null)
+            {
+                System.out.println("===状态===" + networkInfo.getState());
+                System.out.println("===类型===" + networkInfo.getTypeName());
+                // 判断当前网络状态是否为连接状态
+                if (networkInfo.getState() == NetworkInfo.State.CONNECTED)
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     private boolean isFastMobileNetwork() {

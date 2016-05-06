@@ -45,16 +45,9 @@
                 android:background="@color/window_color" />-->
         </android.support.v4.widget.NestedScrollView>
 
-        <include
-            layout="@layout/loading_view_layout"
+        <wanghaisheng.com.xiaoya.ui.empty.EmptyLayout
+            android:id="@+id/empty_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40dp" />
-
-        <include
-            layout="@layout/error_view_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40dp" />
+            android:layout_height="match_parent"/>
     </FrameLayout>
 </LinearLayout>

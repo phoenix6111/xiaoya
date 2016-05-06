@@ -14,7 +14,6 @@ import android.view.View;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.BaseSwipeBackActivity;
 import wanghaisheng.com.xiaoya.utils.StringHelper;
@@ -51,21 +50,6 @@ public class BrowserActivity extends BaseSwipeBackActivity{
     @Override
     public void initInjector() {
         mActivityComponent.inject(this);
-    }
-
-    @Override
-    public void initUiAndListener() {
-        ButterKnife.bind(this);
-        initToolBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        url = getIntent().getStringExtra("url");
-        mFragment = BrowserFragment.newInstance(url, "");
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 
     @Override
@@ -126,8 +110,26 @@ public class BrowserActivity extends BaseSwipeBackActivity{
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-        System.exit(0);
+    }
+
+    @Override
+    public void initView() {
+
+        initToolBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        url = getIntent().getStringExtra("url");
+        mFragment = BrowserFragment.newInstance(url, "");
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

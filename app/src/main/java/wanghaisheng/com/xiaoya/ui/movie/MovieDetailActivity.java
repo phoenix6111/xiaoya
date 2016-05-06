@@ -6,7 +6,6 @@ import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.db.Movie;
 import wanghaisheng.com.xiaoya.presenter.movie.MovieDetailPresenter;
@@ -26,6 +25,11 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
     @Override
     public void collect() {
         presenter.collectEntity(movie);
+    }
+
+    @Override
+    public void onReloadClick() {
+
     }
 
     @Override
@@ -53,25 +57,6 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
         return R.layout.movie_detail;
     }
 
-    @Override
-    public void initUIAndDatas() {
-        ButterKnife.bind(this);
-        presenter.attachView(this);
-        initToolbar(mToolbar);
-
-        //将webview上移，去除广告
-        /*int height = DisplayHelper.getScreenHeight(mAppContext);
-        int marginHeight = (int)(height*0.175f);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(0,-marginHeight,0,0);
-        LogUtils.d("margin top .........."+marginHeight);
-        webView.setLayoutParams(layoutParams);*/
-
-        String detailUrl = presenter.getMovieDetailUrl(movie.getId()+"");
-        webView.loadUrl(detailUrl);
-
-        showLoading();
-    }
 
     @Override
     public void onUpdatePager(int page, int total) {
@@ -91,5 +76,20 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    public void initView() {
+        initToolbar(mToolbar);
+    }
+
+    @Override
+    public void initData() {
+        presenter.attachView(this);
+
+        String detailUrl = presenter.getMovieDetailUrl(movie.getId()+"");
+        webView.loadUrl(detailUrl);
+
+        showLoading();
     }
 }

@@ -9,9 +9,7 @@ import wanghaisheng.com.xiaoya.ui.BaseFragment;
 import wanghaisheng.com.xiaoya.ui.BaseRecyclerFragment;
 import wanghaisheng.com.xiaoya.ui.collection.DailyCollectionFragment;
 import wanghaisheng.com.xiaoya.ui.collection.ScienceCollectionFragment;
-import wanghaisheng.com.xiaoya.ui.daily.DailyListFragment;
-import wanghaisheng.com.xiaoya.ui.daily.TopDailyFragment;
-import wanghaisheng.com.xiaoya.ui.daily.TopStoryFragment;
+import wanghaisheng.com.xiaoya.ui.daily.StoryListFragment;
 import wanghaisheng.com.xiaoya.ui.movie.MovieListFragment;
 import wanghaisheng.com.xiaoya.ui.other.BrowserFragment;
 import wanghaisheng.com.xiaoya.ui.science.ScienceListFragment;
@@ -28,11 +26,7 @@ public interface FragmentComponent {
 
     void inject(BaseFragment fragment);
 
-    void inject(TopDailyFragment topDailyFragment);
-
-    void inject(DailyListFragment dailyListFragment);
-
-    void inject(TopStoryFragment topStoryFragment);
+    void inject(StoryListFragment dailyListFragment);
 
     //void inject(BaseListFragment listFragment);
     void inject(ScienceListFragment scienceListFragment);

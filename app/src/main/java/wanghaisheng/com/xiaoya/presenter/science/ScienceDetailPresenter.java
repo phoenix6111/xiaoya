@@ -1,5 +1,7 @@
 package wanghaisheng.com.xiaoya.presenter.science;
 
+import android.accounts.NetworkErrorException;
+
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
@@ -10,8 +12,9 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import wanghaisheng.com.xiaoya.api.guokr.ArticleApi;
-import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
+import wanghaisheng.com.xiaoya.api.SchedulersCompat;
+import wanghaisheng.com.xiaoya.api.science.ArticleApi;
+import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.beans.Article;
 import wanghaisheng.com.xiaoya.beans.ArticleResult;
 import wanghaisheng.com.xiaoya.db.ArticleCollection;
@@ -19,6 +22,7 @@ import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
 import wanghaisheng.com.xiaoya.db.DBArticle;
 import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.presenter.base.BaseDetailPresenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 
 /**
  * Created by sheng on 2016/4/16.
@@ -40,6 +44,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
     @Override
     public void loadEntityDetail(int entityId) {
         articleApi.getArticleDetail(entityId)
+                .compose(SchedulersCompat.<ArticleResult>applyIoSchedulers())
                 .subscribe(new Action1<ArticleResult>() {
                     @Override
                     public void call(ArticleResult result) {
@@ -51,7 +56,11 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        LogUtils.v(throwable);
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 });
     }

@@ -3,10 +3,7 @@ package wanghaisheng.com.xiaoya.api.Daily;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.api.BaseApi;
-import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.beans.Daily;
 import wanghaisheng.com.xiaoya.beans.Story;
 
@@ -40,8 +37,8 @@ public class DailyApi extends BaseApi {
      */
     public Observable<Daily> getDaily(final int datetime) {
         Observable<Daily> observable = datetime > 0 ? dailyService.getBefore(datetime) : dailyService.getLatest();
-        return observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+
+        return observable;
 
         /**
          * 为了避免重复编写以下代码，用了compose
@@ -52,8 +49,8 @@ public class DailyApi extends BaseApi {
     }
 
     public Observable<Story> getStory(final int story_id) {
-        return dailyService.getStory(story_id)
-            .compose(SchedulersCompat.<Story>applyIoSchedulers());
+        return dailyService.getStory(story_id);
+            //.compose(SchedulersCompat.<Story>applyIoSchedulers());
     }
 
     /**
@@ -62,8 +59,8 @@ public class DailyApi extends BaseApi {
      * @return
      */
     public Observable<Daily> getDailyByTheme(int themeId) {
-        return dailyService.getDailyByTheme(themeId)
-                .compose(SchedulersCompat.<Daily>applyIoSchedulers());
+        return dailyService.getDailyByTheme(themeId);
+                //.compose(SchedulersCompat.<Daily>applyIoSchedulers());
     }
 
 

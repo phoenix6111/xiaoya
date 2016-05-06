@@ -1,8 +1,7 @@
-package wanghaisheng.com.xiaoya.api.guokr;
+package wanghaisheng.com.xiaoya.api.science;
 
 import rx.Observable;
 import wanghaisheng.com.xiaoya.api.BaseApi;
-import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.beans.ArticleResult;
 
 /**
@@ -20,6 +19,7 @@ public class ArticleApi extends BaseApi {
     }
 
     public Observable<ArticleResult> getArticleDetail(int articleid) {
-        return articleService.getArticleDetail(articleid).compose(SchedulersCompat.<ArticleResult>applyIoSchedulers());
+        return articleService.getArticleDetail(articleid);
+//                .compose(SchedulersCompat.<ArticleResult>applyIoSchedulers());
     }
 }

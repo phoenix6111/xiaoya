@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,7 +34,7 @@ import wanghaisheng.com.xiaoya.utils.ToastUtil;
 /**
  * Created by sheng on 2016/4/13.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements BaseViewInterface{
     @Inject
     ResourceHelper mResourceHelper;
     @Inject
@@ -45,40 +47,64 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ToastUtil toastUtil;
 
     protected AppContext mAppContext;
+
     private static final String TAG = "BaseActivity";
 
     protected ActivityComponent mActivityComponent;
 
     protected Toolbar mToolbar;
+    protected LayoutInflater mInflater;
+
+    protected boolean _isVisiable;
+
+    public static final boolean DEVELOPER_MODE = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (DEVELOPER_MODE) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork()
+                    .penaltyLog()
+                    .build());
+        }
 
         mActivityComponent = DaggerActivityComponent.builder()
                                 .activityModule(new ActivityModule(this))
                                 .appComponent(((AppContext)getApplication()).getAppComponent())
                                 .build();
         mActivityComponent.inject(this);
+        initInjector();
 
         initTheme();
-        super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
+
+        onBeforeSetContentLayout();
+
+        if(0 != getLayoutId()) {
+            setContentView(getLayoutId());
+        }
+        mInflater = getLayoutInflater();
+
         ButterKnife.bind(this);
         mAppContext = (AppContext) getApplicationContext();
 
         setTranslucentStatus(isApplyStatusBarTranslucency());
         setStatusBarColor(isApplyStatusBarColor());
 
-        initInjector();
-
         getDatas(savedInstanceState);
 
-        initUiAndListener();
+        initView();
+        initData();
 
-        checkNetwork();
+//        checkNetwork();
 
         AppManager.getAppManager().addActivity(this);
     }
+
+    protected void onBeforeSetContentLayout(){}
 
     public abstract void getDatas(Bundle savedInstanceState);
 
@@ -145,12 +171,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar(Toolbar toolbar) {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        //this.mToolbar = toolbar;
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setHomeAsUpIndicator(R.drawable.);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -187,11 +211,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     //get layout file id
     protected abstract int getLayoutId();
 
-    /**
-     * init UI && Listener
-     */
-    public abstract void initUiAndListener();
-
     protected <T extends View> T findById(int id) {
         return (T) findViewById(id);
     }
@@ -199,5 +218,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void startActivity(Context mContext, Activity activity) {
         Intent intent = new Intent(mContext,activity.getClass());
         mContext.startActivity(intent);
+    }
+
+    protected View inflateView(int resId) {
+        return mInflater.inflate(resId, null);
     }
 }

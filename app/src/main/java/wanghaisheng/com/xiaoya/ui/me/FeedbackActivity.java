@@ -88,25 +88,6 @@ public class FeedbackActivity extends BaseSwipeBackActivity implements FeedbackV
     }
 
     @Override
-    public void initUiAndListener() {
-        ButterKnife.bind(this);
-        initToolbar(toolbar);
-
-        presenter.attachView(this);
-
-        setTitle("反馈");
-        feedbackTitle.setFocusable(false);
-        feedbackTitle.setFocusableInTouchMode(false);
-        feedbackTitle.setText(R.string.feedback_title);
-        feedbackContent.setHint(R.string.feedback_content_hint);
-
-        mDialog = new MaterialDialog.Builder(this)
-                .title("提示")
-                .content("正在发送")
-                .progress(true, 0).build();
-    }
-
-    @Override
     public void showLoading() {
         if (!mDialog.isShowing() && !isFinishing()) {
             mDialog.show();
@@ -246,5 +227,29 @@ public class FeedbackActivity extends BaseSwipeBackActivity implements FeedbackV
             presenter.detachView();
             this.presenter = null;
         }
+    }
+
+    @Override
+    public void initView() {
+        ButterKnife.bind(this);
+        initToolbar(toolbar);
+
+        presenter.attachView(this);
+
+        setTitle("反馈");
+        feedbackTitle.setFocusable(false);
+        feedbackTitle.setFocusableInTouchMode(false);
+        feedbackTitle.setText(R.string.feedback_title);
+        feedbackContent.setHint(R.string.feedback_content_hint);
+
+        mDialog = new MaterialDialog.Builder(this)
+                .title("提示")
+                .content("正在发送")
+                .progress(true, 0).build();
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

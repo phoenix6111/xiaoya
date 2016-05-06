@@ -1,6 +1,7 @@
 package wanghaisheng.com.xiaoya.ui.collection;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.BaseActivity;
@@ -36,9 +37,14 @@ public class BaseCollectionActivity extends BaseActivity {
     }
 
     @Override
-    public void initUiAndListener() {
+    public void initView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         initToolbar(mToolbar);
         setTitle("收藏");
+    }
+
+    @Override
+    public void initData() {
         getSupportFragmentManager().beginTransaction().replace(R.id.content,CollectionTopNavigationFragment.newInstance()).commit();
     }
 }

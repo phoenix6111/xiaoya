@@ -2,6 +2,7 @@ package wanghaisheng.com.xiaoya.ui.daily;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -9,7 +10,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.beans.Story;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryDetailPresenter;
@@ -31,7 +31,7 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
 
     @Override
     public void getDatas(Bundle savedInstanceState) {
-        story = getIntent().getParcelableExtra(DailyListFragment.ARG_STORY);
+        story = (Story) getIntent().getSerializableExtra(StoryListFragment.ARG_STORY);
     }
 
     @Override
@@ -55,27 +55,6 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
     }
 
     @Override
-    public void initUIAndDatas() {
-        ButterKnife.bind(this);
-        initToolbar(mToolbar);
-        presenter.attachView(this);
-
-        if(null != story.getImages()) {
-            //imageUtil.loadImage(this,story.getImages().get(0),storyAvatar);
-            storyAvatar.setImageURI(Uri.parse(story.getImages().get(0)));
-        } else if(null != story.getImage()) {
-            //imageUtil.loadImage(this,story.getImage(),storyAvatar);
-            storyAvatar.setImageURI(Uri.parse(story.getImage()));
-        }
-
-        if(checkNetWork()) {
-            presenter.loadEntityDetail(story.getId());
-        }
-
-        presenter.checkIfCollected(story);
-    }
-
-    @Override
     public void onUpdatePager(int page, int total) {
 
     }
@@ -91,15 +70,10 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
     }
 
     @Override
-    public void renderEntityView(Story story) {
-        if(!netWorkHelper.isAvailableNetwork() ) {
-            onError("网络连接错误，请连接网络后重试！");
-            return;
+    public void onReloadClick() {
+        if(checkNetWork()&&null!=presenter) {
+            presenter.loadEntityDetail(story.getId());
         }
-
-        webView.loadUrl(story.getShare_url());
-        //当webview加载网页信息时显示progress
-        showLoading();
     }
 
     /**
@@ -122,14 +96,34 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
     protected void onDestroy() {
         super.onDestroy();
 
-        if(webView != null) {
-            webView.removeCallBack();
-            webView.destroy();
-        }
-
         if(null != presenter) {
             presenter.detachView();
             this.presenter = null;
         }
+    }
+
+    @Override
+    public void initView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar(mToolbar);
+    }
+
+    @Override
+    public void initData() {
+        presenter.attachView(this);
+
+        if(null != story.getImages()) {
+            //imageUtil.loadImage(this,story.getImages().get(0),storyAvatar);
+            storyAvatar.setImageURI(Uri.parse(story.getImages().get(0)));
+        } else if(null != story.getImage()) {
+            //imageUtil.loadImage(this,story.getImage(),storyAvatar);
+            storyAvatar.setImageURI(Uri.parse(story.getImage()));
+        }
+
+        if(checkNetWork()) {
+            presenter.loadEntityDetail(story.getId());
+        }
+
+        presenter.checkIfCollected(story);
     }
 }

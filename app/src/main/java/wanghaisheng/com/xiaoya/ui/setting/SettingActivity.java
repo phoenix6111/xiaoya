@@ -41,11 +41,13 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    public void initUiAndListener() {
+    public void initView() {
         ButterKnife.bind(this);
         initToolbar(toolbar);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.setting_framelayout, SettingFragment.newInstance()).commit();
     }
 
+    @Override
+    public void initData() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.setting_framelayout, SettingFragment.newInstance()).commit();
+    }
 }

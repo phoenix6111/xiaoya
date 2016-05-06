@@ -13,11 +13,12 @@ import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
+import wanghaisheng.com.xiaoya.beans.Daily;
 import wanghaisheng.com.xiaoya.beans.Story;
 import wanghaisheng.com.xiaoya.component.baseadapter.ViewHolder;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
-import wanghaisheng.com.xiaoya.presenter.daily.DailyListView;
+import wanghaisheng.com.xiaoya.presenter.daily.StoryListView;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryListPresenter;
 import wanghaisheng.com.xiaoya.ui.BaseListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
@@ -28,7 +29,7 @@ import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 /**
  * Created by sheng on 2016/4/14.
  */
-public class DailyListFragment extends BaseListFragment<Story> implements DailyListView {
+public class StoryListFragment extends BaseListFragment<Story> implements StoryListView {
     public static final String ARG_STORY = "story";
     public static final String ARG_THEME = "theme";
     public static final String ARG_DAILY_LIST_FIRST_LOAD = "daily_list_first_load";
@@ -40,11 +41,11 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
     @Inject
     PrefsUtil prefsUtil;
 
-    private String lastDateTime;
+    private int lastDateTime;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        LogUtils.d("onsaveinstancestate................");
+//        LogUtils.d("onsaveinstancestate................");
         super.onSaveInstanceState(outState);
     }
 
@@ -53,8 +54,8 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
         super.onViewStateRestored(savedInstanceState);
     }
 
-    public static DailyListFragment newInstance(int themeId) {
-        DailyListFragment fragment = new DailyListFragment();
+    public static StoryListFragment newInstance(int themeId) {
+        StoryListFragment fragment = new StoryListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_THEME,themeId);
         fragment.setArguments(bundle);
@@ -72,7 +73,7 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
+    public void getSavedBundle(Bundle bundle) {
         this.themeId = getArguments().getInt(ARG_THEME);
 //        LogUtils.v("themeId........................."+themeId);
     }
@@ -107,25 +108,25 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
         return mAdapter;
     }
 
+
     @Override
-    public void loadNewFromNet() {
-        if(checkNetWork() && (null != presenter)) {
-            presenter.loadNewestFromNet(themeId,true);
-        }
+    public void initView(View view) {
+
     }
 
     @Override
     public void initData() {
-        LogUtils.d("DailyListFragment initData.............");
+//        LogUtils.d("StoryListFragment initData.............");
 
         this.firstLoad = prefsUtil.get(ARG_DAILY_LIST_FIRST_LOAD,false);
 
         myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-        presenter.attachDailyListView(this);
+        presenter.attachView(this);
 
         //一开始从数据库加载缓存数据
-        presenter.loadFromDb(themeId);
-        //presenter.loadNewestFromNet(themeId);
+        if(null != presenter) {
+            presenter.firstLoadData(themeId);
+        }
 
         if(themeId != DailyApi.THEME_ID[0]) {
             setCanLoadMore(false);
@@ -133,13 +134,13 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
     }
 
     public String getLoadKey() {
-        return ARG_DAILY_LIST_FIRST_LOAD+DailyListFragment.class.getSimpleName();
+        return ARG_DAILY_LIST_FIRST_LOAD+StoryListFragment.class.getSimpleName();
     }
 
     @Override
     public void onRefreshData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadNewestFromNet(themeId,false);
+            presenter.loadNewestData(themeId);
         }
     }
 
@@ -151,15 +152,14 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
                 onLoadMoreComplete();
                 return;
             }
-            presenter.loadMoreStories();
+            presenter.loadMoreData(lastDateTime);
         }
     }
 
     @Override
     public void onReloadClicked() {
-        if (checkNetWork()) {
-            super.onReloadClicked();
-            presenter.loadFromDb(themeId);
+        if (checkNetWork()&& (null!=presenter)) {
+            presenter.firstLoadData(themeId);
         }
     }
 
@@ -169,6 +169,43 @@ public class DailyListFragment extends BaseListFragment<Story> implements DailyL
         if(null != presenter) {
             presenter.detachView();
             this.presenter = null;
+        }
+    }
+
+    @Override
+    public void renderFirstLoadData(Daily datas) {
+        if(null != datas) {
+            if (null != datas.getStories()) {
+                lastDateTime = datas.getDate();
+                mDatas.clear();
+                mDatas.addAll(datas.getStories());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void refreshComplete(Daily datas) {
+        onRefreshComplete();
+        if (null != datas) {
+            if(null != datas.getStories()) {
+                lastDateTime = datas.getDate();
+                mDatas.clear();
+                mDatas.addAll(datas.getStories());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void loadMoreComplete(Daily datas) {
+        onLoadMoreComplete();
+        if(null != datas) {
+            if(null != datas.getStories()) {
+                lastDateTime = datas.getDate();
+                mDatas.addAll(datas.getStories());
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

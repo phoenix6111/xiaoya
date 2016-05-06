@@ -1,5 +1,7 @@
 package wanghaisheng.com.xiaoya.presenter.daily;
 
+import android.accounts.NetworkErrorException;
+
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
@@ -8,14 +10,17 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
+import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.beans.Story;
 import wanghaisheng.com.xiaoya.db.DBStory;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
 import wanghaisheng.com.xiaoya.db.StoryCollection;
 import wanghaisheng.com.xiaoya.db.StoryCollectionDao;
 import wanghaisheng.com.xiaoya.presenter.base.BaseDetailPresenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 
 /**
@@ -46,25 +51,23 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
      * 通过DailyApi加载Story的详细数据
      */
     public void loadEntityDetail(int storyId) {
-        dailyApi.getStory(storyId)
-                .subscribe(new Subscriber<Story>(){
+        subscription = dailyApi.getStory(storyId)
+                .compose(SchedulersCompat.<Story>applyIoSchedulers())
+                .subscribe(new Action1<Story>() {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LogUtils.v(e);
-//                        iView.error("数据访问异常，请稍后重试");
-//                        iView.hideLoading();
-                    }
-
-                    @Override
-                    public void onNext(Story story) {
-//                        iView.renderEntityView(story);
+                    public void call(Story story) {
                         String webPageContent = buildPageStr(story);
-                        LogUtils.v(webPageContent);
+//                        LogUtils.v(webPageContent);
                         iView.renderWebview(webPageContent);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 });
     }

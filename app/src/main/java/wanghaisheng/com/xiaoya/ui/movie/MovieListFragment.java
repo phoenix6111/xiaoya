@@ -7,6 +7,8 @@ import android.view.View;
 import com.apkfuns.logutils.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
@@ -20,6 +22,7 @@ import wanghaisheng.com.xiaoya.presenter.movie.MovieListPresenter;
 import wanghaisheng.com.xiaoya.ui.BaseListFragment;
 import wanghaisheng.com.xiaoya.ui.other.BrowserActivity;
 import wanghaisheng.com.xiaoya.utils.ImageUtil;
+import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 
 /**
@@ -37,7 +40,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
     @Inject
     PrefsUtil prefsUtil;
     private int offset = 0;
-
+    private boolean hasMore = true;
 
     public static MovieListFragment newInstance() {
         return new MovieListFragment();
@@ -74,28 +77,20 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
     }
 
     @Override
-    public void loadNewFromNet() {
-        if(checkNetWork()&&(null !=presenter)) {
-            offset = 0;
-            presenter.loadNewFromNet(offset,MovieListPresenter.LIMIT,true);
-            offset += MovieListPresenter.LIMIT;
-        }
-    }
-
-    @Override
     public void onRefreshData() {
         if(checkNetWork()&&(null !=presenter)) {
-            offset = 0;
-            presenter.loadNewFromNet(offset,MovieListPresenter.LIMIT,false);
-            offset += MovieListPresenter.LIMIT;
+            presenter.loadNewestData();
         }
     }
 
     @Override
     public void onLoadMoreData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadMoreData(offset,MovieListPresenter.LIMIT);
-            offset += MovieListPresenter.LIMIT;
+            if(hasMore) {
+                presenter.loadMoreData(offset);
+            } else {
+                setCanLoadMore(false);
+            }
         }
     }
 
@@ -105,30 +100,36 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
+    public void getSavedBundle(Bundle bundle) {
 
     }
 
     @Override
+    public void initView(View view) {
+        myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+    }
+
+    @Override
     public void initData() {
-        LogUtils.d("Movie List Fragment initData...........");
+//        LogUtils.d("Movie List Fragment initData...........");
 
         this.firstLoad = prefsUtil.get(ARG_MOVIE_LIST_FIRST_LOAD,false);
-        myRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-        presenter.attachView(this);
-        //一开始从数据库加载缓存数据
-        presenter.loadFromDb();
-        //presenter.loadNewFromNet(offset,MovieListPresenter.LIMIT);
+
+        if(null != presenter) {
+            presenter.attachView(this);
+            presenter.firstLoadData();
+        }
 
     }
 
     @Override
     public void onReloadClicked() {
-        super.onReloadClicked();
 //        presenter.loadFromDb();
         if(checkNetWork()) {
             offset = 0;
-            presenter.loadNewFromNet(0,MovieListPresenter.LIMIT,true);
+            if(null != presenter) {
+                presenter.loadNewestData();
+            }
         }
     }
 
@@ -140,5 +141,47 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
             this.presenter = null;
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void renderFirstLoadData(List<Movie> datas) {
+        if(null != datas) {
+            offset = MovieListPresenter.LIMIT+1;
+            hasMore = true;
+            mDatas.clear();
+            mDatas.addAll(datas);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void refreshComplete(List<Movie> datas) {
+        LogUtils.d("refreshComplete................");
+        onRefreshComplete();
+        if(null != datas) {
+            offset = MovieListPresenter.LIMIT+1;
+            hasMore = true;
+            mDatas.clear();
+            mDatas.addAll(datas);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void loadMoreComplete(List<Movie> datas, boolean hasMore) {
+        this.hasMore = hasMore;
+        onLoadMoreComplete();
+
+        if(!hasMore) {
+            setCanLoadMore(false);
+        }
+
+        if(!ListUtils.isEmpty(datas)) {
+            offset = offset+MovieListPresenter.LIMIT;
+            mDatas.addAll(datas);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            setCanLoadMore(false);
+        }
     }
 }

@@ -20,8 +20,8 @@ public abstract class BaseLazyFragment extends BaseFragment {
                 .appComponent(((AppContext) getActivity().getApplication()).getApplicationComponent())
                 .build();
         initInjector();
-        getBundle(getArguments());
-        initUI(view);
+        getSavedBundle(getArguments());
+//        initUI(view);
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class BaseLazyFragment extends BaseFragment {
     }
 
     private void onVisible() {
-        if (isVisiable && isPrepare) {
+        if (isVisiable) {
             initData();
             isVisiable = false;
         }

@@ -1,12 +1,13 @@
 package wanghaisheng.com.xiaoya.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by sheng on 2016/4/16.
  */
-public class Science {
+public class Science implements Serializable{
     private int offset;
     private int limit;
     private boolean ok;

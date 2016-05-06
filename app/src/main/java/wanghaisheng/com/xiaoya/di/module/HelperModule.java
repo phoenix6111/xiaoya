@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.utils.CacheHelper;
 import wanghaisheng.com.xiaoya.utils.ConfigHelper;
 import wanghaisheng.com.xiaoya.utils.DataCleanHelper;
@@ -136,5 +137,11 @@ public class HelperModule {
     @Singleton
     ToastUtil provideToastUtil(Context context) {
         return new ToastUtil(context);
+    }
+
+    @Provides
+    @Singleton
+    CacheManager provideCacheManager(Context context) {
+        return new CacheManager(context);
     }
 }

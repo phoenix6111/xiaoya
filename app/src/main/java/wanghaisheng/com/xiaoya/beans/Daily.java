@@ -1,11 +1,12 @@
 package wanghaisheng.com.xiaoya.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by sheng on 2016/4/12.
  */
-public class Daily {
+public class Daily implements Serializable{
 
     private int id;
 

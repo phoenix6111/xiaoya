@@ -1,7 +1,5 @@
 package wanghaisheng.com.xiaoya;
 
-import android.app.Application;
-
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
@@ -27,7 +25,7 @@ import wanghaisheng.com.xiaoya.utils.ImageUtil;
 /**
  * Created by sheng on 2016/4/13.
  */
-public class AppContext extends Application{
+public class AppContext extends BaseApplication{
 
     private AppComponent appComponent;
 

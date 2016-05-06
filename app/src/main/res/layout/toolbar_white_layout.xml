@@ -7,4 +7,5 @@
     android:background="@drawable/tab_bg"
     android:elevation="0dp"
     app:titleTextColor="@color/base_text_black"
+    app:titleTextAppearance="@style/whiteToolbarStyle"
     app:popupTheme="@style/AppTheme.PopupOverlay" />

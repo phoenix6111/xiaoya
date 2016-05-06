@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.BaseFragment;
+import wanghaisheng.com.xiaoya.ui.empty.EmptyLayout;
 import wanghaisheng.com.xiaoya.utils.NetWorkHelper;
 import wanghaisheng.com.xiaoya.utils.SettingPrefHelper;
 import wanghaisheng.com.xiaoya.widget.XiaoYaWebView;
@@ -31,6 +31,11 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
 
     private Logger logger = Logger.getLogger(BrowserFragment.class.getSimpleName());
 
+    public static final int ERROR_TYPE_NETWORK = 1;
+    public static final int ERROR_TYPE_NODATA = 2;
+    public static final int ERROR_TYPE_NODATA_ENABLE_CLICK = 3;
+    public static final int ERROR_TYPE_UNKNOWN = 4;
+
     public static BrowserFragment newInstance(String url, String title) {
         BrowserFragment mFragment = new BrowserFragment();
         Bundle bundle = new Bundle();
@@ -40,8 +45,6 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
         return mFragment;
     }
 
-
-//    @Bind(R.id.webview)
     XiaoYaWebView webView;
     @Bind(R.id.progress)
     ProgressBar progress;
@@ -54,6 +57,9 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
     SettingPrefHelper mSettingPrefHelper;
     @Inject
     NetWorkHelper netWorkHelper;
+
+    protected EmptyLayout emptyLayout;
+    protected int mStoreEmptyState = -1;//保存EmptyLayout的状态信息
 
 
     private String url;
@@ -70,19 +76,18 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
+    public void getSavedBundle(Bundle bundle) {
         url = bundle.getString("url");
         title = bundle.getString("title");
-        if (mSettingPrefHelper.getNightModel() && url.contains("?")) {
-            url += "&night=1";
-        }
     }
 
     @Override
-    public void initUI(View view) {
-        ButterKnife.bind(this, view);
-        showContent(true);
+    public void beforeInitView(View view) {
 
+    }
+
+    @Override
+    public void initView(View view) {
         webView = new XiaoYaWebView(getActivity());
         NestedScrollView.LayoutParams layoutParams = new NestedScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -111,11 +116,14 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
         });
 
         checkNetWork();
-
     }
 
     @Override
     public void initData() {
+        if (mSettingPrefHelper.getNightModel() && url.contains("?")) {
+            url += "&night=1";
+        }
+
         if(checkNetWork()) {
             webView.loadUrl(url);
         }
@@ -127,10 +135,46 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
         }
     }
 
+    public void hideLoading() {
+        emptyLayout.dismiss();
+        scrollView.setVisibility(View.VISIBLE);
+    }
+
+    public void showLoading() {
+        emptyLayout.setNetworkLoading();
+        scrollView.setVisibility(View.GONE);
+    }
+
+    public void error(int errorType,String errMsg) {
+        switch (errorType) {
+            case ERROR_TYPE_NETWORK:
+                emptyLayout.setNetworkError();
+                break;
+            case ERROR_TYPE_NODATA:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodata();
+                break;
+            case ERROR_TYPE_NODATA_ENABLE_CLICK:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodataEnableClick();
+                break;
+            default:
+                if(!TextUtils.isEmpty(errMsg)) {
+                    emptyLayout.setNoDataContent(errMsg);
+                }
+                emptyLayout.setNodata();
+                break;
+        }
+        scrollView.setVisibility(View.GONE);
+    }
+
     public boolean checkNetWork() {
         if(!netWorkHelper.isAvailableNetwork()) {
-            setErrorText("网络访问异常，请刷新后重试");
-            showError(false);
+            error(ERROR_TYPE_NETWORK,null);
             return false;
         }
 
@@ -150,14 +194,26 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
 
     @Override
     public void onError(WebResourceError error) {
-        setErrorText("网络访问异常，请刷新后重试");
-        showError(false);
+        error(ERROR_TYPE_NETWORK,null);
+    }
+
+    @Override
+    public void onPause() {
+        webView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        webView.onResume();
+        super.onResume();
     }
 
     @Override
     public void onDestroy() {
         if(null != webView) {
             webView.removeCallBack();
+            webView.setVisibility(View.GONE);
             webView.removeAllViews();
             webView.destroy();
         }

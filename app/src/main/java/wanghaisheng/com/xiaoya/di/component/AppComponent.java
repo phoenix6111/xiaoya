@@ -10,9 +10,13 @@ import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.api.Navigator;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
-import wanghaisheng.com.xiaoya.api.guokr.ArticleApi;
-import wanghaisheng.com.xiaoya.api.guokr.ScienceApi;
+import wanghaisheng.com.xiaoya.api.science.ArticleApi;
+import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
+import wanghaisheng.com.xiaoya.cache.CacheManager;
+import wanghaisheng.com.xiaoya.datasource.DailyData;
+import wanghaisheng.com.xiaoya.datasource.MovieData;
+import wanghaisheng.com.xiaoya.datasource.ScienceData;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
 import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
@@ -72,6 +76,7 @@ public interface AppComponent {
     StringHelper getStringHelper();
     RequestHelper getRequestHelper();
     PrefsUtil getPrefsUtil();
+    CacheManager getCacheManager();
 
     //db
     DBStoryDao getDBStoryDao();
@@ -87,6 +92,9 @@ public interface AppComponent {
     ArticleApi getArticleApi();
     MovieApi getMovieApi();
     FeedbackApi getFeedbackApi();
+    MovieData getMovieData();
+    ScienceData getScienceData();
+    DailyData getDailyData();
 
 
     void inject(AppContext appContext);

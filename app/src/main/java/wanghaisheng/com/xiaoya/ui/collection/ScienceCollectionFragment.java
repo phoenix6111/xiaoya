@@ -67,11 +67,6 @@ public class ScienceCollectionFragment extends BaseListFragment<Article> impleme
     }
 
     @Override
-    public void loadNewFromNet() {
-
-    }
-
-    @Override
     public void onRefreshData() {
     }
 
@@ -86,7 +81,12 @@ public class ScienceCollectionFragment extends BaseListFragment<Article> impleme
     }
 
     @Override
-    public void getBundle(Bundle bundle) {
+    public void getSavedBundle(Bundle bundle) {
+
+    }
+
+    @Override
+    public void initView(View view) {
 
     }
 
@@ -108,8 +108,12 @@ public class ScienceCollectionFragment extends BaseListFragment<Article> impleme
     }
 
     @Override
+    public void error(String error) {
+
+    }
+
+    @Override
     public void onReloadClicked() {
-        super.onReloadClicked();
         presenter.loadArticleFromDb(page);
     }
 

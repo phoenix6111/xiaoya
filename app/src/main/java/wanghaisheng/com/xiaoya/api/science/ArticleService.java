@@ -1,4 +1,4 @@
-package wanghaisheng.com.xiaoya.api.guokr;
+package wanghaisheng.com.xiaoya.api.science;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
