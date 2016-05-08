@@ -1,7 +1,5 @@
 package wanghaisheng.com.xiaoya.api;
 
-import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -14,16 +12,12 @@ public class BaseApi {
 
     protected String baseUrl;
     protected Retrofit retrofit;
-    private static final int CONNECT_TIME_OUT = 5;
 
-    protected BaseApi(String baseUrl) {
+    protected BaseApi(String baseUrl,OkHttpClient client) {
         this.baseUrl = baseUrl;
 
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
-        client.connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS);
-
         retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-                .client(client.build())
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();

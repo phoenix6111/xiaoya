@@ -7,7 +7,6 @@ import com.zhy.http.okhttp.callback.Callback;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -20,9 +19,10 @@ import wanghaisheng.com.xiaoya.utils.ListUtils;
 public class FeedbackPresenter extends Callback<Result> {
     private FeedbackView mFeedbackView;
 
-    private FeedbackApi mFeedbackApi;
+    @Inject
+    FeedbackApi mFeedbackApi;
 
-    @Inject @Singleton
+    @Inject
     public FeedbackPresenter(FeedbackApi feedbackApi) {
         this.mFeedbackApi = feedbackApi;
         mFeedbackApi.attachCallback(this);

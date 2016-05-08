@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
@@ -52,7 +53,7 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
 
         LogUtils.d(dailyData.getDataSourceText());
 
-        subscription = dailyData.subscribeData(themeId)
+        Subscription subscription = dailyData.subscribeData(themeId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Subscriber<Daily>() {
                 @Override
@@ -77,6 +78,8 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
                     iView.renderFirstLoadData(daily);
                 }
             });
+
+        compositeSubscription.add(subscription);
     }
 
 
@@ -85,7 +88,7 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
      * @param themeId
      */
     public void loadNewestData(final int themeId) {
-        subscription = dailyData.network(themeId)
+        Subscription subscription = dailyData.network(themeId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Daily>() {
                     @Override
@@ -103,6 +106,7 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     /**
@@ -110,7 +114,7 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
      * @param lastDateTime
      */
     public void loadMoreData(int lastDateTime) {
-        subscription = dailyApi.getDaily(lastDateTime)
+        Subscription subscription = dailyApi.getDaily(lastDateTime)
                 .compose(SchedulersCompat.<Daily>applyIoSchedulers())
                 .subscribe(new Action1<Daily>() {
                     @Override
@@ -128,6 +132,8 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
                         }
                     }
                 });
+
+        compositeSubscription.add(subscription);
     }
 
     private List<DBStory> convertStoryToDBStory(List<Story> stories,int themeId) {

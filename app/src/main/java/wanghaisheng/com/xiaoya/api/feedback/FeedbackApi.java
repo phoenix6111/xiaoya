@@ -29,7 +29,7 @@ public class FeedbackApi {
         this.callback = callback;
     }
 
-    public FeedbackApi(RequestHelper requestHelper,SettingPrefHelper settingPrefHelper) {
+    public FeedbackApi(RequestHelper requestHelper, SettingPrefHelper settingPrefHelper) {
         this.mRequestHelper = requestHelper;
         this.mSettingPrefHelper = settingPrefHelper;
     }

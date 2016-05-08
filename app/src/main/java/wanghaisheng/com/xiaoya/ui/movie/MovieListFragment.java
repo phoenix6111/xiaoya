@@ -50,7 +50,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
     public CommonAdapter<Movie> initAdapter() {
         return mAdapter = new CommonAdapter<Movie>(getActivity(), R.layout.movie_item_layout,mDatas) {
             @Override
-            public void convert(ViewHolder holder, final Movie movie) {
+            public void convert(ViewHolder holder, final Movie movie,int position) {
                 SimpleDraweeView imageView = holder.getView(R.id.movie_image);
                 //imageUtil.loadImage(getActivity(),movie.getImg(),imageView);
                 if(null != movie.getImg()) {

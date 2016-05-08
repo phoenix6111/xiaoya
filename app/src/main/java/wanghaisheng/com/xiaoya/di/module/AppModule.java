@@ -9,7 +9,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import wanghaisheng.com.xiaoya.api.Navigator;
+import wanghaisheng.com.xiaoya.component.okhttp.HttpLoggingInterceptor;
+import wanghaisheng.com.xiaoya.navigator.Navigator;
 
 
 /**
@@ -35,14 +36,16 @@ public class AppModule {
     }
 
     @Provides
-    @Singleton
+    @Singleton//提供全局OkHttpClient
     public OkHttpClient provideOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(20 * 1000, TimeUnit.MILLISECONDS)
                 .readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
-        /*HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        //builder.networkInterceptors().add(new StethoInterceptor());
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        builder.addInterceptor(logging);
+        //builder.addInterceptor(logging);
+        /*
         builder.addInterceptor(mCookieInterceptor);*/
         return builder.build();
     }

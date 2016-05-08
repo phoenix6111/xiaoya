@@ -139,7 +139,7 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
     public abstract CommonAdapter<T> initAdapter();
 
     public boolean checkNetWork() {
-        LogUtils.v("checknetwork ................");
+//        LogUtils.v("checknetwork ................");
         if(!netWorkHelper.isNetworkAvailable()) {
             LogUtils.v("network error..................");
             emptyLayout.setNetworkError();

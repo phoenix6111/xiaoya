@@ -28,6 +28,16 @@ public class AppManager {
         return instance;
     }
 
+    public static void init() {
+        if (instance == null) {
+            instance = new AppManager();
+        }
+    }
+
+    public static int getActivityCount() {
+        return activityStack.size();
+    }
+
     /**
      * 添加Activity到堆栈
      */
@@ -58,10 +68,12 @@ public class AppManager {
      * 结束指定的Activity
      */
     public static void finishActivity(Activity activity) {
-        LogUtils.v("finish activity..................................");
-        if (activity != null && !activity.isFinishing()) {
+
+        if (activity != null) {
+            LogUtils.v("finish activity......................");
             activityStack.remove(activity);
             activity.finish();
+            activity = null;
         }
     }
 
@@ -125,6 +137,10 @@ public class AppManager {
             System.exit(0);
         } catch (Exception e) {
         }
+    }
+
+    public static Stack<Activity> getAllActivity() {
+        return activityStack;
     }
 
     public static boolean isAppExit() {

@@ -1,7 +1,7 @@
 package wanghaisheng.com.xiaoya.utils;
 
 /**
- * Object Utils
+ * Object UrlUtils
  * 
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2011-10-24
  */

@@ -18,5 +18,4 @@ public interface BaseListView extends BaseView{
 
     public void showLoading();
 
-    public void error(int errorType,String errMsg);
 }

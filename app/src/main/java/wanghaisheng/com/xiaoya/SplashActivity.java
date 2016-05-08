@@ -48,11 +48,14 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         });
+
+        AppManager.addActivity(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        AppManager.finishActivity(this);
     }
 }

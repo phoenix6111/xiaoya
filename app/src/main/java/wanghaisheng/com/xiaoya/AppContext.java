@@ -53,6 +53,19 @@ public class AppContext extends BaseApplication{
         /*Thread.setDefaultUncaughtExceptionHandler(AppException
                 .getAppExceptionHandler(this));*/
         //CrashHandler.getInstance().init(getApplicationContext());
+
+        /*Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());*/
+
+        //为全局设置OkHttpUtils的OkHttpClient对象
+        OkHttpUtils.getInstance(mOkHttpClient);
+        //初始化Activity管理栈
+        AppManager.init();
     }
 
     public AppComponent getAppComponent() {

@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import wanghaisheng.com.xiaoya.AppManager;
 import wanghaisheng.com.xiaoya.Constants;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.daily.BaseDailyFragment;
@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mFragments.add(BaseScienceFragment.newInstance());
         mFragments.add(BaseDailyFragment.newInstance());
         mFragments.add(MovieListFragment.newInstance());
+//        mFragments.add(BaseMeiziFragment.newInstance());
         mFragments.add(MeFragment.newInstance());
 
         mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -236,8 +237,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        AppManager.AppExit(getApplicationContext());
     }
 
     @Override
@@ -273,5 +274,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
         return true;
     }
+
 
 }

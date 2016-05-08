@@ -5,10 +5,10 @@ import android.accounts.NetworkErrorException;
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -37,21 +37,14 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
     @Inject
     DBStoryDao dbStoryDao;
 
-    @Inject @Singleton
+    @Inject
     public StoryDetailPresenter() {}
-
-    @Override
-    public void detachView() {
-        if (null != iView) {
-            iView = null;
-        }
-    }
 
     /**
      * 通过DailyApi加载Story的详细数据
      */
     public void loadEntityDetail(int storyId) {
-        subscription = dailyApi.getStory(storyId)
+        Subscription subscription = dailyApi.getStory(storyId)
                 .compose(SchedulersCompat.<Story>applyIoSchedulers())
                 .subscribe(new Action1<Story>() {
                     @Override
@@ -70,6 +63,7 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     /**
@@ -132,7 +126,7 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
             }
         });
 
-        articleCollectionObservable.subscribeOn(Schedulers.io())
+        Subscription subscription = articleCollectionObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<StoryCollection>() {
                     @Override
@@ -151,6 +145,7 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
                     }
                 });
 
+        compositeSubscription.add(subscription);
     }
 
     /**

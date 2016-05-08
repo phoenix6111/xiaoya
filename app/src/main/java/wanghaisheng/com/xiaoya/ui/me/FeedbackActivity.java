@@ -252,4 +252,9 @@ public class FeedbackActivity extends BaseSwipeBackActivity implements FeedbackV
     public void initData() {
 
     }
+
+    @Override
+    public void error(int errorType, String errMsg) {
+
+    }
 }

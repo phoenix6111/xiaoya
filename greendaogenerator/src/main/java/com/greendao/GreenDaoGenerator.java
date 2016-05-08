@@ -82,6 +82,7 @@ public class GreenDaoGenerator {
         movie.addStringProperty("img");
         movie.addStringProperty("dur");
         movie.addBooleanProperty("is_collected");
+        movie.implementsSerializable();
 
 
         Entity collectedMovie = schema.addEntity("MovieCollection");
@@ -103,6 +104,32 @@ public class GreenDaoGenerator {
         collectedMovie.addStringProperty("dur");
         collectedMovie.addBooleanProperty("is_collected");
 
+        Entity content = schema.addEntity("Content");
+        content.addIdProperty();
+        content.addIntProperty("imagewidth");
+        content.addIntProperty("imageheight");
+        content.addIntProperty("order");
+        content.addStringProperty("url");
+        content.addStringProperty("groupid");
+        content.addStringProperty("title");
+        content.implementsSerializable();
+
+        Entity group = schema.addEntity("Group");
+        group.addIdProperty();
+        group.addIntProperty("count");
+        group.addIntProperty("width");
+        group.addIntProperty("height");
+        group.addIntProperty("order");
+        group.addIntProperty("color");
+        group.addStringProperty("groupid");
+        group.addStringProperty("date");
+        group.addStringProperty("imageurl");
+        group.addStringProperty("url");
+        group.addStringProperty("title");
+        group.addStringProperty("type");
+        group.addLongProperty("viewCount");
+        group.addBooleanProperty("iscollected");
+        group.implementsSerializable();
 
         File f = new File(GREEN_DAO_CODE_PATH);
         if (!f.exists()) {

@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.beans.Story;
@@ -28,7 +28,7 @@ public class DailyCollectionPresenter extends Presenter<Story,DailyCollectionVie
     @Inject
     StoryCollectionDao storyCollectionDao;
 
-    @Inject @Singleton
+    @Inject
     public DailyCollectionPresenter() {}
 
     /**
@@ -45,7 +45,8 @@ public class DailyCollectionPresenter extends Presenter<Story,DailyCollectionVie
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
-        listObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Story>>() {
+
+        Subscription subscription = listObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Story>>() {
             @Override
             public void onCompleted() {
 //                LogUtils.v(TAG,"execute onCompleted.....................................");
@@ -61,12 +62,11 @@ public class DailyCollectionPresenter extends Presenter<Story,DailyCollectionVie
 
             @Override
             public void onNext(List<Story> stories) {
-//                LogUtils.v(TAG,"onNext.........................");
-//                LogUtils.v(stories);
-//                iView.hideLoading();
                 iView.renderStories(page,stories);
             }
         });
+
+        compositeSubscription.add(subscription);
     }
 
     public List<Story> loadStories() {
@@ -105,11 +105,4 @@ public class DailyCollectionPresenter extends Presenter<Story,DailyCollectionVie
         return stories;
     }
 
-
-    @Override
-    public void detachView() {
-        if(null != iView) {
-            iView = null;
-        }
-    }
 }

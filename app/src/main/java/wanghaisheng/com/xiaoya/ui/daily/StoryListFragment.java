@@ -82,7 +82,7 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
     public CommonAdapter<Story> initAdapter() {
         mAdapter = new CommonAdapter<Story>(getActivity(),R.layout.story_item_layout,mDatas) {
             @Override
-            public void convert(ViewHolder holder, final Story story) {
+            public void convert(ViewHolder holder, final Story story,int position) {
 //                LogUtils.v(" title.........................."+story.getTitle());
                 holder.setText(R.id.item_tv_title,story.getTitle());
 //                imageUtil.loadImage(getActivity(),story.getImages().get(0),(ImageView)holder.getView(R.id.item_iv_pic));

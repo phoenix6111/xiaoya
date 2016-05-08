@@ -15,11 +15,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.apkfuns.logutils.LogUtils;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.AppManager;
+import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.di.component.ActivityComponent;
 import wanghaisheng.com.xiaoya.di.component.DaggerActivityComponent;
@@ -45,6 +48,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected NetWorkHelper netWorkHelper;
     @Inject
     protected ToastUtil toastUtil;
+    @Inject
+    Navigator navigator;
 
     protected AppContext mAppContext;
 
@@ -203,7 +208,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        AppManager.getAppManager().finishActivity(this);
+        AppManager.finishActivity(this);
+        LogUtils.d("activity stack...size...."+AppManager.getActivityCount());
+//        LogUtils.d(AppManager.getAllActivity());
     }
 
     protected abstract void initInjector();

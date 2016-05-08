@@ -34,27 +34,5 @@ public class BaseScienceFragment extends BaseTopNagigationFragment {
         return new BaseScienceFragment();
     }
 
-    /*@Override
-    public void onResume() {
-        super.onResume();
-        LogUtils.v(TAG,"onResume.........................");
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        LogUtils.v(TAG,"onViewCreated............................");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LogUtils.v(TAG,"onPause....................");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        LogUtils.v(TAG,"onDestroyView...........................");
-    }*/
 }

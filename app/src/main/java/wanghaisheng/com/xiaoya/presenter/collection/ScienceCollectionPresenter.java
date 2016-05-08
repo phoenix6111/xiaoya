@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.beans.Article;
@@ -28,7 +28,7 @@ public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollect
     @Inject
     ArticleCollectionDao articleCollectionDao;
 
-    @Inject @Singleton
+    @Inject
     public ScienceCollectionPresenter() {}
 
     public void loadArticleFromDb(final int page) {
@@ -40,7 +40,7 @@ public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollect
                 subscriber.onCompleted();
             }
         });
-        listObservable.subscribeOn(Schedulers.io())
+        Subscription subscription = listObservable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Article>>() {
                     @Override
@@ -62,6 +62,8 @@ public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollect
                         iView.renderArticles(page,articles);
                     }
                 });
+
+        compositeSubscription.add(subscription);
     }
 
     public List<Article> loadArticle() {
@@ -93,12 +95,5 @@ public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollect
         }
 
         return articles;
-    }
-
-    @Override
-    public void detachView() {
-        if(null != iView) {
-            iView = null;
-        }
     }
 }

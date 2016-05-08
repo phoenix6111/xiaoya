@@ -7,8 +7,8 @@ import com.apkfuns.logutils.LogUtils;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.SchedulersCompat;
@@ -36,7 +36,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
     @Inject
     MovieData movieData;
 
-    @Inject @Singleton
+    @Inject
     public MovieListPresenter() {}
 
     /**
@@ -45,7 +45,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
     public void firstLoadData() {
         iView.showLoading();
         LogUtils.d(movieData.getDataSourceText());
-        subscription = movieData.subscribeData().observeOn(AndroidSchedulers.mainThread())
+        Subscription subscription = movieData.subscribeData().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Movie>>() {
                     @Override
                     public void call(List<Movie> movies) {
@@ -64,7 +64,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                         }
                     }
                 });
-
+        compositeSubscription.add(subscription);
     }
 
 
@@ -72,7 +72,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
      * 加载最新数据
      */
     public void loadNewestData() {
-        subscription = movieData.network()
+        Subscription subscription = movieData.network()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Movie>>() {
                     @Override
@@ -91,6 +91,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
 
@@ -99,7 +100,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
      * @param offset
      */
     public void loadMoreData(int offset) {
-        subscription = movieApi.getMovieByType(offset,LIMIT)
+        Subscription subscription = movieApi.getMovieByType(offset,LIMIT)
                 .compose(SchedulersCompat.<MovieList>applyIoSchedulers())
                 .subscribe(new Action1<MovieList>() {
                     @Override
@@ -117,6 +118,7 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
 

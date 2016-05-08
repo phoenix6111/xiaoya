@@ -1,7 +1,6 @@
 package wanghaisheng.com.xiaoya.presenter.movie;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
 import wanghaisheng.com.xiaoya.db.Movie;
@@ -21,7 +20,7 @@ public class MovieDetailPresenter extends BaseDetailPresenter<Movie,MovieDetailV
     @Inject
     MovieApi movieApi;
 
-    @Inject @Singleton
+    @Inject
     public MovieDetailPresenter(){}
 
     @Override

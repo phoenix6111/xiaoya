@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -43,14 +44,14 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
 
     @Override
     public void loadEntityDetail(int entityId) {
-        articleApi.getArticleDetail(entityId)
+        Subscription subscription = articleApi.getArticleDetail(entityId)
                 .compose(SchedulersCompat.<ArticleResult>applyIoSchedulers())
                 .subscribe(new Action1<ArticleResult>() {
                     @Override
                     public void call(ArticleResult result) {
 //                        LogUtils.v(article);
                         String webPageStr = buildPageStr(result.getResult());
-                        LogUtils.v(webPageStr);
+//                        LogUtils.v(webPageStr);
                         iView.renderWebview(webPageStr);
                     }
                 }, new Action1<Throwable>() {
@@ -63,6 +64,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     private String buildPageStr(Article article) {
@@ -127,7 +129,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
             }
         });
 
-        articleCollectionObservable.subscribeOn(Schedulers.io())
+        Subscription subscription = articleCollectionObservable.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new Subscriber<ArticleCollection>() {
                                     @Override
@@ -145,6 +147,8 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
                                         iView.updateCollectionFlag(null!=articleCollection);
                                     }
                                 });
+
+        compositeSubscription.add(subscription);
 
     }
 
@@ -197,12 +201,4 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
 
     }
 
-
-
-    @Override
-    public void detachView() {
-        if (iView!=null) {
-            iView = null;
-        }
-    }
 }

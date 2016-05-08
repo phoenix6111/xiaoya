@@ -12,6 +12,7 @@
         android:icon="@mipmap/logo2"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -28,6 +29,9 @@
         <activity android:name=".ui.other.BrowserActivity"/>
         <activity android:name=".ui.me.FeedbackActivity"/>
         <activity android:name=".ui.me.SelectImageActivity"/>
+        <activity android:name=".ui.meizi.MeiziPersonListActivity"/>
+        <activity android:name=".ui.meizi.MeiziLargePicActivity"/>
+        <activity android:name=".ui.meizi.FuliActivity"/>
     </application>
 
 </manifest>

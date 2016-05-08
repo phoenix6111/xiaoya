@@ -167,6 +167,18 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         return true;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.onResume();
+    }
+
     public abstract void collect();
 
     @Override
@@ -206,8 +218,8 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
             webView.removeCallBack();
             webView.removeAllViews();
             webView.setVisibility(View.GONE);
+//            webView.releaseAllWebViewCallback();
             webView.destroy();
-            webView.releaseAllWebViewCallback();
 //            webView = null;
             webviewContainer.removeView(webView);
         }

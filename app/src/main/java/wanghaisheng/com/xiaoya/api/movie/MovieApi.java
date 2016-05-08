@@ -1,5 +1,6 @@
 package wanghaisheng.com.xiaoya.api.movie;
 
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import wanghaisheng.com.xiaoya.api.BaseApi;
 import wanghaisheng.com.xiaoya.beans.MovieList;
@@ -17,8 +18,8 @@ public class MovieApi extends BaseApi{
 
     private MovieService movieService;
 
-    public MovieApi() {
-        super(BASE_URL);
+    public MovieApi(OkHttpClient client) {
+        super(BASE_URL,client);
         movieService = retrofit.create(MovieService.class);
     }
 

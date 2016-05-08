@@ -1,7 +1,6 @@
 package wanghaisheng.com.xiaoya.api.Daily;
 
-import javax.inject.Inject;
-
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import wanghaisheng.com.xiaoya.api.BaseApi;
 import wanghaisheng.com.xiaoya.beans.Daily;
@@ -24,9 +23,8 @@ public class DailyApi extends BaseApi {
 //    public static final String THEME_DAILY_BASE_URL = "http://news-at.zhihu.com/api/4/";
     private DailyService dailyService;
 
-    @Inject
-    public DailyApi() {
-        super(BASE_URL);
+    public DailyApi(OkHttpClient client) {
+        super(BASE_URL,client);
         dailyService = retrofit.create(DailyService.class);
     }
 

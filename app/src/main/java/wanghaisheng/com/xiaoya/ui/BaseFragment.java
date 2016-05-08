@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.AppContext;
+import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.di.component.DaggerFragmentComponent;
 import wanghaisheng.com.xiaoya.di.component.FragmentComponent;
@@ -31,7 +32,8 @@ public abstract class BaseFragment extends Fragment implements BaseFragmentInter
     protected ImageUtil imageUtil;
     @Inject
     protected NetWorkHelper netWorkHelper;
-
+    @Inject
+    Navigator navigator;
 
     //初始化dagger2注入
     public abstract void initInjector();
@@ -44,6 +46,8 @@ public abstract class BaseFragment extends Fragment implements BaseFragmentInter
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mFragmentComponent = DaggerFragmentComponent.builder()
                 .fragmentModule(new FragmentModule(this))
                 .appComponent(((AppContext)getActivity().getApplication()).getAppComponent())
@@ -58,7 +62,6 @@ public abstract class BaseFragment extends Fragment implements BaseFragmentInter
         initView(view);
         initData();
 
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

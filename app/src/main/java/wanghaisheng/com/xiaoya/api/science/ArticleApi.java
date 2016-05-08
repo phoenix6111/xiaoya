@@ -1,5 +1,6 @@
 package wanghaisheng.com.xiaoya.api.science;
 
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import wanghaisheng.com.xiaoya.api.BaseApi;
 import wanghaisheng.com.xiaoya.beans.ArticleResult;
@@ -12,8 +13,8 @@ public class ArticleApi extends BaseApi {
 
     private ArticleService articleService;
 
-    public ArticleApi() {
-        super(ARTICLE_DETAIL_URL);
+    public ArticleApi(OkHttpClient client) {
+        super(ARTICLE_DETAIL_URL,client);
 
         articleService = retrofit.create(ArticleService.class);
     }

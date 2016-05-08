@@ -41,7 +41,7 @@ public class ScienceCollectionFragment extends BaseListFragment<Article> impleme
     public CommonAdapter<Article> initAdapter() {
         mAdapter = new CommonAdapter<Article>(getActivity(), R.layout.science_item_layout,mDatas) {
             @Override
-            public void convert(ViewHolder holder, final Article article) {
+            public void convert(ViewHolder holder, final Article article,int position) {
                 holder.setText(R.id.article_title,article.getTitle());
                 holder.setText(R.id.comment_count,article.getReplies_count()+"");
                 ImageView imageView = holder.getView(R.id.article_image);

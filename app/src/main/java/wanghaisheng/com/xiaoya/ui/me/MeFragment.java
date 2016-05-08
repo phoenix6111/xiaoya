@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.collection.BaseCollectionActivity;
+import wanghaisheng.com.xiaoya.ui.meizi.FuliActivity;
 import wanghaisheng.com.xiaoya.ui.other.BrowserActivity;
 import wanghaisheng.com.xiaoya.ui.setting.SettingActivity;
 
@@ -54,7 +55,7 @@ public class MeFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.collect_card, R.id.feedback, R.id.setup_card, R.id.about_card})
+    @OnClick({R.id.collect_card, R.id.feedback, R.id.setup_card, R.id.about_card,R.id.fuli_card})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.collect_card:
@@ -72,6 +73,10 @@ public class MeFragment extends Fragment {
                 break;
             case R.id.about_card:
                 BrowserActivity.startActivity(getActivity(),"http://justgogo.biz/xiaoya/about");
+                break;
+            case R.id.fuli_card:
+                Intent fuliIntent = new Intent(getActivity(), FuliActivity.class);
+                startActivity(fuliIntent);
                 break;
         }
     }

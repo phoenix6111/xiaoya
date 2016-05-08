@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.SchedulersCompat;
@@ -44,7 +44,6 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
     ScienceData scienceData;
 
     @Inject
-    @Singleton
     public ScienceListPresenter() {}
 
     /**
@@ -56,7 +55,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
 
         LogUtils.d(scienceData.getDataSourceText());
 
-        subscription = scienceData.subscribeData(channel)
+        Subscription subscription = scienceData.subscribeData(channel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Science>() {
                     @Override
@@ -81,6 +80,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                         iView.renderFirstLoadData(science);
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
 
@@ -89,7 +89,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
      * @param channel
      */
     public void loadNewestData(String channel) {
-        subscription = scienceData.network(channel)
+        Subscription subscription = scienceData.network(channel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Science>() {
                     @Override
@@ -107,6 +107,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     private int getResultOffset(Science science) {
@@ -124,7 +125,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
      * @param offset
      */
     public void loadMoreData(String channel, int offset) {
-        subscription = scienceApi.getScienceByChannel(channel, offset, limit)
+        Subscription subscription = scienceApi.getScienceByChannel(channel, offset, limit)
                 .compose(SchedulersCompat.<Science>applyIoSchedulers())
                 .subscribe(new Action1<Science>() {
                     @Override
@@ -143,6 +144,7 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                         }
                     }
                 });
+        compositeSubscription.add(subscription);
     }
 
     private DBArticle convertArticleToDBArticle(Article article) {
@@ -214,17 +216,6 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
         }
 
         return articles;
-    }
-
-    @Override
-    public void detachView() {
-        if (null != subscription) {
-            subscription.unsubscribe();
-        }
-
-        if (null == iView) {
-            iView = null;
-        }
     }
 
 }
