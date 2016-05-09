@@ -60,24 +60,30 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                 .subscribe(new Subscriber<Science>() {
                     @Override
                     public void onCompleted() {
-                        iView.hideLoading();
+                        if(null != iView) {
+                            iView.hideLoading();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         LogUtils.d(e);
-                        iView.hideLoading();
-                        if(e instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            iView.hideLoading();
+                            if(e instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
 
                     @Override
                     public void onNext(Science science) {
-                        iView.hideLoading();
-                        iView.renderFirstLoadData(science);
+                        if (null != iView) {
+                            iView.hideLoading();
+                            iView.renderFirstLoadData(science);
+                        }
                     }
                 });
         compositeSubscription.add(subscription);
@@ -94,16 +100,20 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                 .subscribe(new Action1<Science>() {
                     @Override
                     public void call(Science science) {
-                        iView.refreshComplete(science);
+                        if(null != iView) {
+                            iView.refreshComplete(science);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -130,17 +140,21 @@ public class ScienceListPresenter extends BaseListPresenter<Article, ScienceList
                 .subscribe(new Action1<Science>() {
                     @Override
                     public void call(Science science) {
-                        science.setOffset(getResultOffset(science));
-                        iView.loadMoreComplete(science);
+                        if(null != iView) {
+                            science.setOffset(getResultOffset(science));
+                            iView.loadMoreComplete(science);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable.getStackTrace());
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });

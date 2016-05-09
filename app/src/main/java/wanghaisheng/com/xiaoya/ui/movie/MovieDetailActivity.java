@@ -80,7 +80,7 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
 
     @Override
     public void initView() {
-        initToolbar(mToolbar);
+
     }
 
     @Override

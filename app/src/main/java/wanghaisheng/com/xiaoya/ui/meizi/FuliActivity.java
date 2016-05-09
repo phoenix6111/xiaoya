@@ -8,12 +8,12 @@ import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import wanghaisheng.com.xiaoya.R;
-import wanghaisheng.com.xiaoya.ui.BaseActivity;
+import wanghaisheng.com.xiaoya.ui.BaseSwipeBackActivity;
 
 /**
  * Created by sheng on 2016/5/8.
  */
-public class FuliActivity extends BaseActivity {
+public class FuliActivity extends BaseSwipeBackActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.content)

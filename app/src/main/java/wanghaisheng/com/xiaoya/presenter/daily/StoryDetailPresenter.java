@@ -51,15 +51,19 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
                     public void call(Story story) {
                         String webPageContent = buildPageStr(story);
 //                        LogUtils.v(webPageContent);
-                        iView.renderWebview(webPageContent);
+                        if(null != iView) {
+                            iView.renderWebview(webPageContent);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -141,7 +145,9 @@ public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailV
 
                     @Override
                     public void onNext(StoryCollection storyCollection) {
-                        iView.updateCollectionFlag(null!=storyCollection);
+                        if(null != iView) {
+                            iView.updateCollectionFlag(null!=storyCollection);
+                        }
                     }
                 });
 

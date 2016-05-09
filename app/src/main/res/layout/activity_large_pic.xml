@@ -16,5 +16,10 @@
         android:layout_height="@dimen/actionbar_height"
         android:background="#20000000"
         android:fitsSystemWindows="true"
-        app:titleTextColor="@color/cardview_light_background"/>
+        app:titleTextColor="@color/cardview_light_background">
+        <TextSwitcher
+            android:id="@+id/toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        </android.support.v7.widget.Toolbar>
 </android.support.design.widget.CoordinatorLayout>

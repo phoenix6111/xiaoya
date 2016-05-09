@@ -5,6 +5,7 @@ import android.app.Service;
 import dagger.Component;
 import wanghaisheng.com.xiaoya.di.scopes.PerService;
 import wanghaisheng.com.xiaoya.di.module.ServiceModule;
+import wanghaisheng.com.xiaoya.service.SaveAllImageService;
 
 /**
  * Created by sheng on 2016/4/14.
@@ -16,4 +17,5 @@ public interface ServiceComponent {
 
     Service getServiceContext();
 
+    void inject(SaveAllImageService saveAllImageService);
 }

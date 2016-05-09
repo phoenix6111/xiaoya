@@ -58,24 +58,30 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
             .subscribe(new Subscriber<Daily>() {
                 @Override
                 public void onCompleted() {
-                    iView.hideLoading();
+                    if(null != iView) {
+                        iView.hideLoading();
+                    }
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     LogUtils.d(e);
-                    iView.hideLoading();
-                    if(e instanceof NetworkErrorException) {
-                        iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                    } else {
-                        iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                    if(null != iView) {
+                        iView.hideLoading();
+                        if(e instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 }
 
                 @Override
                 public void onNext(Daily daily) {
-                    iView.hideLoading();
-                    iView.renderFirstLoadData(daily);
+                    if(null != iView) {
+                        iView.hideLoading();
+                        iView.renderFirstLoadData(daily);
+                    }
                 }
             });
 
@@ -93,16 +99,20 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
                 .subscribe(new Action1<Daily>() {
                     @Override
                     public void call(Daily daily) {
-                        iView.refreshComplete(daily);
+                        if(null != iView) {
+                            iView.refreshComplete(daily);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -119,16 +129,20 @@ public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
                 .subscribe(new Action1<Daily>() {
                     @Override
                     public void call(Daily daily) {
-                        iView.loadMoreComplete(daily);
+                        if(null != iView) {
+                            iView.loadMoreComplete(daily);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });

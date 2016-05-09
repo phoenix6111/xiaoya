@@ -44,12 +44,14 @@ public class FeedbackPresenter extends Callback<Result> {
 
     @Override
     public void onResponse(Result response) {
-        if(response.success) {
-            mFeedbackView.postSuccess();
-        } else {
-            mFeedbackView.postFailure(response.msg);
+        if(null != mFeedbackView) {
+            if(response.success) {
+                mFeedbackView.postSuccess();
+            } else {
+                mFeedbackView.postFailure(response.msg);
+            }
+            mFeedbackView.hideLoading();
         }
-        mFeedbackView.hideLoading();
     }
 
 

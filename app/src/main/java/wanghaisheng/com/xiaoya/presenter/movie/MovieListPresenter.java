@@ -49,18 +49,22 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                 .subscribe(new Action1<List<Movie>>() {
                     @Override
                     public void call(List<Movie> movies) {
-                        iView.hideLoading();
-                        iView.renderFirstLoadData(movies);
+                        if(null != iView) {
+                            iView.hideLoading();
+                            iView.renderFirstLoadData(movies);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        iView.hideLoading();
-                        if(throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            iView.hideLoading();
+                            if(throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -78,16 +82,20 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                     @Override
                     public void call(List<Movie> datas) {
 //                        LogUtils.d("loadNewestData........onNext..........");
-                        iView.refreshComplete(datas);
+                        if(null != iView) {
+                            iView.refreshComplete(datas);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -105,16 +113,20 @@ public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView
                 .subscribe(new Action1<MovieList>() {
                     @Override
                     public void call(MovieList movieList) {
-                        iView.loadMoreComplete(movieList.getData().getMovies(),movieList.getData().isHasNext());
+                        if(null != iView) {
+                            iView.loadMoreComplete(movieList.getData().getMovies(),movieList.getData().isHasNext());
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });

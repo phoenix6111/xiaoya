@@ -41,15 +41,21 @@ public class AppConfig {
     public final static String DEFAULT_SAVE_IMAGE_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator
-            + "OSChina"
-            + File.separator + "osc_img" + File.separator;
+            + "xiaoya"
+            + File.separator + "image" + File.separator;
 
     // 默认存放文件下载的路径
     public final static String DEFAULT_SAVE_FILE_PATH = Environment
             .getExternalStorageDirectory()
             + File.separator
-            + "OSChina"
+            + "xiaoya"
             + File.separator + "download" + File.separator;
+
+    public final static String DEFAULT_APP_PATH = Environment
+            .getExternalStorageDirectory()
+            + File.separator
+            + "xiaoya"
+            + File.separator;
 
     private Context mContext;
     private static AppConfig appConfig;

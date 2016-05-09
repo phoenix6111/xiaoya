@@ -61,16 +61,17 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void initView() {
+//        initToolbar(mToolbar);
         fragmentTitle = new String[]{getString(R.string.str_science),getString(R.string.str_daily)
                 ,getString(R.string.str_movie),getString(R.string.str_me)};
-
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(fragmentTitle[0]);
 
         mTabIndicators.add(tabScience);
         mTabIndicators.add(tabDaily);
         mTabIndicators.add(tabMovie);
         mTabIndicators.add(tabMe);
+
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(fragmentTitle[0]);
 
         //默认第一个tab为选中状态
         tabScience.setIconAlpha(1.0f);
@@ -119,8 +120,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     protected boolean isApplyStatusBarColor() {
         return true;
     }
-
-
 
     private void setupOptionsMenu() {
         ViewConfiguration conf = ViewConfiguration.get(this);
@@ -227,7 +226,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPageSelected(int position) {
-        getSupportActionBar().setTitle(fragmentTitle[position]);
+        setTitle(fragmentTitle[position]);
     }
 
     @Override

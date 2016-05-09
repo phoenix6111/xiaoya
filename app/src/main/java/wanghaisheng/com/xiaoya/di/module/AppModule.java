@@ -21,6 +21,7 @@ public class AppModule {
 
     Context context;
 
+    //全局context，使用application context
     public AppModule(Context context) {
         this.context = context;
     }

@@ -3,13 +3,16 @@ package wanghaisheng.com.xiaoya.ui.collection;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import butterknife.Bind;
 import wanghaisheng.com.xiaoya.R;
-import wanghaisheng.com.xiaoya.ui.BaseActivity;
+import wanghaisheng.com.xiaoya.ui.BaseSwipeBackActivity;
 
 /**
  * Created by sheng on 2016/4/19.
  */
-public class BaseCollectionActivity extends BaseActivity {
+public class BaseCollectionActivity extends BaseSwipeBackActivity {
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     public void getDatas(Bundle savedInstanceState) {
@@ -38,7 +41,6 @@ public class BaseCollectionActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         initToolbar(mToolbar);
         setTitle("收藏");
     }

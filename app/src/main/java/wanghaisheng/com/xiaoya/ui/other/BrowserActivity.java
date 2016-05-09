@@ -9,7 +9,6 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import javax.inject.Inject;
 
@@ -115,14 +114,8 @@ public class BrowserActivity extends BaseSwipeBackActivity{
 
     @Override
     public void initView() {
+        initToolbar(toolbar);
 
-        initToolBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         url = getIntent().getStringExtra("url");
         mFragment = BrowserFragment.newInstance(url, "");
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();

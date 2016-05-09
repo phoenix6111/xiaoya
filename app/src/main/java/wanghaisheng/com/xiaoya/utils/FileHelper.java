@@ -1,14 +1,26 @@
 package wanghaisheng.com.xiaoya.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
+
+import com.apkfuns.logutils.LogUtils;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sll on 2015/3/7.
@@ -21,7 +33,7 @@ public class FileHelper {
         this.context = context;
     }
 
-    public boolean hasSDCard() {
+    public static boolean hasSDCard() {
         boolean mHasSDcard = false;
         if (Environment.MEDIA_MOUNTED.endsWith(Environment.getExternalStorageState())) {
             mHasSDcard = true;
@@ -35,7 +47,7 @@ public class FileHelper {
     public String getSdcardPath() {
 
         if (hasSDCard())
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
+            return Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator;
 
         return "/sdcard/";
     }
@@ -142,6 +154,54 @@ public class FileHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Observable<Uri> saveImagesAndGetPathObservable(final String url, final String foldername, final String name) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = Picasso.with(context).load(url).get();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+                if (bitmap == null) {
+                    subscriber.onError(new Exception("无法下载到图片"));
+                }
+                subscriber.onNext(bitmap);
+                subscriber.onCompleted();
+            }
+        }).flatMap(new Func1<Bitmap, Observable<Uri>>() {
+            @Override
+            public Observable<Uri> call(Bitmap bitmap) {
+                LogUtils.d(bitmap.getByteCount());
+                return Observable.just(saveimages(bitmap, foldername, name));
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Uri saveimages(Bitmap bm, String foldername, String name) {
+        File appDir = new File(AppConfig.DEFAULT_SAVE_IMAGE_PATH, foldername);
+        if (!appDir.exists()) {
+            appDir.mkdirs();
+        }
+        File file = new File(appDir, name + ".jpg");
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Uri uri = Uri.fromFile(file);
+        // 通知图库更新
+        Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+        context.sendBroadcast(scannerIntent);
+        return uri;
     }
 }
 

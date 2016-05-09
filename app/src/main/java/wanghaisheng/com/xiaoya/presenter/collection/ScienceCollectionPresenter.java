@@ -45,21 +45,27 @@ public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollect
                 .subscribe(new Subscriber<List<Article>>() {
                     @Override
                     public void onCompleted() {
-                        iView.hideLoading();
+                        if(null != iView) {
+                            iView.hideLoading();
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         LogUtils.v(e);
-                        iView.hideLoading();
-                        iView.error("数据访问异常，请稍后重试");
+                        if(null != iView) {
+                            iView.hideLoading();
+                            iView.error("数据访问异常，请稍后重试");
+                        }
                     }
 
                     @Override
                     public void onNext(List<Article> articles) {
                         /*LogUtils.v(TAG,"print ScienceCollectionPresenter................");
                         LogUtils.v(articles);*/
-                        iView.renderArticles(page,articles);
+                        if(null != iView) {
+                            iView.renderArticles(page,articles);
+                        }
                     }
                 });
 

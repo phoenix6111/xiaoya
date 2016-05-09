@@ -50,14 +50,18 @@ public class DailyCollectionPresenter extends Presenter<Story,DailyCollectionVie
             @Override
             public void onCompleted() {
 //                LogUtils.v(TAG,"execute onCompleted.....................................");
-                iView.hideLoading();
+                if(null != iView) {
+                    iView.hideLoading();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 LogUtils.d(e);
-                iView.error("数据访问异常，请稍后重试");
-                iView.hideLoading();
+                if(null != iView) {
+                    iView.error("数据访问异常，请稍后重试");
+                    iView.hideLoading();
+                }
             }
 
             @Override

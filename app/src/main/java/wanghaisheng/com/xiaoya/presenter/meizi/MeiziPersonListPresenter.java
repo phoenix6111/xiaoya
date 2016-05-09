@@ -1,5 +1,7 @@
 package wanghaisheng.com.xiaoya.presenter.meizi;
 
+import android.accounts.NetworkErrorException;
+
 import com.apkfuns.logutils.LogUtils;
 
 import java.util.ArrayList;
@@ -14,8 +16,8 @@ import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
 import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
 import wanghaisheng.com.xiaoya.db.Content;
-import wanghaisheng.com.xiaoya.presenter.ErrorHandlerAction;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
+import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 
 /**
  * Created by sheng on 2016/5/7.
@@ -36,17 +38,30 @@ public class MeiziPersonListPresenter extends BaseListPresenter<Content,MeiziPer
         Subscription subscription = meiziData.loadFromNetwork(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Content>() {
-                    @Override
-                    public void call(Content content) {
-                        iView.hideLoading();
-                        iView.renderNetworkData(content);
-                        contents.add(content);
-                    }
-                }, new ErrorHandlerAction(iView)
-                , new Action0() {
+                               @Override
+                               public void call(Content content) {
+                                   if (null != iView) {
+                                       iView.hideLoading();
+                                       iView.renderNetworkData(content);
+                                   }
+                                   contents.add(content);
+                               }
+                           }, new Action1<Throwable>() {
+                               @Override
+                               public void call(Throwable throwable) {
+                                   if(null != iView) {
+                                       if (throwable instanceof NetworkErrorException) {
+                                           iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                                       } else {
+                                           iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                                       }
+                                   }
+                               }
+                           }
+                        , new Action0() {
                             @Override
                             public void call() {
-                                meiziData.saveToCache(contents,groupId);
+                                meiziData.saveToCache(contents, groupId);
                             }
                         });
         compositeSubscription.add(subscription);
@@ -59,9 +74,20 @@ public class MeiziPersonListPresenter extends BaseListPresenter<Content,MeiziPer
                 .subscribe(new Action1<List<Content>>() {
                     @Override
                     public void call(List<Content> contents) {
-                        iView.renderCacheData(contents);
+                        if(null != iView) {
+                            iView.renderCacheData(contents);
+                        }
                     }
-                },new ErrorHandlerAction(iView));
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if (throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
+                    }
+                });
         compositeSubscription.add(subscription);
     }
 

@@ -50,17 +50,21 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
                     @Override
                     public void call(ArticleResult result) {
 //                        LogUtils.v(article);
-                        String webPageStr = buildPageStr(result.getResult());
+                        if(null != iView) {
+                            String webPageStr = buildPageStr(result.getResult());
 //                        LogUtils.v(webPageStr);
-                        iView.renderWebview(webPageStr);
+                            iView.renderWebview(webPageStr);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });

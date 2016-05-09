@@ -21,10 +21,12 @@ public class ErrorHandlerAction implements Action1<Throwable> {
     @Override
     public void call(Throwable throwable) {
         LogUtils.d(throwable);
-        if (throwable instanceof NetworkErrorException) {
-            mBaseView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-        } else {
-            mBaseView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+        if(null != mBaseView) {
+            if (throwable instanceof NetworkErrorException) {
+                mBaseView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+            } else {
+                mBaseView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+            }
         }
     }
 }

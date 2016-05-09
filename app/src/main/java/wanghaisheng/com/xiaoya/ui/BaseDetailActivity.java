@@ -1,23 +1,20 @@
 package wanghaisheng.com.xiaoya.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
 import com.apkfuns.logutils.LogUtils;
-
-import java.lang.reflect.Field;
 
 import javax.inject.Inject;
 
@@ -36,6 +33,8 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     @Bind(R.id.empty_layout)
     protected EmptyLayout emptyLayout;
     protected int mStoreEmptyState = -1;//保存EmptyLayout的状态信息
+    @Bind(R.id.toolbar)
+    protected Toolbar mToolbar;
 
     protected XiaoYaWebView webView;
     @Bind(R.id.webview_container)
@@ -50,8 +49,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setConfigCallback((WindowManager)getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+        initToolbar(mToolbar);
 
         mActivityComponent.inject(this);
 
@@ -218,33 +216,12 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
             webView.removeCallBack();
             webView.removeAllViews();
             webView.setVisibility(View.GONE);
-//            webView.releaseAllWebViewCallback();
             webView.destroy();
 //            webView = null;
             webviewContainer.removeView(webView);
         }
 
-        setConfigCallback(null);
-
         super.onDestroy();
     }
 
-    public void setConfigCallback(WindowManager windowManager) {
-        try {
-            Field field = WebView.class.getDeclaredField("mWebViewCore");
-            field = field.getType().getDeclaredField("mBrowserFrame");
-            field = field.getType().getDeclaredField("sConfigCallback");
-            field.setAccessible(true);
-            Object configCallback = field.get(null);
-
-            if (null == configCallback) {
-                return;
-            }
-
-            field = field.getType().getDeclaredField("mWindowManager");
-            field.setAccessible(true);
-            field.set(configCallback, windowManager);
-        } catch(Exception e) {
-        }
-    }
 }

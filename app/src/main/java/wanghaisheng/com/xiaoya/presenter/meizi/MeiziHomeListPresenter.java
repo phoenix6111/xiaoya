@@ -15,7 +15,6 @@ import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
 import wanghaisheng.com.xiaoya.datasource.MeiziData;
 import wanghaisheng.com.xiaoya.db.Group;
-import wanghaisheng.com.xiaoya.presenter.ErrorHandlerAction;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 
@@ -40,18 +39,22 @@ public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeLis
             .subscribe(new Action1<List<Group>>() {
                 @Override
                 public void call(List<Group> groups) {
-                    iView.hideLoading();
-                    iView.renderFirstLoadData(groups);
+                    if(null != iView) {
+                        iView.hideLoading();
+                        iView.renderFirstLoadData(groups);
+                    }
                 }
             }, new Action1<Throwable>() {
                 @Override
                 public void call(Throwable throwable) {
                     LogUtils.d(throwable);
-                    iView.hideLoading();
-                    if(throwable instanceof NetworkErrorException) {
-                        iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                    } else {
-                        iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                    if(null != iView) {
+                        iView.hideLoading();
+                        if(throwable instanceof NetworkErrorException) {
+                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                        } else {
+                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        }
                     }
                 }
             });
@@ -68,16 +71,20 @@ public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeLis
                     @Override
                     public void call(List<Group> datas) {
 //                        LogUtils.d("loadNewestData........onNext..........");
-                        iView.refreshComplete(datas);
+                        if(null != iView) {
+                            iView.refreshComplete(datas);
+                        }
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
                         LogUtils.d(throwable);
-                        if (throwable instanceof NetworkErrorException) {
-                            iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                        } else {
-                            iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
                         }
                     }
                 });
@@ -97,9 +104,22 @@ public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeLis
                 .subscribe(new Action1<List<Group>>() {
                     @Override
                     public void call(List<Group> datas) {
-                        iView.loadMoreComplete(datas);
+                        if (null != iView) {
+                            iView.loadMoreComplete(datas);
+                        }
                     }
-                }, new ErrorHandlerAction(iView));
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
+                            }
+                        }
+                    }
+                });
         compositeSubscription.add(subscription);
     }
 }

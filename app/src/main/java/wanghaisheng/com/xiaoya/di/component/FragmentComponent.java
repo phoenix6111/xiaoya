@@ -11,6 +11,7 @@ import wanghaisheng.com.xiaoya.ui.collection.DailyCollectionFragment;
 import wanghaisheng.com.xiaoya.ui.collection.ScienceCollectionFragment;
 import wanghaisheng.com.xiaoya.ui.daily.StoryListFragment;
 import wanghaisheng.com.xiaoya.ui.meizi.MeiziHomeListFragment;
+import wanghaisheng.com.xiaoya.ui.meizi.MeiziLargePicFragment;
 import wanghaisheng.com.xiaoya.ui.meizi.MeiziPersonListFragment;
 import wanghaisheng.com.xiaoya.ui.movie.MovieListFragment;
 import wanghaisheng.com.xiaoya.ui.other.BrowserFragment;
@@ -48,5 +49,7 @@ public interface FragmentComponent {
     void inject(MeiziHomeListFragment meiziHomeListFragment);
 
     void inject(MeiziPersonListFragment meiziPersonListFragment);
+
+    void inject(MeiziLargePicFragment meiziLargePicFragment);
 
 }

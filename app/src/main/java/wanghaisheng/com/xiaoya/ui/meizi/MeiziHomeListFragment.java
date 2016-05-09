@@ -1,6 +1,10 @@
 package wanghaisheng.com.xiaoya.ui.meizi;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -22,6 +26,7 @@ import wanghaisheng.com.xiaoya.presenter.meizi.MeiziHomeListPresenter;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziHomeListView;
 import wanghaisheng.com.xiaoya.ui.BaseListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
+import wanghaisheng.com.xiaoya.utils.ViewUtils;
 import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
 
 /**
@@ -61,7 +66,7 @@ public class MeiziHomeListFragment extends BaseListFragment<Group> implements Me
             @Override
             public void convert(ViewHolder holder, final Group group,int position) {
                 holder.setText(R.id.meizi_tv_title,group.getTitle());
-                RadioImageView imageView = holder.getView(R.id.meizi_img);
+                final RadioImageView imageView = holder.getView(R.id.meizi_img);
                 imageView.setOriginalSize(group.getWidth(), group.getHeight());
                 Picasso.with(getActivity()).load(group.getImageurl())
                         .tag("1")
@@ -71,15 +76,26 @@ public class MeiziHomeListFragment extends BaseListFragment<Group> implements Me
                 holder.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(MeiziPersonListActivity.ARG_COLOR,0);
-                        bundle.putString(MeiziPersonListActivity.ARG_GROUPID,group.getGroupid());
+                        Intent intent = new Intent(getActivity(),MeiziPersonListActivity.class);
+
+                        Bitmap bitmap = null;
+                        BitmapDrawable bd = (BitmapDrawable) imageView.getDrawable();
+                        if (bd != null) {
+                            bitmap = bd.getBitmap();
+                        }
+
+                        intent.putExtra(MeiziPersonListActivity.ARG_GROUPID,group.getGroupid());
                         LogUtils.d("meizihomelistfragment....groupid.."+group.getGroupid());
-                        bundle.putString(MeiziPersonListActivity.ARG_TITLE,group.getTitle());
-                        bundle.putString(MeiziPersonListActivity.ARG_URL,group.getUrl());
-
-                        navigator.openMeiziPersonListActivity(getActivity(),bundle);
-
+                        intent.putExtra(MeiziPersonListActivity.ARG_TITLE,group.getTitle());
+                        intent.putExtra(MeiziPersonListActivity.ARG_URL,group.getUrl());
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(v, bitmap, 0, 0);
+                        navigator.start(getActivity(),intent,options.toBundle());
+                        if (bitmap != null && !bitmap.isRecycled()) {
+                            intent.putExtra(MeiziPersonListActivity.COLOR, ViewUtils.getPaletteColor(bitmap));
+                        }
+//                        Intent intent = new Intent(getActivity(),MeiziPersonListActivity.class);
+//                        intent.putExtras(bundle);
+//                        startActivity(intent);
                     }
                 });
             }

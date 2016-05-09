@@ -57,7 +57,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     protected ActivityComponent mActivityComponent;
 
-    protected Toolbar mToolbar;
     protected LayoutInflater mInflater;
 
     protected boolean _isVisiable;

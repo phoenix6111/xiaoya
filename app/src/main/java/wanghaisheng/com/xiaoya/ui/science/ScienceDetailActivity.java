@@ -2,7 +2,6 @@ package wanghaisheng.com.xiaoya.ui.science;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -105,8 +104,7 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
 
     @Override
     public void initView() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        initToolbar(mToolbar);
+
     }
 
     @Override

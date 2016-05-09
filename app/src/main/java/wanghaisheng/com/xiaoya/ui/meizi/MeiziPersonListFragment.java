@@ -1,11 +1,13 @@
 package wanghaisheng.com.xiaoya.ui.meizi;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.apkfuns.logutils.LogUtils;
 import com.squareup.picasso.Picasso;
@@ -22,6 +24,7 @@ import wanghaisheng.com.xiaoya.db.Content;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziPersonListPresenter;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziPersonListView;
+import wanghaisheng.com.xiaoya.service.SaveAllImageService;
 import wanghaisheng.com.xiaoya.ui.BaseListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
@@ -29,9 +32,10 @@ import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
 /**
  * Created by sheng on 2016/5/7.
  */
-public class MeiziPersonListFragment extends BaseListFragment<Content> implements MeiziPersonListView{
+public class MeiziPersonListFragment extends BaseListFragment<Content> implements MeiziPersonListView,PagerResultView,ISaveAllImage{
 //    private String url;
     private String groupId;
+    private String title;
 
     private boolean hasload = false;
 
@@ -39,14 +43,16 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     MeiziPersonListPresenter presenter;
     @Inject
     Navigator navigator;
+
     private Picasso picasso;
 
-    public static MeiziPersonListFragment newInstance(String url,String groupId) {
+    public static MeiziPersonListFragment newInstance(String url,String groupId,String title) {
         LogUtils.d("MeiziPersonFragment  new groupId...."+groupId);
         MeiziPersonListFragment fragment = new MeiziPersonListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(MeiziPersonListActivity.ARG_URL,url);
         bundle.putString(MeiziPersonListActivity.ARG_GROUPID,groupId);
+        bundle.putString(MeiziPersonListActivity.ARG_TITLE,title);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -116,6 +122,7 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     public void getSavedBundle(Bundle bundle) {
 //        url = getArguments().getString(MeiziPersonListActivity.ARG_URL);
         groupId = getArguments().getString(MeiziPersonListActivity.ARG_GROUPID);
+        title = getArguments().getString(MeiziPersonListActivity.ARG_TITLE);
     }
 
     @Override
@@ -179,5 +186,35 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
             presenter.detachView();
             this.presenter = null;
         }
+    }
+
+    @Override
+    public void handlerResult(Bundle reenterState) {
+        myRecyclerView.scrollToPosition(reenterState.getInt(MeiziLargePicActivity.ARG_INEX, 0));
+        myRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                myRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                myRecyclerView.requestLayout();
+                getActivity().supportStartPostponedEnterTransition();
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void saveAllImage() {
+        LogUtils.d("fragment 一键保存");
+        ArrayList<String> urls = new ArrayList<>();
+        for(Content con : mDatas) {
+            urls.add(con.getUrl());
+        }
+
+        Intent saveIntent = new Intent(getActivity(),SaveAllImageService.class);
+        saveIntent.putExtra(SaveAllImageService.ARG_TITLE,title);
+        saveIntent.putExtra(SaveAllImageService.ARG_GROUPID,groupId);
+        saveIntent.putStringArrayListExtra(SaveAllImageService.ARG_URLS,urls);
+
+        getActivity().startService(saveIntent);
     }
 }

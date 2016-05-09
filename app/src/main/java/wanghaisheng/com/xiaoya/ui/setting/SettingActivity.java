@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.ui.BaseActivity;
 
@@ -42,8 +41,8 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        ButterKnife.bind(this);
         initToolbar(toolbar);
+        setTitle(R.string.setting);
     }
 
     @Override
