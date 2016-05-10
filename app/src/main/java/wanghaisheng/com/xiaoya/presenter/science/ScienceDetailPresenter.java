@@ -135,20 +135,15 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceD
 
         Subscription subscription = articleCollectionObservable.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<ArticleCollection>() {
+                                .subscribe(new Action1<ArticleCollection>() {
                                     @Override
-                                    public void onCompleted() {
-
+                                    public void call(ArticleCollection articleCollection) {
+                                        iView.updateCollectionFlag(null != articleCollection);
                                     }
-
+                                }, new Action1<Throwable>() {
                                     @Override
-                                    public void onError(Throwable e) {
-                                        LogUtils.d(e.getMessage());
-                                    }
-
-                                    @Override
-                                    public void onNext(ArticleCollection articleCollection) {
-                                        iView.updateCollectionFlag(null!=articleCollection);
+                                    public void call(Throwable throwable) {
+                                        LogUtils.d(throwable);
                                     }
                                 });
 

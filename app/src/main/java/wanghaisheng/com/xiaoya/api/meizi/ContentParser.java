@@ -11,26 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wanghaisheng.com.xiaoya.beans.GroupResult;
-import wanghaisheng.com.xiaoya.db.Content;
 import wanghaisheng.com.xiaoya.db.Group;
 
 /**
- * Created by Mr_Wrong on 15/9/14.
  * 解析具体大图页面
  */
 public class ContentParser {
-
-    public static Content ParserContent(String html) {
-        Content content = new Content();
-        Document doc = Jsoup.parse(html);
-        Elements links = doc.select("img[src~=(?i)\\.(png|jpe?g)]");
-
-        Element element = links.get(1).getElementsByTag("img").first();
-
-        content.setUrl(element.attr("src"));
-        content.setTitle(element.attr("alt"));
-        return content;
-    }
 
     public static List<Group> parseGroups(String html) {
         List<Group> list = new ArrayList<>();
@@ -81,10 +67,11 @@ public class ContentParser {
 
         Element imgElem = doc.select("div.main-image img").get(0);
         String imgUrl = imgElem.attr("src");
+        Element titleElem = doc.select(".main-title").get(0);
+        String title = titleElem.text();
 
-        return new GroupResult(pageSize,imgUrl);
+        return new GroupResult(pageSize,imgUrl,title);
 
-//        return Integer.parseInt(stringBuffer.toString().substring(1));
     }
 
     private static String url2groupid(String url) {

@@ -44,8 +44,6 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     @Inject
     Navigator navigator;
 
-    private Picasso picasso;
-
     public static MeiziPersonListFragment newInstance(String url,String groupId,String title) {
         LogUtils.d("MeiziPersonFragment  new groupId...."+groupId);
         MeiziPersonListFragment fragment = new MeiziPersonListFragment();
@@ -64,7 +62,7 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
             public void convert(ViewHolder holder, final Content content, final int position) {
                 if(null != content) {
                     RadioImageView imageView = holder.getView(R.id.meizi_img);
-                    //imageView.setOriginalSize(content.getImagewidth(), content.getImageheight());
+                    imageView.setOriginalSize(content.getImagewidth(), content.getImageheight());
                     Picasso.with(getActivity()).load(content.getUrl())
                             .tag("1").config(Bitmap.Config.RGB_565)
                             .into(imageView);
@@ -140,11 +138,12 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
         if(null != presenter) {
             presenter.attachView(this);
 
-            if(presenter.isCacheExist(groupId)) {
+            /*if(presenter.isCacheExist(groupId)) {
                 presenter.loadFromCache(groupId);
             } else {
                 presenter.loadFromNet(groupId);
-            }
+            }*/
+            presenter.loadFromCache(groupId);
         }
 
         //因为个人的图片信息有限，故是一次全部加载进mdatas，不设置加载更多
@@ -160,12 +159,19 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
         }
     }
 
+    /**
+     * 先从数据库加载，如数据库没有则从网络加载
+     * @param datas
+     */
     @Override
     public void renderCacheData(List<Content> datas) {
         if(!ListUtils.isEmpty(datas)) {
             mDatas.clear();
             mDatas.addAll(datas);
             mAdapter.notifyDataSetChanged();
+        } else {
+            LogUtils.d("db empty........");
+            presenter.loadFromNet(groupId);
         }
     }
 

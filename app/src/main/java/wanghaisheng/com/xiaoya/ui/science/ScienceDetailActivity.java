@@ -80,11 +80,6 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
     }
 
     @Override
-    public void onUpdatePager(int page, int total) {
-
-    }
-
-    @Override
     protected void onDestroy() {
         if(null != presenter) {
             presenter.detachView();

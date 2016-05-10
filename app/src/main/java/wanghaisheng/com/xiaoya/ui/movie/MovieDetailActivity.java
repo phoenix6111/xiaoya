@@ -59,11 +59,6 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
 
 
     @Override
-    public void onUpdatePager(int page, int total) {
-
-    }
-
-    @Override
     public void onScroll(int dx, int dy) {
         LogUtils.d("dx===>"+dx+"........dy===>"+dy);
     }

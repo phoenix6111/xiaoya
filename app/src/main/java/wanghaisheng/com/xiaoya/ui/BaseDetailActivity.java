@@ -10,11 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-
-import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
 
@@ -28,7 +25,7 @@ import wanghaisheng.com.xiaoya.widget.XiaoYaWebView;
 /**
  * Created by sheng on 2016/4/15.
  */
-public abstract class BaseDetailActivity extends BaseSwipeBackActivity implements XiaoYaWebView.XiaoYaWebViewCallBack,BaseDetailView {
+public abstract class BaseDetailActivity extends BaseSwipeBackActivity implements BaseDetailView {
 
     @Bind(R.id.empty_layout)
     protected EmptyLayout emptyLayout;
@@ -60,8 +57,6 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         webView.setBackgroundColor(ContextCompat.getColor(mAppContext,R.color.window_color));
         webviewContainer.removeAllViews();
         webviewContainer.addView(webView);
-
-        webView.setCallBack(this);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -186,19 +181,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         Snackbar.make(webView,"Add it to collection successful",Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onFinish() {
-        //setTitle(webView.getTitle());
-        //this.hideLoading();
-    }
-
     public abstract void onReloadClick();
-
-    @Override
-    public void onError(WebResourceError error) {
-        LogUtils.v("web view onerror.................");
-        error(ERROR_TYPE_NODATA_ENABLE_CLICK,null);
-    }
 
     public void uncollectSuccess() {
         isCollected = false;
@@ -214,11 +197,11 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
     protected void onDestroy() {
         if(webView!=null) {
             webView.removeCallBack();
-            webView.removeAllViews();
             webView.setVisibility(View.GONE);
+            webView.removeAllViews();
             webView.destroy();
-//            webView = null;
-            webviewContainer.removeView(webView);
+
+            webviewContainer.removeAllViews();
         }
 
         super.onDestroy();

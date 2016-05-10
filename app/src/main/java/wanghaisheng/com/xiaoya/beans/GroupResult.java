@@ -6,13 +6,23 @@ package wanghaisheng.com.xiaoya.beans;
 public class GroupResult {
     private int count;
     private String indexImageUrl;
+    private String title;
 
     public GroupResult() {
     }
 
-    public GroupResult(int count, String indexImageUrl) {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public GroupResult(int count, String indexImageUrl,String title) {
         this.count = count;
         this.indexImageUrl = indexImageUrl;
+        this.title = title;
     }
 
     public String getIndexImageUrl() {

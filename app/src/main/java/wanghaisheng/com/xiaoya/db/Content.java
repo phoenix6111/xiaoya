@@ -5,7 +5,6 @@ package wanghaisheng.com.xiaoya.db;
  * Entity mapped to table "CONTENT".
  */
 public class Content implements java.io.Serializable {
-
     private Long id;
     private Integer imagewidth;
     private Integer imageheight;

@@ -13,7 +13,6 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Observable;
-import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import wanghaisheng.com.xiaoya.api.converter.MeiziGroupConverter;
@@ -62,14 +61,12 @@ public class MeiziApi {
                             group.setType(type);
                             datas.add(group);
                         }
-                        groups = null;
                         return datas;
                     }
                 });
     }
 
     public Observable<Content> getContents(final String groupid) {
-
         final Observable<Content> temp = getPersonListResult(groupid)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<GroupResult, List<Content>>() {
@@ -93,61 +90,19 @@ public class MeiziApi {
                     public Observable<Content> call(List<Content> contents) {
                         return Observable.from(contents);
                     }
-                }).map(new Func1<Content, Content>() {
-                    @Override
-                    public Content call(Content content) {
-                        /*try {
-                            content = handleContent(content,groupid);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
-                        return content;
-                    }
-                }).doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        //当取消订阅的时候，取消没有完成的加载图片信息的请求
-                        OkHttpUtils.getInstance().cancelTag(LOAD_IMAGE_INFO_TAG);
-                    }
                 });
 
         return temp;
-        /*Observable<List<Content>> observable = Observable.create(new Observable.OnSubscribe<List<Content>>() {
-            @Override
-            public void call(final Subscriber<? super List<Content>> subscriber) {
-                final List<Content> contents = new ArrayList<Content>();
-                temp.observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<Content>() {
-                            @Override
-                            public void onCompleted() {
-                                subscriber.onNext(contents);
-                                subscriber.onCompleted();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
-
-                            @Override
-                            public void onNext(Content content) {
-                                contents.add(content);
-                            }
-                        });
-            }
-        });*/
-
-//        return observable;
     }
 
     private Content handleContent(Content content,String groupId) throws IOException {
-
-        Response response = OkHttpUtils.getInstance(okHttpClient).get().url(content.getUrl()).tag(LOAD_IMAGE_INFO_TAG).build().execute();
+        Response response = OkHttpUtils.get().url(content.getUrl()).tag(LOAD_IMAGE_INFO_TAG).build().execute();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(response.body().byteStream(), null, options);
         content.setImagewidth(options.outWidth);
         content.setImageheight(options.outHeight);
+
         return content;
     }
 

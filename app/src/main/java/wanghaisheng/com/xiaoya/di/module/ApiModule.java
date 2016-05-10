@@ -13,10 +13,11 @@ import wanghaisheng.com.xiaoya.api.science.ArticleApi;
 import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.datasource.DailyData;
-import wanghaisheng.com.xiaoya.datasource.MeiziData;
+import wanghaisheng.com.xiaoya.datasource.MeiziHomeData;
 import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
 import wanghaisheng.com.xiaoya.datasource.MovieData;
 import wanghaisheng.com.xiaoya.datasource.ScienceData;
+import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.utils.RequestHelper;
 import wanghaisheng.com.xiaoya.utils.SettingPrefHelper;
 
@@ -83,14 +84,14 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public MeiziData provideMeiziData(CacheManager cacheManager, MeiziApi meiziApi) {
-        return new MeiziData(cacheManager,meiziApi);
+    public MeiziHomeData provideMeiziData(CacheManager cacheManager, MeiziApi meiziApi) {
+        return new MeiziHomeData(cacheManager,meiziApi);
     }
 
     @Provides
     @Singleton
-    public MeiziPersonData provideMeiziPersonData(CacheManager cacheManager,MeiziApi meiziApi) {
-        return new MeiziPersonData(cacheManager,meiziApi);
+    public MeiziPersonData provideMeiziPersonData(CacheManager cacheManager, MeiziApi meiziApi, ContentDao contentDao) {
+        return new MeiziPersonData(cacheManager,meiziApi,contentDao);
     }
 
 }

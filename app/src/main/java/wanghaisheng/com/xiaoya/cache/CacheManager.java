@@ -15,6 +15,7 @@ import java.io.Serializable;
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.utils.NetWorkHelper;
+import wanghaisheng.com.xiaoya.utils.TDevice;
 
 public class CacheManager {
 
@@ -123,16 +124,15 @@ public class CacheManager {
     public boolean isCacheDataFailure(String cachefile) {
         File data = mContext.getFileStreamPath(cachefile);
         if (!data.exists()) {
-
             return false;
         }
         long existTime = System.currentTimeMillis() - data.lastModified();
         boolean failure = false;
-        /*if (TDevice.getNetworkType() == TDevice.NETTYPE_WIFI) {
+        if (TDevice.getNetworkType() == TDevice.NETTYPE_WIFI) {
             failure = existTime > wifi_cache_time ? true : false;
         } else {
             failure = existTime > other_cache_time ? true : false;
-        }*/
+        }
         return failure;
     }
 }

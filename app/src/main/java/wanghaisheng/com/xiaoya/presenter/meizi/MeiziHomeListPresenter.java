@@ -13,7 +13,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.SchedulersCompat;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
-import wanghaisheng.com.xiaoya.datasource.MeiziData;
+import wanghaisheng.com.xiaoya.datasource.MeiziHomeData;
 import wanghaisheng.com.xiaoya.db.Group;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
@@ -24,7 +24,7 @@ import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeListView> {
 
     @Inject
-    MeiziData meiziData;
+    MeiziHomeData meiziHomeData;
     @Inject
     MeiziApi meiziApi;
 
@@ -34,7 +34,7 @@ public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeLis
     public void firstLoadData(String channel) {
         iView.showLoading();
 
-        Subscription subscription = meiziData.subscribeData(channel)
+        Subscription subscription = meiziHomeData.subscribeData(channel)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Action1<List<Group>>() {
                 @Override
@@ -65,7 +65,7 @@ public class MeiziHomeListPresenter extends BaseListPresenter<Group,MeiziHomeLis
      * 加载最新数据
      */
     public void loadNewestData(String channel) {
-        Subscription subscription = meiziData.network(channel)
+        Subscription subscription = meiziHomeData.network(channel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Group>>() {
                     @Override

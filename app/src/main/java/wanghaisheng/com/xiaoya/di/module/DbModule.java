@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
+import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
 import wanghaisheng.com.xiaoya.db.DaoMaster;
@@ -72,6 +73,12 @@ public class DbModule {
     @Singleton
     MovieCollectionDao provideMovieCollectionDao(DaoSession session) {
         return session.getMovieCollectionDao();
+    }
+
+    @Provides
+    @Singleton
+    ContentDao provideContentDao(DaoSession daoSession) {
+        return daoSession.getContentDao();
     }
 
 

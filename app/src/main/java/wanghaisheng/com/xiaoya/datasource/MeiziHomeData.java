@@ -16,13 +16,13 @@ import wanghaisheng.com.xiaoya.utils.ListUtils;
 /**
  * Created by sheng on 2016/5/7.
  */
-public class MeiziData extends Data {
+public class MeiziHomeData extends Data {
     List<Group>[] cache = new List[MeiziApi.CHANNEL_TAG.length];
 
     private CacheManager cacheManager;
     private MeiziApi meiziApi;
 
-    public MeiziData(CacheManager cacheManager,MeiziApi meiziApi) {
+    public MeiziHomeData(CacheManager cacheManager, MeiziApi meiziApi) {
         this.cacheManager = cacheManager;
         this.meiziApi = meiziApi;
     }
@@ -57,7 +57,7 @@ public class MeiziData extends Data {
             @Override
             public void call(Subscriber<? super List<Group>> subscriber) {
 //                LogUtils.d("load from disk");
-                if(cacheManager.isExistDataCache(cacheKey)) {
+                if(cacheManager.isExistDataCache(cacheKey)&&cacheManager.isCacheDataFailure(cacheKey)) {
                     List<Group> items = (List<Group>) cacheManager.readObject(cacheKey);
                     subscriber.onNext(items);
                     subscriber.onCompleted();
@@ -89,9 +89,7 @@ public class MeiziData extends Data {
      */
     public Observable<List<Group>> network(final String channel) {
         //获取channel在channel_tag数组中的索引
-//        int i = Arrays.binarySearch(DailyApi.THEME_ID,themeId);
         final int i = getIndex(channel);
-//        LogUtils.d("channel.............."+channel);
         final String tempChannel = (channel.equals("home"))?"":channel;
 
         return meiziApi.getGroup(tempChannel, 1)
@@ -107,8 +105,6 @@ public class MeiziData extends Data {
                     }
                 });
 
-
-
     }
 
     /**
@@ -118,7 +114,7 @@ public class MeiziData extends Data {
      */
     public Observable<List<Group>> subscribeData(String channel) {
         return Observable.concat(momory(channel)
-//                ,disk(channel)
+                ,disk(channel)
                 ,network(channel))
                 .first(new Func1<List<Group>, Boolean>() {
                     @Override

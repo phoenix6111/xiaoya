@@ -11,9 +11,11 @@ import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import wanghaisheng.com.xiaoya.Exception.NoDataException;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
 import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.db.Content;
+import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 
 /**
@@ -25,11 +27,12 @@ public class MeiziPersonData extends Data {
 
     private CacheManager cacheManager;
     private MeiziApi meiziApi;
+    private ContentDao contentDao;
 
-    public MeiziPersonData(CacheManager cacheManager,MeiziApi meiziApi) {
+    public MeiziPersonData(CacheManager cacheManager,MeiziApi meiziApi,ContentDao contentDao) {
         this.cacheManager = cacheManager;
         this.meiziApi = meiziApi;
-
+        this.contentDao = contentDao;
     }
 
     /**
@@ -59,21 +62,27 @@ public class MeiziPersonData extends Data {
      * disk级缓存
      * @return
      */
-    public Observable<List<Content>> disk(final String groupId) {
-        final String cacheKey = getCacheKey(groupId);
+    public Observable<List<Content>> database(final String groupId) {
         Observable<List<Content>> observable = Observable.create(new Observable.OnSubscribe<List<Content>>() {
             @Override
             public void call(Subscriber<? super List<Content>> subscriber) {
 //                LogUtils.d("load from disk");
-                if(cacheManager.isExistDataCache(cacheKey)) {
+                /*if(cacheManager.isExistDataCache(cacheKey)) {
                     List<Content> items = (List<Content>) cacheManager.readObject(cacheKey);
                     subscriber.onNext(items);
                     subscriber.onCompleted();
                 } else {
                     subscriber.onNext(null);
                     subscriber.onCompleted();
+                }*/
+                //从数据库加载
+                List<Content> contents = contentDao.queryBuilder().where(ContentDao.Properties.Groupid.eq(groupId)).list();
+                if(!ListUtils.isEmpty(contents)) {
+                    subscriber.onNext(contents);
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new NoDataException("no data"));
                 }
-
                 setDataSource(DATA_SOURCE_DISK);
             }
         }).subscribeOn(Schedulers.io())
@@ -133,7 +142,7 @@ public class MeiziPersonData extends Data {
     public Observable<List<Content>> loadFromCache(String groupId) {
         return Observable.concat(
                 momory(groupId)
-                ,disk(groupId)
+                ,database(groupId)
 //                ,network(groupId)
                 )
                 .first(new Func1<List<Content>, Boolean>() {

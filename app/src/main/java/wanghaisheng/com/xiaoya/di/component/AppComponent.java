@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
+import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
@@ -17,7 +18,7 @@ import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
 import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.datasource.DailyData;
-import wanghaisheng.com.xiaoya.datasource.MeiziData;
+import wanghaisheng.com.xiaoya.datasource.MeiziHomeData;
 import wanghaisheng.com.xiaoya.datasource.MovieData;
 import wanghaisheng.com.xiaoya.datasource.ScienceData;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
@@ -88,6 +89,7 @@ public interface AppComponent {
     ArticleCollectionDao getArticleCollectionDao();
     MovieDao getMovieDao();
     MovieCollectionDao getMovieCollectionDao();
+    ContentDao getContentDao();
 
     //API
     DailyApi getDailyApi();
@@ -99,7 +101,7 @@ public interface AppComponent {
     MovieData getMovieData();
     ScienceData getScienceData();
     DailyData getDailyData();
-    MeiziData getMeiziData();
+    MeiziHomeData getMeiziData();
     MeiziPersonData getMeiziPersonData();
 
     void inject(AppContext appContext);

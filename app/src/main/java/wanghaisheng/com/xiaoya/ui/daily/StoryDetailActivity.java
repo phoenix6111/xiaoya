@@ -54,11 +54,6 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
     }
 
     @Override
-    public void onUpdatePager(int page, int total) {
-
-    }
-
-    @Override
     public void collect() {
         if(!isCollected) {
             presenter.collectEntity(story);
