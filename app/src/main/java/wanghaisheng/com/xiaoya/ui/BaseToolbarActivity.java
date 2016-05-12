@@ -17,7 +17,7 @@ import wanghaisheng.com.xiaoya.utils.ViewUtils;
  * Created by sheng on 2016/5/9.
  */
 public abstract class BaseToolbarActivity extends BaseActivity{
-    public static final String COLOR = "color";
+    public static final String ARG_COLOR = "arg_color";
     protected int mColor;
     protected Toolbar mToolbar;
     protected TextSwitcher mTextSwitcher;
@@ -40,7 +40,7 @@ public abstract class BaseToolbarActivity extends BaseActivity{
                 }
             }
         });
-        mColor = getIntent().getIntExtra(COLOR, ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
+        mColor = getIntent().getIntExtra(ARG_COLOR, ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
         ViewUtils.setSystemBar(this, mToolbar, mColor);
         initTitle();
     }

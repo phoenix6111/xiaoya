@@ -5,6 +5,7 @@ package wanghaisheng.com.xiaoya.db;
  * Entity mapped to table "CONTENT".
  */
 public class Content implements java.io.Serializable {
+
     private Long id;
     private Integer imagewidth;
     private Integer imageheight;
@@ -39,7 +40,6 @@ public class Content implements java.io.Serializable {
     }
 
     public Integer getImagewidth() {
-//        return 256;
         return imagewidth;
     }
 
@@ -48,7 +48,6 @@ public class Content implements java.io.Serializable {
     }
 
     public Integer getImageheight() {
-//        return 366;
         return imageheight;
     }
 

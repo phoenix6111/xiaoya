@@ -37,12 +37,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!--<wanghaisheng.com.xiaoya.widget.XiaoYaWebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@color/window_color" />-->
         </android.support.v4.widget.NestedScrollView>
 
         <wanghaisheng.com.xiaoya.ui.empty.EmptyLayout

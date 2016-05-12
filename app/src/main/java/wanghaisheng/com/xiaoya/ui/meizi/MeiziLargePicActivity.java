@@ -9,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.apkfuns.logutils.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,8 +81,8 @@ public class MeiziLargePicActivity extends BaseSwipeBackActivity {
 
     @Override
     public void initData() {
-        LogUtils.d("print urls..............");
-        LogUtils.d(urls);
+//        LogUtils.d("print urls..............");
+//        LogUtils.d(urls);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(),urls,groupId);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(index);

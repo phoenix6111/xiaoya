@@ -38,7 +38,6 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
 
     private int color;
     private String title;
-    private String url;
     private String groupId;
 
     private Bundle reenterState;
@@ -54,7 +53,6 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
     public void getDatas(Bundle savedInstanceState) {
         color = getIntent().getIntExtra(ARG_COLOR,0);
         title = getIntent().getStringExtra(ARG_TITLE);
-        url = getIntent().getStringExtra(ARG_URL);
         groupId = getIntent().getStringExtra(ARG_GROUPID);
     }
 
@@ -90,9 +88,6 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
             setTitle(title);
         }
 
-//        mHelper = new SwipeBackActivityHelper(this);
-//        mHelper.onActivityCreate();
-
     }
 
     @Override
@@ -103,7 +98,7 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
     @Override
     public void initData() {
 
-        mFragment = MeiziPersonListFragment.newInstance(url,groupId,title);
+        mFragment = MeiziPersonListFragment.newInstance(groupId,title);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
 
         this.pagerResultView = mFragment;

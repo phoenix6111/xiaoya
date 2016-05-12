@@ -21,7 +21,7 @@ public class DataCleanHelper {
 
 
     /**
-     * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context
+     * 清除本应用内部缓存(/data/data/com.xxx.xxx/memory) * * @param context
      */
     public void cleanInternalCache() {
         deleteFilesByDirectory(context.getCacheDir());
@@ -59,7 +59,7 @@ public class DataCleanHelper {
     }
 
     /**
-     * * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache) * * @param
+     * * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/memory) * * @param
      * context
      */
     public void cleanExternalCache() {

@@ -23,7 +23,7 @@ import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 /**
  * Created by sheng on 2016/4/18.
  */
-public class MovieListPresenter extends BaseListPresenter<MovieList,MoveListView>{
+public class MovieListPresenter extends BaseListPresenter<MoveListView>{
     //每页显示的数目
     public static final int LIMIT = 20;
     //查询API时的offset

@@ -3,6 +3,7 @@ package wanghaisheng.com.xiaoya.ui.science;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -85,6 +86,16 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
             presenter.detachView();
             this.presenter = null;
         }
+
+        if(webView!=null) {
+            webView.removeCallBack();
+            webView.setVisibility(View.GONE);
+            webView.removeAllViews();
+            webView.destroy();
+
+            webviewContainer.removeAllViews();
+        }
+
         super.onDestroy();
     }
 

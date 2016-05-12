@@ -47,7 +47,7 @@
                 android:textColor="@color/colorTextLight"/>
         </LinearLayout>
     </LinearLayout>
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/article_image"
         android:layout_width="0dp"
         android:layout_weight="3"

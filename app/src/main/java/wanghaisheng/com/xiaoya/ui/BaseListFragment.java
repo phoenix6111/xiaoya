@@ -146,7 +146,7 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
             swipeToLoadLayout.setVisibility(View.GONE);
             return false;
         } else {
-            LogUtils.v("network ok....................");
+//            LogUtils.v("network ok....................");
             return true;
         }
     }

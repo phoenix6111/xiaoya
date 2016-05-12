@@ -7,7 +7,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by sheng on 2016/4/14.
  */
-public abstract class Presenter<T,V> {
+public abstract class Presenter<V> {
     protected V iView;
     protected CompositeSubscription compositeSubscription = new CompositeSubscription();//这个是持有订阅  用于生命周期
 //    protected WeakReference<V>

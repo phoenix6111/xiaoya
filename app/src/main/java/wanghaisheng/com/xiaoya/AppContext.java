@@ -98,8 +98,8 @@ public class AppContext extends BaseApplication{
 
     private void initFrescoConfig() {
         final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(
-                MAX_MEMORY_CACHE_SIZE, // Max total size of elements in the cache
-                Integer.MAX_VALUE,                     // Max entries in the cache
+                MAX_MEMORY_CACHE_SIZE, // Max total size of elements in the memory
+                Integer.MAX_VALUE,                     // Max entries in the memory
                 MAX_MEMORY_CACHE_SIZE, // Max total size of elements in eviction queue
                 Integer.MAX_VALUE,                     // Max length of eviction queue
                 Integer.MAX_VALUE);

@@ -12,7 +12,7 @@ import wanghaisheng.com.xiaoya.presenter.base.BaseDetailPresenter;
 /**
  * Created by sheng on 2016/4/18.
  */
-public class MovieDetailPresenter extends BaseDetailPresenter<Movie,MovieDetailView> {
+public class MovieDetailPresenter extends BaseDetailPresenter<MovieDetailView> {
     @Inject
     MovieDao movieDao;
     @Inject
@@ -32,7 +32,6 @@ public class MovieDetailPresenter extends BaseDetailPresenter<Movie,MovieDetailV
         return movieApi.getMovieDetailUrl(movieId);
     }
 
-    @Override
     public void collectEntity(Movie movie) {
         movie.setIs_collected(true);
         movieDao.insertOrReplace(movie);

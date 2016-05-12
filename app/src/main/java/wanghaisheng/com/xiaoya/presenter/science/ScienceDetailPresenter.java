@@ -28,7 +28,7 @@ import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 /**
  * Created by sheng on 2016/4/16.
  */
-public class ScienceDetailPresenter extends BaseDetailPresenter<Article,ScienceDetailView> {
+public class ScienceDetailPresenter extends BaseDetailPresenter<ScienceDetailView> {
 
     @Inject
     ScienceApi scienceApi;

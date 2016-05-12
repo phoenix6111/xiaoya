@@ -3,7 +3,6 @@ package wanghaisheng.com.xiaoya.ui.science;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.apkfuns.logutils.LogUtils;
@@ -75,15 +74,15 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
 
     @Override
     public CommonAdapter<Article> initAdapter() {
-        mAdapter = new CommonAdapter<Article>(getActivity(), R.layout.science_item_layout,mDatas) {
+        mAdapter = new CommonAdapter<Article>(getActivity(), R.layout.science_item_layout2,mDatas) {
             @Override
             public void convert(ViewHolder holder, final Article article,int position) {
                 holder.setText(R.id.article_title,article.getTitle());
                 holder.setText(R.id.comment_count,article.getReplies_count()+"");
-                holder.setText(R.id.article_summary,article.getSummary());
+                /*holder.setText(R.id.article_summary,article.getSummary());
                 if(!TextUtils.isEmpty(article.getDate_published())) {
                     holder.setText(R.id.article_pubdate,article.getDate_published());
-                }
+                }*/
                 SimpleDraweeView imageView = holder.getView(R.id.article_image);
                 if(null != article.getImage_info()) {
                     //imageUtil.loadImage(getActivity(),article.getImage_info().getUrl(),imageView);
@@ -227,5 +226,7 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         Bundle bundle = getArguments();
         bundle.putSerializable(ARG_DATAS, (Serializable) mDatas);
     }
+
+    
 
 }

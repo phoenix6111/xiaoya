@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_white_layout"/>
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
+            android:layout_weight="1"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/white">
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_20"
+                    android:text="人际关系并不复杂，牢记这几条就够了。"
+                    android:textColor="@color/colorText"
+                    android:layout_gravity="center"
+                    android:paddingLeft="@dimen/space_20"
+                    android:paddingRight="@dimen/space_20"
+                    android:paddingTop="@dimen/space_15"
+                    android:paddingBottom="@dimen/space_10" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp">
+                    <ImageView
+                        android:id="@+id/icon_read"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@mipmap/read"/>
+                    <TextView
+                        android:id="@+id/tv_read"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/icon_read"
+                        android:layout_marginLeft="@dimen/space_5"
+                        android:text="20"
+                        android:textSize="@dimen/text_size_12"
+                        android:textColor="@color/colorTextLight" />
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="1天之前"
+                        android:textSize="@dimen/text_size_12"
+                        android:textColor="@color/colorTextLight" />
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_toLeftOf="@id/tv_date"
+                        android:layout_marginRight="@dimen/space_5"
+                        android:src="@mipmap/date"/>
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/webview_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </FrameLayout>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <wanghaisheng.com.xiaoya.ui.empty.EmptyLayout
+            android:id="@+id/empty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+    </FrameLayout>
+</LinearLayout>

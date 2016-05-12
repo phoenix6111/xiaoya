@@ -22,7 +22,6 @@
             android:layout_height="50dp"
             android:background="?attr/colorPrimary" />
 
-
         <TextView
             android:id="@+id/tvLoading"
             android:layout_width="wrap_content"

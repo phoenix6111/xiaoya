@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rv_selector"
+    android:padding="@dimen/default_padding">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/item_iv_pic"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@color/gray_light"
+        android:src="@drawable/movie_avator"
+        android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_toRightOf="@+id/item_iv_pic"
+        android:layout_marginLeft="@dimen/space_5">
+        <TextView
+            android:id="@+id/item_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="6dp"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/text_size_17"
+            android:text="网络图片加载的封装-（从零开始搭建android框架系列（4））"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp">
+            <ImageView
+                android:id="@+id/icon_read"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/read"/>
+            <TextView
+                android:id="@+id/tv_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/icon_read"
+                android:layout_marginLeft="@dimen/space_5"
+                android:text="20"
+                android:textColor="@color/colorTextLight" />
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="1天之前"
+                android:textColor="@color/colorTextLight" />
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_toLeftOf="@id/tv_date"
+                android:layout_marginRight="@dimen/space_5"
+                android:src="@mipmap/date"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

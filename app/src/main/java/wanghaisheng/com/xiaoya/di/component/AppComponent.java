@@ -8,8 +8,14 @@ import dagger.Component;
 import okhttp3.OkHttpClient;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
+import wanghaisheng.com.xiaoya.api.jianshu.JianshuApi;
+import wanghaisheng.com.xiaoya.api.meitu.MeituApi;
+import wanghaisheng.com.xiaoya.datasource.JianshuData;
+import wanghaisheng.com.xiaoya.datasource.MeituHomeData;
+import wanghaisheng.com.xiaoya.datasource.MeituPersonData;
 import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
 import wanghaisheng.com.xiaoya.db.ContentDao;
+import wanghaisheng.com.xiaoya.db.MeituPictureDao;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
@@ -90,6 +96,7 @@ public interface AppComponent {
     MovieDao getMovieDao();
     MovieCollectionDao getMovieCollectionDao();
     ContentDao getContentDao();
+    MeituPictureDao getMeituPictureDao();
 
     //API
     DailyApi getDailyApi();
@@ -98,11 +105,16 @@ public interface AppComponent {
     MovieApi getMovieApi();
     FeedbackApi getFeedbackApi();
     MeiziApi getMeiziApi();
+    JianshuApi getJianshuApi();
     MovieData getMovieData();
     ScienceData getScienceData();
     DailyData getDailyData();
     MeiziHomeData getMeiziData();
     MeiziPersonData getMeiziPersonData();
+    JianshuData getJianshuData();
+    MeituApi getMeituApi();
+    MeituHomeData getMeituData();
+    MeituPersonData getMeituPersonData();
 
     void inject(AppContext appContext);
 

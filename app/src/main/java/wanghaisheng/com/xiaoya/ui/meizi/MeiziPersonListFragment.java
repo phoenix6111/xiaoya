@@ -33,7 +33,6 @@ import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
  * Created by sheng on 2016/5/7.
  */
 public class MeiziPersonListFragment extends BaseListFragment<Content> implements MeiziPersonListView,PagerResultView,ISaveAllImage{
-//    private String url;
     private String groupId;
     private String title;
 
@@ -44,11 +43,10 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     @Inject
     Navigator navigator;
 
-    public static MeiziPersonListFragment newInstance(String url,String groupId,String title) {
+    public static MeiziPersonListFragment newInstance(String groupId,String title) {
         LogUtils.d("MeiziPersonFragment  new groupId...."+groupId);
         MeiziPersonListFragment fragment = new MeiziPersonListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(MeiziPersonListActivity.ARG_URL,url);
         bundle.putString(MeiziPersonListActivity.ARG_GROUPID,groupId);
         bundle.putString(MeiziPersonListActivity.ARG_TITLE,title);
         fragment.setArguments(bundle);
@@ -118,7 +116,6 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
 
     @Override
     public void getSavedBundle(Bundle bundle) {
-//        url = getArguments().getString(MeiziPersonListActivity.ARG_URL);
         groupId = getArguments().getString(MeiziPersonListActivity.ARG_GROUPID);
         title = getArguments().getString(MeiziPersonListActivity.ARG_TITLE);
     }

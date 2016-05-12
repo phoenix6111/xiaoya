@@ -21,17 +21,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity"/>
-        <activity android:name=".ui.daily.StoryDetailActivity"/>
-        <activity android:name=".ui.science.ScienceDetailActivity"/>
-        <activity android:name=".ui.movie.MovieDetailActivity"/>
+        <activity android:name=".ui.daily.StoryDetailActivity" android:process=":WebviewProcess"/>
+        <activity android:name=".ui.science.ScienceDetailActivity" android:process=":WebviewProcess"/>
+        <activity android:name=".ui.movie.MovieDetailActivity" android:process=":WebviewProcess"/>
         <activity android:name=".ui.setting.SettingActivity"/>
         <activity android:name=".ui.collection.BaseCollectionActivity"/>
-        <activity android:name=".ui.other.BrowserActivity"/>
+        <activity android:name=".ui.other.BrowserActivity" android:process=":WebviewProcess"/>
         <activity android:name=".ui.me.FeedbackActivity"/>
         <activity android:name=".ui.me.SelectImageActivity"/>
         <activity android:name=".ui.meizi.MeiziPersonListActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".ui.meizi.MeiziLargePicActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".ui.meizi.FuliActivity" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".ui.jianshu.JianshuDetailActivity" android:process=":WebviewProcess"/>
+        <activity android:name=".ui.meitu.MeituPersonListActivity"/>
 
         <service android:name=".service.SaveAllImageService"
             android:process=":DownloadService"/>

@@ -9,14 +9,13 @@ import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import wanghaisheng.com.xiaoya.db.Content;
 import wanghaisheng.com.xiaoya.presenter.base.Presenter;
 import wanghaisheng.com.xiaoya.utils.FileHelper;
 
 /**
  * Created by sheng on 2016/5/9.
  */
-public class MeiziLargePicPresenter extends Presenter<Content,MeiziLargePicView> {
+public class MeiziLargePicPresenter extends Presenter<MeiziLargePicView> {
     @Inject
     FileHelper fileHelper;
 

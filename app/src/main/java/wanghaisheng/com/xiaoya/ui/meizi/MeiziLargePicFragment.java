@@ -1,5 +1,6 @@
 package wanghaisheng.com.xiaoya.ui.meizi;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -8,7 +9,7 @@ import android.view.ViewTreeObserver;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.apkfuns.logutils.LogUtils;
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import javax.inject.Inject;
 
@@ -17,7 +18,6 @@ import wanghaisheng.com.xiaoya.presenter.meizi.MeiziLargePicPresenter;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziLargePicView;
 import wanghaisheng.com.xiaoya.ui.BaseFragment;
 import wanghaisheng.com.xiaoya.utils.ToastUtil;
-import wanghaisheng.com.xiaoya.widget.view.TouchImageView;
 
 /**
  * Created by sheng on 2016/5/8.
@@ -31,7 +31,8 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
     private String groupId;
     private String url;
 
-    TouchImageView imageView;
+//    TouchImageView imageView;
+    SimpleDraweeView simpleDraweeView;
     MaterialDialog mDialog;
 
     @Inject
@@ -65,8 +66,8 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
         this.index = getArguments().getInt(ARG_INDEX);
         this.groupId = getArguments().getString(ARG_GROUPID);
         this.url = getArguments().getString(ARG_URL);
-        LogUtils.d("print urls..............");
-        LogUtils.d(url);
+//        LogUtils.d("print urls..............");
+//        LogUtils.d(url);
     }
 
     @Override
@@ -76,22 +77,23 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
 
     @Override
     public void initView(View view) {
-        this.imageView = (TouchImageView) view.findViewById(R.id.image);
-        imageView.setOnClickListener(new View.OnClickListener() {
+//        this.imageView = (TouchImageView) view.findViewById(R.id.image);
+        this.simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.image);
+        simpleDraweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().supportFinishAfterTransition();
             }
         });
-        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        simpleDraweeView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                simpleDraweeView.getViewTreeObserver().removeOnPreDrawListener(this);
                 getActivity().supportStartPostponedEnterTransition();
                 return true;
             }
         });
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+        simpleDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
@@ -125,11 +127,12 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
     public void onResume() {
         super.onResume();
         LogUtils.d("url.........."+url);
-        Picasso.with(getActivity()).load(url).into(imageView);
+        //Picasso.with(getActivity()).load(url).into(imageView);
+        simpleDraweeView.setImageURI(Uri.parse(url));
     }
 
     public View getSharedElement() {
-        return imageView;
+        return simpleDraweeView;
     }
 
     @Override

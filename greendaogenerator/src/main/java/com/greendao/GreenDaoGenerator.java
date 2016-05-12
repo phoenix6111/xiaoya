@@ -131,6 +131,26 @@ public class GreenDaoGenerator {
         group.addBooleanProperty("iscollected");
         group.implementsSerializable();
 
+        Entity meituPicture = schema.addEntity("MeituPicture");
+        meituPicture.addIdProperty();
+        meituPicture.addStringProperty("imageId");
+        meituPicture.addStringProperty("groupId");
+        meituPicture.addStringProperty("picUrl");
+        meituPicture.addStringProperty("picPageurl");
+        meituPicture.addIntProperty("picHeight");
+        meituPicture.addIntProperty("picWidth");
+        meituPicture.addStringProperty("picSize");
+        meituPicture.addStringProperty("picTitle");
+        meituPicture.addStringProperty("picDesc");
+        meituPicture.addStringProperty("insTime");
+        meituPicture.addIntProperty("index");
+        meituPicture.addStringProperty("imgUrl");
+        meituPicture.addStringProperty("imgThumbUrl");
+        meituPicture.addIntProperty("imgThumbWidth");
+        meituPicture.addIntProperty("imgThumbHeight");
+        meituPicture.addStringProperty("downUrl");
+        meituPicture.implementsSerializable();
+
         File f = new File(GREEN_DAO_CODE_PATH);
         if (!f.exists()) {
             f.mkdirs();

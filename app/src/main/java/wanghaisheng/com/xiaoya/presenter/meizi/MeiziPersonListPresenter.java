@@ -27,7 +27,7 @@ import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 /**
  * Created by sheng on 2016/5/7.
  */
-public class MeiziPersonListPresenter extends BaseListPresenter<Content,MeiziPersonListView> {
+public class MeiziPersonListPresenter extends BaseListPresenter<MeiziPersonListView> {
     @Inject
     MeiziPersonData meiziData;
     @Inject

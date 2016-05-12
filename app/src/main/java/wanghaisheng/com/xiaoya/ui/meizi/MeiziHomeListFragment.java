@@ -91,7 +91,7 @@ public class MeiziHomeListFragment extends BaseListFragment<Group> implements Me
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(v, bitmap, 0, 0);
                         navigator.start(getActivity(),intent,options.toBundle());
                         if (bitmap != null && !bitmap.isRecycled()) {
-                            intent.putExtra(MeiziPersonListActivity.COLOR, ViewUtils.getPaletteColor(bitmap));
+                            intent.putExtra(MeiziPersonListActivity.ARG_COLOR, ViewUtils.getPaletteColor(bitmap));
                         }
 //                        Intent intent = new Intent(getActivity(),MeiziPersonListActivity.class);
 //                        intent.putExtras(bundle);

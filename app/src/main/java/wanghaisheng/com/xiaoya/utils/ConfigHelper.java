@@ -22,7 +22,7 @@ public class ConfigHelper {
         if (!TextUtils.isEmpty(cachePath)) {
             return cachePath;
         }
-        cachePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "gzsll" + File.separator + "cache" + File.separator;
+        cachePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "gzsll" + File.separator + "memory" + File.separator;
         File cache = new File(cachePath);
         if (!cache.exists()) {
             cache.mkdirs();

@@ -22,7 +22,7 @@ import wanghaisheng.com.xiaoya.presenter.base.Presenter;
 /**
  * Created by sheng on 2016/4/20.
  */
-public class ScienceCollectionPresenter extends Presenter<Article,ScienceCollectionView> {
+public class ScienceCollectionPresenter extends Presenter<ScienceCollectionView> {
     private static final String TAG = "ScienceCollectionPresenter";
 
     @Inject

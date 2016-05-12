@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -41,6 +42,20 @@ public class StringUtils {
             return new SimpleDateFormat("yyyy-MM-dd");
         }
     };
+
+    /**
+     * 根据字符串获得其中的第一个数字
+     * @param content
+     * @return
+     */
+    public static int getNumbers(String content) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            return Integer.parseInt(matcher.group(0));
+        }
+        return -1;
+    }
 
     /**
      * 将字符串转位日期类型

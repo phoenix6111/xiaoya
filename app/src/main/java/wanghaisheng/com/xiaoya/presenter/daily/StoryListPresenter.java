@@ -27,7 +27,7 @@ import wanghaisheng.com.xiaoya.utils.ListUtils;
 /**
  * Created by sheng on 2016/4/14.
  */
-public class StoryListPresenter extends BaseListPresenter<Story,StoryListView> {
+public class StoryListPresenter extends BaseListPresenter<StoryListView> {
 
     @Inject
     DailyApi dailyApi;

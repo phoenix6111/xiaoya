@@ -56,8 +56,8 @@ public class MovieData extends Data{
             @Override
             public void call(Subscriber<? super List<Movie>> subscriber) {
 //                LogUtils.d("load from disk");
-                if(cacheManager.isExistDataCache(getCacheKey("cache"))) {
-                    List<Movie> items = (List<Movie>) cacheManager.readObject(getCacheKey("cache"));
+                if(cacheManager.isExistDataCache(getCacheKey("memory"))) {
+                    List<Movie> items = (List<Movie>) cacheManager.readObject(getCacheKey("memory"));
                     subscriber.onNext(items);
                     subscriber.onCompleted();
                 } else {
@@ -97,7 +97,7 @@ public class MovieData extends Data{
                     @Override
                     public void call(List<Movie> movies) {
                         if(!ListUtils.isEmpty(movies)) {
-                            cacheManager.saveObject((Serializable) movies,getCacheKey("cache"));
+                            cacheManager.saveObject((Serializable) movies,getCacheKey("memory"));
                             memoryDatas = movies;
                         }
                         setDataSource(DATA_SOURCE_NETWORK);

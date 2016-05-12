@@ -10,6 +10,7 @@ import wanghaisheng.com.xiaoya.di.module.ActivityModule;
 import wanghaisheng.com.xiaoya.ui.BaseActivity;
 import wanghaisheng.com.xiaoya.ui.BaseDetailActivity;
 import wanghaisheng.com.xiaoya.ui.daily.StoryDetailActivity;
+import wanghaisheng.com.xiaoya.ui.jianshu.JianshuDetailActivity;
 import wanghaisheng.com.xiaoya.ui.me.FeedbackActivity;
 import wanghaisheng.com.xiaoya.ui.movie.MovieDetailActivity;
 import wanghaisheng.com.xiaoya.ui.other.BrowserActivity;
@@ -42,7 +43,7 @@ public interface ActivityComponent {
 
     void inject(FeedbackActivity feedbackActivity);
 
-
+    void inject(JianshuDetailActivity jianshuDetailActivity);
 
 //    void inject()
 }

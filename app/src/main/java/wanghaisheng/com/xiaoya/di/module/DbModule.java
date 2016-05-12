@@ -12,6 +12,7 @@ import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
 import wanghaisheng.com.xiaoya.db.DaoMaster;
 import wanghaisheng.com.xiaoya.db.DaoSession;
+import wanghaisheng.com.xiaoya.db.MeituPictureDao;
 import wanghaisheng.com.xiaoya.db.MovieCollectionDao;
 import wanghaisheng.com.xiaoya.db.MovieDao;
 import wanghaisheng.com.xiaoya.db.StoryCollectionDao;
@@ -81,5 +82,9 @@ public class DbModule {
         return daoSession.getContentDao();
     }
 
-
+    @Provides
+    @Singleton
+    MeituPictureDao provideMeituPictureDao(DaoSession session) {
+        return session.getMeituPictureDao();
+    }
 }

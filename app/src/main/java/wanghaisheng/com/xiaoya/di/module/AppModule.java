@@ -45,7 +45,7 @@ public class AppModule {
         //builder.networkInterceptors().add(new StethoInterceptor());
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        //builder.addInterceptor(logging);
+//        builder.addInterceptor(logging);
         /*
         builder.addInterceptor(mCookieInterceptor);*/
         return builder.build();

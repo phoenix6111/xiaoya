@@ -261,6 +261,12 @@ public class ViewHolder extends RecyclerView.ViewHolder
         return this;
     }
 
+    public ViewHolder setOnLongClickListener(View.OnLongClickListener listener) {
+        mConvertView.setOnLongClickListener(listener);
+
+        return this;
+    }
+
     public ViewHolder setOnTouchListener(int viewId,
                                          View.OnTouchListener listener)
     {

@@ -20,8 +20,6 @@ public class MeiziGroupConverter extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-
-
         //根据type判断是否是自己能处理的类型，不能的话，return null ,交给后面的Converter.Factory
         if(type instanceof ParameterizedType) {//支持返回值是List<Group>
             Type rawType = ((ParameterizedType) type).getRawType();

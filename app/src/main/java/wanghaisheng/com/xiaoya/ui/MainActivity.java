@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import wanghaisheng.com.xiaoya.AppManager;
 import wanghaisheng.com.xiaoya.Constants;
 import wanghaisheng.com.xiaoya.R;
-import wanghaisheng.com.xiaoya.ui.daily.BaseDailyFragment;
+import wanghaisheng.com.xiaoya.ui.jianshu.BaseJianshuFragment;
 import wanghaisheng.com.xiaoya.ui.me.MeFragment;
 import wanghaisheng.com.xiaoya.ui.movie.MovieListFragment;
 import wanghaisheng.com.xiaoya.ui.science.BaseScienceFragment;
@@ -80,9 +80,12 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void initData() {
         mFragments.add(BaseScienceFragment.newInstance());
-        mFragments.add(BaseDailyFragment.newInstance());
+        //mFragments.add(BaseDailyFragment.newInstance());
+//        mFragments.add(BaseBeautyMeituFragment.newInstance());
+        mFragments.add(BaseJianshuFragment.newInstance());
         mFragments.add(MovieListFragment.newInstance());
 //        mFragments.add(BaseMeiziFragment.newInstance());
+//        mFragments.add(BaseFunnyMeituFragment.newInstance());
         mFragments.add(MeFragment.newInstance());
 
         mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {

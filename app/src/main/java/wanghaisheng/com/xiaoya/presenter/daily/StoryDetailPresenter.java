@@ -26,7 +26,7 @@ import wanghaisheng.com.xiaoya.utils.ListUtils;
 /**
  * Created by sheng on 2016/4/15.
  */
-public class StoryDetailPresenter extends BaseDetailPresenter<Story,StoryDetailView> {
+public class StoryDetailPresenter extends BaseDetailPresenter<StoryDetailView> {
     private static final String TAG = "StoryDetailPresenter";
 
     @Inject

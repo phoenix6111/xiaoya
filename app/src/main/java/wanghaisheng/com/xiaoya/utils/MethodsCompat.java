@@ -37,9 +37,9 @@ public class MethodsCompat {
 
 //	    // return context.getExternalCacheDir(); API level 8
 //
-//	    // e.g. "<sdcard>/Android/data/<package_name>/cache/"
+//	    // e.g. "<sdcard>/Android/data/<package_name>/memory/"
 //	    final File extCacheDir = new File(Environment.getExternalStorageDirectory(),
-//	        "/Android/data/" + context.getApplicationInfo().packageName + "/cache/");
+//	        "/Android/data/" + context.getApplicationInfo().packageName + "/memory/");
 //	    extCacheDir.mkdirs();
 //	    return extCacheDir;
 
