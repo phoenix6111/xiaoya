@@ -1,4 +1,4 @@
-package wanghaisheng.com.xiaoya.presenter.meitu;
+package wanghaisheng.com.xiaoya.presenter.gaoxiao;
 
 import android.accounts.NetworkErrorException;
 import android.net.Uri;
@@ -11,26 +11,27 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import wanghaisheng.com.xiaoya.api.SchedulersCompat;
-import wanghaisheng.com.xiaoya.api.meitu.MeituApi;
-import wanghaisheng.com.xiaoya.api.meitu.MeituGalleryResult;
-import wanghaisheng.com.xiaoya.datasource.MeituHomeData;
+import wanghaisheng.com.xiaoya.api.gaoxiao.GaoxiaoApi;
+import wanghaisheng.com.xiaoya.beans.GaoxiaoPicResult;
+import wanghaisheng.com.xiaoya.datasource.GaoxiaoData;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListPresenter;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 import wanghaisheng.com.xiaoya.utils.FileHelper;
 
 /**
- * Created by sheng on 2016/5/11.
+ * Created by sheng on 2016/5/13.
  */
-public class MeituHomeListPresenter extends BaseListPresenter<MeituHomeListView> {
+public class GaoxiaoHomeListPresenter extends BaseListPresenter<GaoxiaoHomeListView> {
+
     @Inject
-    MeituApi meituApi;
+    GaoxiaoApi gaoxiaoApi;
     @Inject
-    MeituHomeData meituData;
+    GaoxiaoData gaoxiaoData;
     @Inject
     FileHelper fileHelper;
 
     @Inject
-    public MeituHomeListPresenter() {}
+    public GaoxiaoHomeListPresenter() {}
 
     /**
      * 保存图片进本地
@@ -62,14 +63,14 @@ public class MeituHomeListPresenter extends BaseListPresenter<MeituHomeListView>
 
     /**
      * 第一次加载数据，按照 memory->disk->network的顺序查找
-     * @param channel
+     * @param tag
      */
-    public void firstLoadData(String channel,String tag) {
-        Subscription subscription = meituData.subscribeBeautyData(channel,tag)
+    public void firstLoadData(String tag) {
+        Subscription subscription = gaoxiaoData.subscribeBeautyData(tag)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<MeituGalleryResult>() {
+                .subscribe(new Action1<GaoxiaoPicResult>() {
                     @Override
-                    public void call(MeituGalleryResult datas) {
+                    public void call(GaoxiaoPicResult datas) {
                         if(null != iView) {
 //                            LogUtils.d(jianshuContentResult.getContents());
                             iView.hideLoading();
@@ -95,15 +96,15 @@ public class MeituHomeListPresenter extends BaseListPresenter<MeituHomeListView>
     }
 
     /**
-     * 根据channel刷新数据
-     * @param channel
+     * 根据tag刷新数据
+     * @param tag
      */
-    public void loadNewestData(String channel,String tag) {
-        Subscription subscription = meituData.network(channel,tag)
+    public void loadNewestData(String tag) {
+        Subscription subscription = gaoxiaoData.network(tag)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<MeituGalleryResult>() {
+                .subscribe(new Action1<GaoxiaoPicResult>() {
                     @Override
-                    public void call(MeituGalleryResult datas) {
+                    public void call(GaoxiaoPicResult datas) {
 //                        LogUtils.d("loadNewestData........onNext..........");
                         if(null != iView) {
                             iView.refreshComplete(datas);
@@ -127,59 +128,33 @@ public class MeituHomeListPresenter extends BaseListPresenter<MeituHomeListView>
 
     /**
      * 加载更多
-     * @param channel
      * @param tag
+     * @param nextIndex
      */
-    public void loadMoreData(String channel,String tag,int nextIndex) {
+    public void loadMoreData(String tag,int nextIndex) {
 //        LogUtils.d("channel..........."+channel+"         page"+page);
-        if(MeituApi.CHANNEL_ID[0].equals(channel)) {
-            Subscription subscription = meituApi.getBeautyMeituGallery(tag,nextIndex)
-                    .compose(SchedulersCompat.<MeituGalleryResult>applyIoSchedulers())
-                    .subscribe(new Action1<MeituGalleryResult>() {
-                        @Override
-                        public void call(MeituGalleryResult datas) {
-                            LogUtils.d(datas);
-                            if (null != iView) {
-                                iView.loadMoreComplete(datas);
+        Subscription subscription = gaoxiaoApi.getGaoxiaoPicResult(tag,nextIndex)
+                .compose(SchedulersCompat.<GaoxiaoPicResult>applyIoSchedulers())
+                .subscribe(new Action1<GaoxiaoPicResult>() {
+                    @Override
+                    public void call(GaoxiaoPicResult datas) {
+                        if (null != iView) {
+                            iView.loadMoreComplete(datas);
+                        }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if(null != iView) {
+                            if (throwable instanceof NetworkErrorException) {
+                                iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
+                            } else {
+                                iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
                             }
                         }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            if(null != iView) {
-                                if (throwable instanceof NetworkErrorException) {
-                                    iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                                } else {
-                                    iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
-                                }
-                            }
-                        }
-                    });
-            compositeSubscription.add(subscription);
-        } else {
-            Subscription subscription = meituApi.getFunnyMeituGallery(tag,nextIndex)
-                    .compose(SchedulersCompat.<MeituGalleryResult>applyIoSchedulers())
-                    .subscribe(new Action1<MeituGalleryResult>() {
-                        @Override
-                        public void call(MeituGalleryResult datas) {
-                            if (null != iView) {
-                                iView.loadMoreComplete(datas);
-                            }
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            if(null != iView) {
-                                if (throwable instanceof NetworkErrorException) {
-                                    iView.error(BaseListView.ERROR_TYPE_NETWORK,null);
-                                } else {
-                                    iView.error(BaseListView.ERROR_TYPE_NODATA_ENABLE_CLICK,null);
-                                }
-                            }
-                        }
-                    });
-            compositeSubscription.add(subscription);
-        }
+                    }
+                });
+        compositeSubscription.add(subscription);
 
     }
 

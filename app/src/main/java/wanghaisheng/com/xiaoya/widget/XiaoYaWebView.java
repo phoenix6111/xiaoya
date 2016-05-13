@@ -20,11 +20,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.BuildConfig;
-import wanghaisheng.com.xiaoya.utils.ToastHelper;
 
 /**
  * Created by sheng on 2016/4/15.
@@ -36,8 +32,6 @@ public class XiaoYaWebView extends WebView {
 
 //    @Inject
 //    RequestHelper mRequestHelper;
-    @Inject
-    ToastHelper mToastHelper;
 
     public XiaoYaWebView(Context context) {
         super(context);
@@ -57,17 +51,20 @@ public class XiaoYaWebView extends WebView {
         this.callBack = null;
     }
 
-
     public class XiaoYaChromeClient extends WebChromeClient {
         @Override
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
             LogUtils.d("onConsoleMessage:" + consoleMessage.message() + ":" + consoleMessage.lineNumber());
             return true;
         }
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+        }
     }
 
     private void init() {
-        ((AppContext) getContext().getApplicationContext()).getApplicationComponent().inject(this);
         WebSettings settings = getSettings();
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(false);
@@ -76,7 +73,10 @@ public class XiaoYaWebView extends WebView {
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setDomStorageEnabled(true);
-        settings.setCacheMode(1);
+        //设置 缓存模式
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        // 开启 DOM storage API 功能
+        settings.setDomStorageEnabled(true);
         settings.setLoadsImagesAutomatically(false);
         settings.setUseWideViewPort(true);
         /**
@@ -132,7 +132,7 @@ public class XiaoYaWebView extends WebView {
             if (!view.getSettings().getLoadsImagesAutomatically()) {
                 view.getSettings().setLoadsImagesAutomatically(true);
             }
-            view.getSettings().setBlockNetworkImage(false);
+            view.getSettings().setBlockNetworkImage(false);//当页面加载完成时还原图片下载
             if (callBack != null) {
                 callBack.onFinish();
             }
@@ -147,9 +147,9 @@ public class XiaoYaWebView extends WebView {
                 callBack.onError(error);
             }
         }
-
-
     }
+
+
 
     private void setUA(int i) {
         if (this.basicUA != null) {

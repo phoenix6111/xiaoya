@@ -84,7 +84,7 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
                     holder.setText(R.id.article_pubdate,article.getDate_published());
                 }*/
                 SimpleDraweeView imageView = holder.getView(R.id.article_image);
-                if(null != article.getImage_info()) {
+                if(null != article.getImage_info()&&!isScrolling) {
                     //imageUtil.loadImage(getActivity(),article.getImage_info().getUrl(),imageView);
                     imageView.setImageURI(Uri.parse(article.getImage_info().getUrl()));
                 }
@@ -214,8 +214,7 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         if(null != datas) {
             offset = datas.getOffset();
             if (null != datas.getResult()) {
-                mDatas.addAll(datas.getResult());
-                mAdapter.notifyDataSetChanged();
+                addOrReplace(datas.getResult());
             }
         }
     }
@@ -226,7 +225,4 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
         Bundle bundle = getArguments();
         bundle.putSerializable(ARG_DATAS, (Serializable) mDatas);
     }
-
-    
-
 }

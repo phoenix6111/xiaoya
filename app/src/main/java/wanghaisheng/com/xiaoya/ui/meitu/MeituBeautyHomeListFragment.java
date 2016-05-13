@@ -175,8 +175,7 @@ public class MeituBeautyHomeListFragment extends BaseListFragment<MeituGallery> 
         onLoadMoreComplete();
         if(null != datas && !ListUtils.isEmpty(datas.getList())) {
             nextIndex = datas.getLastid();
-            mDatas.addAll(datas.getList());
-            mAdapter.notifyDataSetChanged();
+            addOrReplace(datas.getList());
         }
     }
 

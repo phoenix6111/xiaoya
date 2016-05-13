@@ -88,12 +88,13 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         if(null != presenter) {
             presenter.detachView();
             this.presenter = null;
         }
+
+        super.onDestroy();
+        System.exit(0);
     }
 
     @Override

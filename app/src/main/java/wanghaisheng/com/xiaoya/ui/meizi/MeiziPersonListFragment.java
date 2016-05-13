@@ -95,9 +95,6 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     @Override
     public void onLoadMoreData() {
         setCanLoadMore(false);
-        /*if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadMoreData(groupId);
-        }*/
     }
 
     @Override
@@ -135,11 +132,6 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
         if(null != presenter) {
             presenter.attachView(this);
 
-            /*if(presenter.isCacheExist(groupId)) {
-                presenter.loadFromCache(groupId);
-            } else {
-                presenter.loadFromNet(groupId);
-            }*/
             presenter.loadFromCache(groupId);
         }
 

@@ -18,7 +18,7 @@ import wanghaisheng.com.xiaoya.ui.BaseDetailActivity;
 /**
  * Created by sheng on 2016/4/16.
  */
-public class ScienceDetailActivity extends BaseDetailActivity implements ScienceDetailView{
+public class ScienceDetailActivity2 extends BaseDetailActivity implements ScienceDetailView{
     private static final String TAG = "ScienceDetailActivity";
 
     @Bind(R.id.img_avatar)

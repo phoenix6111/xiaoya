@@ -119,6 +119,8 @@ public class AppContext extends BaseApplication{
                                 .build()).build();
         Fresco.initialize(this, config);
 
+        //Fresco.initialize(this, ImagePipelineConfigUtils.getDefaultImagePipelineConfig(this));
+
     }
 
     /**

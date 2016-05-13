@@ -1,19 +1,25 @@
 package wanghaisheng.com.xiaoya.ui.meizi;
 
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.apkfuns.logutils.LogUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
+import wanghaisheng.com.xiaoya.component.fresco.photodraweeview.OnPhotoTapListener;
+import wanghaisheng.com.xiaoya.component.fresco.photodraweeview.OnViewTapListener;
+import wanghaisheng.com.xiaoya.component.fresco.photodraweeview.PhotoDraweeView;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziLargePicPresenter;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziLargePicView;
 import wanghaisheng.com.xiaoya.ui.BaseFragment;
@@ -32,7 +38,7 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
     private String url;
 
 //    TouchImageView imageView;
-    SimpleDraweeView simpleDraweeView;
+    PhotoDraweeView mPhotoDraweeView;
     MaterialDialog mDialog;
 
     @Inject
@@ -77,25 +83,50 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
 
     @Override
     public void initView(View view) {
-//        this.imageView = (TouchImageView) view.findViewById(R.id.image);
-        this.simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.image);
-        simpleDraweeView.setOnClickListener(new View.OnClickListener() {
+        this.mPhotoDraweeView = (PhotoDraweeView) view.findViewById(R.id.image);
+    }
+
+    @Override
+    public void initData() {
+        presenter.attachView(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.d("url.........."+url);
+
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setUri(Uri.parse(url));
+        controller.setOldController(mPhotoDraweeView.getController());
+        // You need setControllerListener
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
             @Override
-            public void onClick(View v) {
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || mPhotoDraweeView == null) {
+                    return;
+                }
+                mPhotoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        mPhotoDraweeView.setController(controller.build());
+        mPhotoDraweeView.setOnPhotoTapListener(new OnPhotoTapListener() {
+            @Override public void onPhotoTap(View view, float x, float y) {
+//                Toast.makeText(view.getContext(), "onPhotoTap :  x =  " + x + ";" + " y = " + y,
+//                        Toast.LENGTH_SHORT).show();
                 getActivity().supportFinishAfterTransition();
             }
         });
-        simpleDraweeView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                simpleDraweeView.getViewTreeObserver().removeOnPreDrawListener(this);
-                getActivity().supportStartPostponedEnterTransition();
-                return true;
+        mPhotoDraweeView.setOnViewTapListener(new OnViewTapListener() {
+            @Override public void onViewTap(View view, float x, float y) {
+//                Toast.makeText(view.getContext(), "onViewTap", Toast.LENGTH_SHORT).show();
             }
         });
-        simpleDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
+
+        mPhotoDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override public boolean onLongClick(View v) {
+//                Toast.makeText(v.getContext(), "onLongClick", Toast.LENGTH_SHORT).show();
 
                 mDialog = new MaterialDialog.Builder(getActivity()).content("保存图片")
                         .positiveText("确定")
@@ -116,23 +147,11 @@ public class MeiziLargePicFragment extends BaseFragment implements MeiziLargePic
                 return true;
             }
         });
-    }
 
-    @Override
-    public void initData() {
-        presenter.attachView(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LogUtils.d("url.........."+url);
-        //Picasso.with(getActivity()).load(url).into(imageView);
-        simpleDraweeView.setImageURI(Uri.parse(url));
     }
 
     public View getSharedElement() {
-        return simpleDraweeView;
+        return mPhotoDraweeView;
     }
 
     @Override

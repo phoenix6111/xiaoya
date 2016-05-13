@@ -3,6 +3,7 @@ package wanghaisheng.com.xiaoya.ui;
 import android.os.Bundle;
 import android.view.View;
 
+import butterknife.ButterKnife;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.di.component.DaggerFragmentComponent;
 import wanghaisheng.com.xiaoya.di.module.FragmentModule;
@@ -11,7 +12,7 @@ import wanghaisheng.com.xiaoya.di.module.FragmentModule;
  * Created by sheng on 2016/5/3.
  */
 public abstract class BaseLazyFragment extends BaseFragment {
-    private boolean isVisiable = true;
+    private boolean isVisiable = false;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -20,8 +21,13 @@ public abstract class BaseLazyFragment extends BaseFragment {
                 .appComponent(((AppContext) getActivity().getApplication()).getApplicationComponent())
                 .build();
         initInjector();
+
+        ButterKnife.bind(this,view);
+
+        beforeInitView(view);
+
         getSavedBundle(getArguments());
-//        initUI(view);
+        initView(view);
     }
 
     @Override
@@ -36,14 +42,14 @@ public abstract class BaseLazyFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            isVisiable = true;
             onVisible();
         }
     }
 
     private void onVisible() {
-        if (isVisiable) {
+        if (isVisiable&&isPrepare) {
             initData();
-            isVisiable = false;
         }
     }
 }

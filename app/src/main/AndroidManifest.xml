@@ -14,26 +14,34 @@
         android:supportsRtl="true"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" android:theme="@style/AppTheme.Launcher"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".ui.MainActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ui.daily.StoryDetailActivity" android:process=":WebviewProcess"/>
-        <activity android:name=".ui.science.ScienceDetailActivity" android:process=":WebviewProcess"/>
+        <!--<activity android:name=".ui.science.ScienceDetailActivity" android:process=":WebviewProcess"/>
         <activity android:name=".ui.movie.MovieDetailActivity" android:process=":WebviewProcess"/>
-        <activity android:name=".ui.setting.SettingActivity"/>
-        <activity android:name=".ui.collection.BaseCollectionActivity"/>
-        <activity android:name=".ui.other.BrowserActivity" android:process=":WebviewProcess"/>
-        <activity android:name=".ui.me.FeedbackActivity"/>
-        <activity android:name=".ui.me.SelectImageActivity"/>
-        <activity android:name=".ui.meizi.MeiziPersonListActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".ui.meizi.MeiziLargePicActivity" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".ui.meizi.FuliActivity" android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".ui.jianshu.JianshuDetailActivity" android:process=":WebviewProcess"/>
-        <activity android:name=".ui.meitu.MeituPersonListActivity"/>
+        <activity android:name=".ui.other.BrowserActivity" android:process=":WebviewProcess"/>
+        <activity android:name=".ui.daily.StoryDetailActivity" android:screenOrientation="portrait"/>
+        -->
+        <activity android:name=".ui.science.ScienceDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.movie.MovieDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.jianshu.JianshuDetailActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.other.BrowserActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.setting.SettingActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.collection.BaseCollectionActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.FeedbackActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.me.SelectImageActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.meizi.MeiziPersonListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.meizi.MeiziLargePicActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.meizi.FuliActivity"  android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.meitu.MeituPersonListActivity" android:screenOrientation="portrait"/>
 
         <service android:name=".service.SaveAllImageService"
             android:process=":DownloadService"/>

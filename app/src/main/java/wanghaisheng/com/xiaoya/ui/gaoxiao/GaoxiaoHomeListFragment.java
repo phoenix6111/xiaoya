@@ -1,6 +1,5 @@
-package wanghaisheng.com.xiaoya.ui.meitu;
+package wanghaisheng.com.xiaoya.ui.gaoxiao;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,53 +8,47 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import wanghaisheng.com.xiaoya.R;
-import wanghaisheng.com.xiaoya.api.meitu.MeituApi;
-import wanghaisheng.com.xiaoya.api.meitu.MeituGallery;
-import wanghaisheng.com.xiaoya.api.meitu.MeituGalleryResult;
+import wanghaisheng.com.xiaoya.api.gaoxiao.GaoxiaoApi;
+import wanghaisheng.com.xiaoya.beans.GaoxiaoPic;
+import wanghaisheng.com.xiaoya.beans.GaoxiaoPicResult;
 import wanghaisheng.com.xiaoya.component.baseadapter.ViewHolder;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.fresco.MySimpleDraweeView;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
-import wanghaisheng.com.xiaoya.presenter.meitu.MeituHomeListPresenter;
-import wanghaisheng.com.xiaoya.presenter.meitu.MeituHomeListView;
+import wanghaisheng.com.xiaoya.presenter.gaoxiao.GaoxiaoHomeListPresenter;
+import wanghaisheng.com.xiaoya.presenter.gaoxiao.GaoxiaoHomeListView;
 import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.meizi.MeiziLargePicActivity;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.utils.ToastUtil;
 
 /**
- * Created by sheng on 2016/5/11.
+ * Created by sheng on 2016/5/13.
  */
-public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> implements MeituHomeListView{
+public class GaoxiaoHomeListFragment extends BaseListFragment<GaoxiaoPic> implements GaoxiaoHomeListView {
 
     private boolean hasload = false;
-    private String currentImageUrl;
 
     private String tag;
     private int nextIndex;
     public static final String ARG_TAG = "arg_tag";
 
-    public static final String CHANNEL_TAG = MeituApi.CHANNEL_ID[2];
-
     @Inject
-    MeituHomeListPresenter presenter;
-    @Inject
-    Navigator navigator;
+    GaoxiaoHomeListPresenter presenter;
     @Inject
     ToastUtil toastUtil;
+    @Inject
+    Navigator navigator;
 
-    public static MeituFunnyHomeListFragment newInstance(String tag) {
-        MeituFunnyHomeListFragment fragment = new MeituFunnyHomeListFragment();
+    public static GaoxiaoHomeListFragment newInstance(String tag) {
+        GaoxiaoHomeListFragment fragment = new GaoxiaoHomeListFragment();
         Bundle bundle = new Bundle();
-//        bundle.putString(ARG_CHANNEL,channel);
         bundle.putString(ARG_TAG,tag);
         fragment.setArguments(bundle);
 
@@ -68,28 +61,28 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
     }
 
     @Override
-    public CommonAdapter<MeituGallery> initAdapter() {
-        return new CommonAdapter<MeituGallery>(getActivity(), R.layout.meitu_funny_home_item_layout,mDatas) {
+    public CommonAdapter<GaoxiaoPic> initAdapter() {
+        return new CommonAdapter<GaoxiaoPic>(getActivity(), R.layout.meitu_funny_home_item_layout,mDatas) {
             @Override
-            public void convert(ViewHolder holder, final MeituGallery gallery, int position) {
-                holder.setText(R.id.meizi_tv_title,gallery.getGroupTitle());
+            public void convert(ViewHolder holder, final GaoxiaoPic gallery, final int position) {
+                holder.setText(R.id.meizi_tv_title,gallery.getTitle());
                 final MySimpleDraweeView simpleDraweeView = holder.getView(R.id.meizi_img);
 
                 simpleDraweeView.setAutoPlayAnimations(true)
-                            .setDraweeViewUrl(gallery.getImgUrl())
-                            .setWidthAndHeight(gallery.getImgWidth(),gallery.getImgHeight());
+                        .setDraweeViewUrl(gallery.getPic_url())
+                        .setWidthAndHeight(gallery.getWidth(),gallery.getHeight());
 
                 holder.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
 
-                        MaterialDialog mDialog = new MaterialDialog.Builder(getActivity()).content("保存图片")
+                        new MaterialDialog.Builder(getActivity()).content("保存图片")
                                 .positiveText("确定")
                                 .negativeText("取消")
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        presenter.saveLargePic(gallery.getImgUrl(), gallery.getId());
+                                        presenter.saveLargePic(gallery.getPic_url(), gallery.getId()+"");
                                         dialog.dismiss();
                                     }
                                 })
@@ -103,42 +96,35 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
                     }
                 });
 
-                /*Picasso.with(getActivity()).load(gallery.getImgThumbUrl())
-                        .tag("1")
-                        .config(Bitmap.Config.RGB_565)
-                        .into(imageView);*/
+                holder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(MeiziLargePicActivity.ARG_INEX,position);
+                        bundle.putString(MeiziLargePicActivity.ARG_GROUPID,gallery.getId()+"");
+                        ArrayList<String> urls = new ArrayList<>();
+                        for(GaoxiaoPic pic : mDatas) {
+                            urls.add(pic.getPic_url());
+                        }
+                        bundle.putStringArrayList(MeiziLargePicActivity.ARG_URLS,urls);
+                        navigator.openMeiziLargePicActivity(getActivity(),bundle);
+                    }
+                });
             }
         };
-    }
-
-    //修改图片尺寸
-    public void setSize(String url,int width,int height,SimpleDraweeView mDraweeView) {
-        Uri uri = Uri.parse(url);
-
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-//                .setResizeOptions(new ResizeOptions(width, height))
-
-                .build();
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setOldController(mDraweeView.getController())
-                .setAutoPlayAnimations(true)
-                .setImageRequest(request)
-                .build();
-
-        mDraweeView.setController(controller);
     }
 
     @Override
     public void onRefreshData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadNewestData(CHANNEL_TAG,tag);
+            presenter.loadNewestData(tag);
         }
     }
 
     @Override
     public void onLoadMoreData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadMoreData(CHANNEL_TAG,tag,nextIndex);
+            presenter.loadMoreData(tag,nextIndex);
         }
     }
 
@@ -146,7 +132,7 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
     public void onReloadClicked() {
         if(checkNetWork()) {
             if(null != presenter) {
-                presenter.firstLoadData(CHANNEL_TAG,tag);
+                presenter.firstLoadData(tag);
             }
         }
     }
@@ -170,37 +156,37 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
     public void initData() {
         if(null != presenter) {
             presenter.attachView(this);
-            presenter.firstLoadData(CHANNEL_TAG,tag);
+            presenter.firstLoadData(tag);
         }
     }
 
     @Override
-    public void renderFirstLoadData(MeituGalleryResult datas) {
-        if(null != datas && !ListUtils.isEmpty(datas.getList())) {
-            nextIndex = datas.getLastid();
+    public void renderFirstLoadData(GaoxiaoPicResult datas) {
+        if(null != datas && !ListUtils.isEmpty(datas.getAll_items())) {
+            nextIndex = GaoxiaoApi.LIMIT;
             mDatas.clear();
-            mDatas.addAll(datas.getList());
+            mDatas.addAll(datas.getAll_items());
             mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void refreshComplete(MeituGalleryResult datas) {
+    public void refreshComplete(GaoxiaoPicResult datas) {
         onRefreshComplete();
-        if(null != datas && !ListUtils.isEmpty(datas.getList())) {
-            nextIndex = datas.getLastid();
+        if(null != datas && !ListUtils.isEmpty(datas.getAll_items())) {
+            nextIndex = GaoxiaoApi.LIMIT;
             mDatas.clear();
-            mDatas.addAll(datas.getList());
+            mDatas.addAll(datas.getAll_items());
             mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void loadMoreComplete(MeituGalleryResult datas) {
+    public void loadMoreComplete(GaoxiaoPicResult datas) {
         onLoadMoreComplete();
-        if(null != datas && !ListUtils.isEmpty(datas.getList())) {
-            nextIndex = datas.getLastid();
-           addOrReplace(datas.getList());
+        if(null != datas && !ListUtils.isEmpty(datas.getAll_items())) {
+            nextIndex += GaoxiaoApi.LIMIT;
+            addOrReplace(datas.getAll_items());
         }
     }
 

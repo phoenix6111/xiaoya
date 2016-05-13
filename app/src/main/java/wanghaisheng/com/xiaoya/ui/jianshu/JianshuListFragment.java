@@ -169,18 +169,14 @@ public class JianshuListFragment extends BaseListFragment<JianshuContent> implem
     public void loadMoreComplete(JianshuContentResult datas) {
         onLoadMoreComplete();
         if(null != datas) {
-
             String pageUrl = datas.getNextUrl();
             if(null != pageUrl) {
                 nextPageUrl = pageUrl;
-//                LogUtils.d("nextPageUrl.... not null   "+nextPageUrl);
             }
 
             List<JianshuContent> contents = datas.getContents();
             if(!ListUtils.isEmpty(contents)) {
-                int index = mDatas.size();
-                mDatas.addAll(contents);
-                mAdapter.notifyItemRangeChanged(index,contents.size());
+                addOrReplace(contents);
             }
         }
     }

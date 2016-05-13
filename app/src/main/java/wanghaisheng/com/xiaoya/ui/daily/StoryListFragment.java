@@ -88,7 +88,7 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
 //                imageUtil.loadImage(getActivity(),story.getImages().get(0),(ImageView)holder.getView(R.id.item_iv_pic));
                 SimpleDraweeView imageView = holder.getView(R.id.item_iv_pic);
 
-                if(!ListUtils.isEmpty(story.getImages())) {
+                if(!ListUtils.isEmpty(story.getImages())&&!isScrolling) {
                     //LogUtils.v("url str====="+story.getImages()+" ===>"+(story.getImages().get(0)==null));
                     Uri uri = Uri.parse(story.getImages().get(0));
                     //imageUtil.loadImage(getActivity(),story.getImages().get(0),(ImageView)holder.getView(R.id.item_iv_pic));
@@ -165,17 +165,18 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if(null != presenter) {
             presenter.detachView();
             this.presenter = null;
         }
+
+        super.onDestroy();
     }
 
     @Override
     public void renderFirstLoadData(Daily datas) {
         if(null != datas) {
-            if (null != datas.getStories()) {
+            if (!ListUtils.isEmpty(datas.getStories())) {
                 lastDateTime = datas.getDate();
                 mDatas.clear();
                 mDatas.addAll(datas.getStories());
@@ -203,8 +204,7 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
         if(null != datas) {
             if(null != datas.getStories()) {
                 lastDateTime = datas.getDate();
-                mDatas.addAll(datas.getStories());
-                mAdapter.notifyDataSetChanged();
+                addOrReplace(datas.getStories());
             }
         }
     }

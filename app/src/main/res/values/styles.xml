@@ -11,6 +11,9 @@
     </style>
     <style name="AppTheme" parent="BaseAppTheme"></style>
     <style name="AppTheme.Detail" parent="AppTheme"></style>
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/splash2</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
         <item name="elevation">0dp</item>
     </style>

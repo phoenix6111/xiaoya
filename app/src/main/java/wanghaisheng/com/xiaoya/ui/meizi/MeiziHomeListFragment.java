@@ -174,8 +174,7 @@ public class MeiziHomeListFragment extends BaseListFragment<Group> implements Me
         onLoadMoreComplete();
         if(!ListUtils.isEmpty(datas)) {
             page += 1;
-            mDatas.addAll(datas);
-            mAdapter.notifyDataSetChanged();
+            addOrReplace(datas);
         }
     }
 

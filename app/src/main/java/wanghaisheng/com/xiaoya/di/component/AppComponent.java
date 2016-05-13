@@ -8,28 +8,29 @@ import dagger.Component;
 import okhttp3.OkHttpClient;
 import wanghaisheng.com.xiaoya.AppContext;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
+import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
+import wanghaisheng.com.xiaoya.api.gaoxiao.GaoxiaoApi;
 import wanghaisheng.com.xiaoya.api.jianshu.JianshuApi;
 import wanghaisheng.com.xiaoya.api.meitu.MeituApi;
+import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
+import wanghaisheng.com.xiaoya.api.movie.MovieApi;
+import wanghaisheng.com.xiaoya.api.science.ArticleApi;
+import wanghaisheng.com.xiaoya.api.science.ScienceApi;
+import wanghaisheng.com.xiaoya.cache.CacheManager;
+import wanghaisheng.com.xiaoya.datasource.DailyData;
+import wanghaisheng.com.xiaoya.datasource.GaoxiaoData;
 import wanghaisheng.com.xiaoya.datasource.JianshuData;
 import wanghaisheng.com.xiaoya.datasource.MeituHomeData;
 import wanghaisheng.com.xiaoya.datasource.MeituPersonData;
-import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
-import wanghaisheng.com.xiaoya.db.ContentDao;
-import wanghaisheng.com.xiaoya.db.MeituPictureDao;
-import wanghaisheng.com.xiaoya.navigator.Navigator;
-import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
-import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
-import wanghaisheng.com.xiaoya.api.science.ArticleApi;
-import wanghaisheng.com.xiaoya.api.science.ScienceApi;
-import wanghaisheng.com.xiaoya.api.movie.MovieApi;
-import wanghaisheng.com.xiaoya.cache.CacheManager;
-import wanghaisheng.com.xiaoya.datasource.DailyData;
 import wanghaisheng.com.xiaoya.datasource.MeiziHomeData;
+import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
 import wanghaisheng.com.xiaoya.datasource.MovieData;
 import wanghaisheng.com.xiaoya.datasource.ScienceData;
 import wanghaisheng.com.xiaoya.db.ArticleCollectionDao;
+import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.db.DBArticleDao;
 import wanghaisheng.com.xiaoya.db.DBStoryDao;
+import wanghaisheng.com.xiaoya.db.MeituPictureDao;
 import wanghaisheng.com.xiaoya.db.MovieCollectionDao;
 import wanghaisheng.com.xiaoya.db.MovieDao;
 import wanghaisheng.com.xiaoya.db.StoryCollectionDao;
@@ -37,6 +38,7 @@ import wanghaisheng.com.xiaoya.di.module.ApiModule;
 import wanghaisheng.com.xiaoya.di.module.AppModule;
 import wanghaisheng.com.xiaoya.di.module.DbModule;
 import wanghaisheng.com.xiaoya.di.module.HelperModule;
+import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.utils.CacheHelper;
 import wanghaisheng.com.xiaoya.utils.ConfigHelper;
 import wanghaisheng.com.xiaoya.utils.DataCleanHelper;
@@ -53,7 +55,6 @@ import wanghaisheng.com.xiaoya.utils.ShareHelper;
 import wanghaisheng.com.xiaoya.utils.StringHelper;
 import wanghaisheng.com.xiaoya.utils.ToastHelper;
 import wanghaisheng.com.xiaoya.utils.ToastUtil;
-import wanghaisheng.com.xiaoya.widget.XiaoYaWebView;
 
 
 /**
@@ -115,9 +116,10 @@ public interface AppComponent {
     MeituApi getMeituApi();
     MeituHomeData getMeituData();
     MeituPersonData getMeituPersonData();
+    GaoxiaoApi getGaoxiaoApi();
+    GaoxiaoData getGaoxiaoData();
 
     void inject(AppContext appContext);
 
-    void inject(XiaoYaWebView webView);
 
 }

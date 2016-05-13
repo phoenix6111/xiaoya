@@ -26,6 +26,8 @@ import wanghaisheng.com.xiaoya.utils.NetWorkHelper;
  * Created by sheng on 2016/4/13.
  */
 public abstract class BaseFragment extends Fragment implements BaseFragmentInterface{
+    public boolean isPrepare = false;
+
     protected FragmentComponent mFragmentComponent;
 
     @Inject
@@ -62,6 +64,7 @@ public abstract class BaseFragment extends Fragment implements BaseFragmentInter
         initView(view);
         initData();
 
+        isPrepare = true;
     }
 
     @Override
@@ -77,6 +80,9 @@ public abstract class BaseFragment extends Fragment implements BaseFragmentInter
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutId(), container, false);
+
+        isPrepare = true;
+
         return view;
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.drawee.view.SimpleDraweeView
+<wanghaisheng.com.xiaoya.component.fresco.photodraweeview.PhotoDraweeView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    fresco:actualImageScaleType="fitCenter"
-    />
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:scaleType="fitCenter" />

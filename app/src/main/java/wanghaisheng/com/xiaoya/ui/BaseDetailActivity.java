@@ -205,6 +205,7 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
         }
 
         super.onDestroy();
+//        System.exit(0);
     }
 
 }

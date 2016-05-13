@@ -53,7 +53,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
             public void convert(ViewHolder holder, final Movie movie,int position) {
                 SimpleDraweeView imageView = holder.getView(R.id.movie_image);
                 //imageUtil.loadImage(getActivity(),movie.getImg(),imageView);
-                if(null != movie.getImg()) {
+                if(null != movie.getImg()&&!isScrolling) {
                     imageView.setImageURI(Uri.parse(movie.getImg()));
                     //imageUtil.loadImage(getActivity(),movie.getImg(),imageView);
                 }
@@ -178,8 +178,7 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
 
         if(!ListUtils.isEmpty(datas)) {
             offset = offset+MovieListPresenter.LIMIT;
-            mDatas.addAll(datas);
-            mAdapter.notifyDataSetChanged();
+            addOrReplace(datas);
         } else {
             setCanLoadMore(false);
         }

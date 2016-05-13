@@ -25,7 +25,7 @@ import wanghaisheng.com.xiaoya.ui.empty.EmptyLayout;
 /**
  * Created by sheng on 2016/4/14.
  */
-public abstract class BaseListFragment<T> extends BaseFragment implements BaseListView {
+public abstract class BaseListFragment<T> extends BaseLazyFragment implements BaseListView {
 
     protected SwipeToLoadLayout swipeToLoadLayout;
     protected RecyclerView myRecyclerView;
@@ -39,6 +39,9 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
     protected List<T> mDatas = new ArrayList<>();
 
     protected boolean firstLoad = true;
+
+    //是否是滚动状态
+    protected boolean isScrolling;
 
     //初始化UI相关的属性
     @Override
@@ -68,13 +71,30 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
         myRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+                //当停止滑动时加载图片
+                isScrolling = !(newState == RecyclerView.SCROLL_STATE_IDLE);
+                if (!isScrolling) {
+                    mAdapter.notifyDataSetChanged();
+                }
+                LogUtils.d("isScrolling....."+isScrolling);
+
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (!ViewCompat.canScrollVertically(recyclerView, 1)) {
                         swipeToLoadLayout.setLoadingMore(true);
                     }
                 }
+
+                super.onScrollStateChanged(recyclerView,newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LogUtils.d("scrolling...........");
             }
         });
+
 
         emptyLayout.setOnLayoutClickListener(new View.OnClickListener() {
             @Override
@@ -145,10 +165,9 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
             emptyLayout.setNetworkError();
             swipeToLoadLayout.setVisibility(View.GONE);
             return false;
-        } else {
-//            LogUtils.v("network ok....................");
-            return true;
         }
+
+        return true;
     }
 
     //当数据刷新完成时调用
@@ -189,5 +208,14 @@ public abstract class BaseListFragment<T> extends BaseFragment implements BaseLi
 
     public abstract void onReloadClicked();
 
+    /**
+     * 上拉加载更多时，统一处理添加数据
+     * @param datas
+     */
+    public void addOrReplace(List<T> datas) {
+        int lastIndex = mDatas.size();
+        mDatas.addAll(lastIndex,datas);
+        mAdapter.notifyItemRangeChanged(lastIndex,datas.size());
+    }
 
 }

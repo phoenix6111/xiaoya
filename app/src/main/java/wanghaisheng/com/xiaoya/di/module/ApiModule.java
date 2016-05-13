@@ -7,6 +7,7 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.api.feedback.FeedbackApi;
+import wanghaisheng.com.xiaoya.api.gaoxiao.GaoxiaoApi;
 import wanghaisheng.com.xiaoya.api.jianshu.JianshuApi;
 import wanghaisheng.com.xiaoya.api.meitu.MeituApi;
 import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
@@ -15,6 +16,7 @@ import wanghaisheng.com.xiaoya.api.science.ArticleApi;
 import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.datasource.DailyData;
+import wanghaisheng.com.xiaoya.datasource.GaoxiaoData;
 import wanghaisheng.com.xiaoya.datasource.JianshuData;
 import wanghaisheng.com.xiaoya.datasource.MeituHomeData;
 import wanghaisheng.com.xiaoya.datasource.MeituPersonData;
@@ -128,5 +130,17 @@ public class ApiModule {
     @Singleton
     public MeituPersonData provideMeituPersonData(CacheManager cacheManager, MeituApi meituApi, MeituPictureDao pictureDao) {
         return new MeituPersonData(cacheManager,meituApi,pictureDao);
+    }
+
+    @Provides
+    @Singleton
+    public GaoxiaoApi provideGaoxiaoApi(OkHttpClient okHttpClient)  {
+        return new GaoxiaoApi(okHttpClient);
+    }
+
+    @Provides
+    @Singleton
+    public GaoxiaoData provideGaoxiaoData(GaoxiaoApi gaoxiaoApi,CacheManager cacheManager) {
+        return new GaoxiaoData(gaoxiaoApi,cacheManager);
     }
 }

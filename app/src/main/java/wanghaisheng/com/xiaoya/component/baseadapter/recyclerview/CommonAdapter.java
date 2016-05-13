@@ -18,6 +18,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>
     protected int mLayoutId;
     protected List<T> mDatas;
     protected LayoutInflater mInflater;
+    protected boolean isScrolling;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -32,6 +33,8 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>
         mInflater = LayoutInflater.from(context);
         mLayoutId = layoutId;
         mDatas = datas;
+
+
     }
 
     @Override

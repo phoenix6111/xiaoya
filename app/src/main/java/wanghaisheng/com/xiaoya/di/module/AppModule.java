@@ -42,10 +42,10 @@ public class AppModule {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(20 * 1000, TimeUnit.MILLISECONDS)
                 .readTimeout(20 * 1000, TimeUnit.MILLISECONDS);
-        //builder.networkInterceptors().add(new StethoInterceptor());
+//        builder.networkInterceptors().add(new StethoInterceptor());
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        builder.addInterceptor(logging);
+        builder.addInterceptor(logging);
         /*
         builder.addInterceptor(mCookieInterceptor);*/
         return builder.build();

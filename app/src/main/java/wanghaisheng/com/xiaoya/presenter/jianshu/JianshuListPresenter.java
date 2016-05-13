@@ -33,6 +33,7 @@ public class JianshuListPresenter extends BaseListPresenter<JianshuListView> {
      * @param channel
      */
     public void firstLoadData(String channel) {
+        LogUtils.d("jianshu list presenter "+jianshuData.getDataSourceText());
         Subscription subscription = jianshuData.subscribeData(channel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<JianshuContentResult>() {
