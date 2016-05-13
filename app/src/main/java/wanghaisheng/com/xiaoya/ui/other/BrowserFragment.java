@@ -2,7 +2,6 @@ package wanghaisheng.com.xiaoya.ui.other;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.view.View;
@@ -92,7 +91,6 @@ public class BrowserFragment extends BaseFragment implements XiaoYaWebView.XiaoY
         NestedScrollView.LayoutParams layoutParams = new NestedScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         webView.setLayoutParams(layoutParams);
-        webView.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.window_color));
         scrollView.removeAllViews();
         scrollView.addView(webView);
 

@@ -21,13 +21,13 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
 import wanghaisheng.com.xiaoya.presenter.science.ScienceListPresenter;
 import wanghaisheng.com.xiaoya.presenter.science.ScienceListView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 
 /**
  * Created by sheng on 2016/4/15.
  */
-public class ScienceListFragment extends BaseListFragment<Article> implements ScienceListView {
+public class SciencePagerListFragment extends BasePagerListFragment<Article> implements ScienceListView {
     public static final String ARG_CHANNEL = "channel";
     public static final String ARG_ARTICLE = "article";
 
@@ -48,8 +48,8 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
      * @param channel
      * @return
      */
-    public static ScienceListFragment newInstance(String channel) {
-        ScienceListFragment fragment = new ScienceListFragment();
+    public static SciencePagerListFragment newInstance(String channel) {
+        SciencePagerListFragment fragment = new SciencePagerListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_CHANNEL,channel);
         fragment.setArguments(bundle);
@@ -157,7 +157,7 @@ public class ScienceListFragment extends BaseListFragment<Article> implements Sc
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        LogUtils.d("ScienceListFragment onSaveInstancestate...............");
+        LogUtils.d("SciencePagerListFragment onSaveInstancestate...............");
         outState.putSerializable(ARG_DATAS, (Serializable) mDatas);
     }
 

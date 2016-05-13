@@ -7,7 +7,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
-import com.squareup.leakcanary.LeakCanary;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.Properties;
@@ -48,7 +47,7 @@ public class AppContext extends BaseApplication{
 
         initFrescoConfig();
 
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
 
         /*Thread.setDefaultUncaughtExceptionHandler(AppException
                 .getAppExceptionHandler(this));*/

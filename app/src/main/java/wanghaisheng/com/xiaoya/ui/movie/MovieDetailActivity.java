@@ -34,7 +34,7 @@ public class MovieDetailActivity extends BaseDetailActivity implements MovieDeta
 
     @Override
     public void getDatas(Bundle savedInstanceState) {
-        this.movie = (Movie) getIntent().getSerializableExtra(MovieListFragment.ARG_MOVIE);
+        this.movie = (Movie) getIntent().getSerializableExtra(MoviePagerListFragment.ARG_MOVIE);
     }
 
     @Override

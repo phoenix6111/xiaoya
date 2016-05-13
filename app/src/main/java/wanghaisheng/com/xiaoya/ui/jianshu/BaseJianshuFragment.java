@@ -24,7 +24,7 @@ public class BaseJianshuFragment extends BaseTopNagigationFragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(),titles) {
             @Override
             public Fragment getItem(int position) {
-                JianshuListFragment fragment = JianshuListFragment.newInstance(JianshuApi.CHANNEL_TAG[position]);
+                JianshuPagerListFragment fragment = JianshuPagerListFragment.newInstance(JianshuApi.CHANNEL_TAG[position]);
 
                 return fragment;
             }

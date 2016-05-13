@@ -19,7 +19,7 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDec
 import wanghaisheng.com.xiaoya.db.Movie;
 import wanghaisheng.com.xiaoya.presenter.movie.MoveListView;
 import wanghaisheng.com.xiaoya.presenter.movie.MovieListPresenter;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.ui.other.BrowserActivity;
 import wanghaisheng.com.xiaoya.utils.ImageUtil;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
@@ -28,7 +28,7 @@ import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 /**
  * Created by sheng on 2016/4/17.
  */
-public class MovieListFragment extends BaseListFragment<Movie> implements MoveListView {
+public class MoviePagerListFragment extends BasePagerListFragment<Movie> implements MoveListView {
     public static final String ARG_MOVIE = "movie";
 
     public static final String ARG_MOVIE_LIST_FIRST_LOAD = "MOVIE_list_first_load";
@@ -42,8 +42,8 @@ public class MovieListFragment extends BaseListFragment<Movie> implements MoveLi
     private int offset = 0;
     private boolean hasMore = true;
 
-    public static MovieListFragment newInstance() {
-        return new MovieListFragment();
+    public static MoviePagerListFragment newInstance() {
+        return new MoviePagerListFragment();
     }
 
     @Override

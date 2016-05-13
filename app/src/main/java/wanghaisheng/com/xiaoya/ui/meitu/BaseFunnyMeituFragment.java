@@ -28,7 +28,7 @@ public class BaseFunnyMeituFragment extends BaseTopNagigationFragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), titles) {
             @Override
             public Fragment getItem(int position) {
-                MeituFunnyHomeListFragment fragment = MeituFunnyHomeListFragment.newInstance(MeituApi.FUNNY_TAG_ID[position]);
+                MeituFunnyHomePagerListFragment fragment = MeituFunnyHomePagerListFragment.newInstance(MeituApi.FUNNY_TAG_ID[position]);
                 return fragment;
             }
         };

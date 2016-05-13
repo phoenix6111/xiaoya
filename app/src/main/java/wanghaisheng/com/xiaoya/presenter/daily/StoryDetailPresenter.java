@@ -82,6 +82,8 @@ public class StoryDetailPresenter extends BaseDetailPresenter<StoryDetailView> {
             .append(story.getTitle())
             .append("</title>");
         sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"story_detail.css\" /></head><body>");
+        sb.append("<script src=\"jquery.js\"></script>");
+        sb.append("<script src=\"disable_a.js\"></script>");
         sb.append(story.getBody());
         sb.append("</body></html>");
 

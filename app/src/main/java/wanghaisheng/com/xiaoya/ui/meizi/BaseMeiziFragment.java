@@ -29,7 +29,7 @@ public class BaseMeiziFragment extends BaseTopNagigationFragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), titles) {
             @Override
             public Fragment getItem(int position) {
-                MeiziHomeListFragment fragment = MeiziHomeListFragment.newInstance(MeiziApi.CHANNEL_TAG[position]);
+                MeiziHomePagerListFragment fragment = MeiziHomePagerListFragment.newInstance(MeiziApi.CHANNEL_TAG[position]);
                 return fragment;
             }
         };

@@ -18,22 +18,22 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
 import wanghaisheng.com.xiaoya.presenter.collection.DailyCollectionPresenter;
 import wanghaisheng.com.xiaoya.presenter.collection.DailyCollectionView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.ui.daily.StoryDetailActivity;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 
 /**
  * Created by sheng on 2016/4/19.
  */
-public class DailyCollectionFragment extends BaseListFragment<Story> implements DailyCollectionView{
+public class DailyCollectionFragmentPager extends BasePagerListFragment<Story> implements DailyCollectionView{
     public static final String ARG_STORY = "story";
 
     @Inject
     DailyCollectionPresenter presenter;
     private int page = 1;
 
-    public static DailyCollectionFragment newInstance() {
-        return new DailyCollectionFragment();
+    public static DailyCollectionFragmentPager newInstance() {
+        return new DailyCollectionFragmentPager();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DailyCollectionFragment extends BaseListFragment<Story> implements 
     @Override
     public void renderStories(int page, List<Story> stories) {
         this.page = page;
-        //LogUtils.d("DailyCollectionFragment.....................");
+        //LogUtils.d("DailyCollectionFragmentPager.....................");
         //LogUtils.d(stories);
         mDatas.clear();
         this.mDatas.addAll(stories);

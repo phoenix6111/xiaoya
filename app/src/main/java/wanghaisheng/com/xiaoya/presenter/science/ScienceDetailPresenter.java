@@ -5,7 +5,6 @@ import android.accounts.NetworkErrorException;
 import com.apkfuns.logutils.LogUtils;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -39,7 +38,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<ScienceDetailVie
     @Inject
     ArticleApi articleApi;
 
-    @Inject @Singleton
+    @Inject
     public ScienceDetailPresenter() {}
 
     @Override
@@ -51,6 +50,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<ScienceDetailVie
                     public void call(ArticleResult result) {
 //                        LogUtils.v(article);
                         if(null != iView) {
+                            iView.hideLoading();
                             String webPageStr = buildPageStr(result.getResult());
 //                        LogUtils.v(webPageStr);
                             iView.renderWebview(webPageStr);
@@ -81,7 +81,7 @@ public class ScienceDetailPresenter extends BaseDetailPresenter<ScienceDetailVie
         sb.append("<title>")
                 .append(article.getTitle())
                 .append("</title>");
-        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"article_detail.css\" /></head><body></head>\n" +
+        sb.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"article_detail.css\" /><script src=\"jquery.js\"></script><script src=\"disable_a.js\"></script></head><body></head>\n" +
                 "<body>\n" +
                 "<div class=\"container article-page\">\n" +
                 "    <div class=\"main\">\n" +

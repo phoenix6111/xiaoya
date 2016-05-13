@@ -28,7 +28,7 @@ public class BaseGaoxiaoFragment extends BaseTopNagigationFragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), titles) {
             @Override
             public Fragment getItem(int position) {
-                GaoxiaoHomeListFragment fragment = GaoxiaoHomeListFragment.newInstance(GaoxiaoApi.TAGS[position]);
+                GaoxiaoHomePagerListFragment fragment = GaoxiaoHomePagerListFragment.newInstance(GaoxiaoApi.TAGS[position]);
                 return fragment;
             }
         };

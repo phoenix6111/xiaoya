@@ -28,7 +28,7 @@ public class BaseBeautyMeituFragment extends BaseTopNagigationFragment {
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), titles) {
             @Override
             public Fragment getItem(int position) {
-                MeituBeautyHomeListFragment fragment = MeituBeautyHomeListFragment.newInstance(MeituApi.BEAUTY_TAG_ID[position]);
+                MeituBeautyHomePagerListFragment fragment = MeituBeautyHomePagerListFragment.newInstance(MeituApi.BEAUTY_TAG_ID[position]);
                 return fragment;
             }
         };

@@ -8,7 +8,7 @@ import java.util.List;
 import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.ui.BaseTopNagigationFragment;
 import wanghaisheng.com.xiaoya.ui.PagerAdapter;
-import wanghaisheng.com.xiaoya.ui.movie.MovieListFragment;
+import wanghaisheng.com.xiaoya.ui.movie.MoviePagerListFragment;
 
 /**
  * Created by sheng on 2016/4/19.
@@ -23,10 +23,10 @@ public class BaseDailyFragment extends BaseTopNagigationFragment {
             @Override
             public Fragment getItem(int position) {
                 if(position==0) {
-                    return StoryListFragment.newInstance(DailyApi.THEME_ID[0]);
+                    return StoryPagerListFragment.newInstance(DailyApi.THEME_ID[0]);
                 }
 
-                return MovieListFragment.newInstance();
+                return MoviePagerListFragment.newInstance();
             }
         };
 

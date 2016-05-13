@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.daily.StoryDetailActivity" android:process=":WebviewProcess"/>
+        <activity android:name=".ui.daily.StoryDetailActivity"/>
         <!--<activity android:name=".ui.science.ScienceDetailActivity" android:process=":WebviewProcess"/>
         <activity android:name=".ui.movie.MovieDetailActivity" android:process=":WebviewProcess"/>
         <activity android:name=".ui.jianshu.JianshuDetailActivity" android:process=":WebviewProcess"/>

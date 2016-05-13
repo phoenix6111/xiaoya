@@ -19,22 +19,22 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
 import wanghaisheng.com.xiaoya.presenter.collection.ScienceCollectionPresenter;
 import wanghaisheng.com.xiaoya.presenter.collection.ScienceCollectionView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.ui.science.ScienceDetailActivity;
-import wanghaisheng.com.xiaoya.ui.science.ScienceListFragment;
+import wanghaisheng.com.xiaoya.ui.science.SciencePagerListFragment;
 
 /**
  * Created by sheng on 2016/4/19.
  */
-public class ScienceCollectionFragment extends BaseListFragment<Article> implements ScienceCollectionView{
+public class ScienceCollectionFragmentPager extends BasePagerListFragment<Article> implements ScienceCollectionView{
     public static final String ARG_ARTICLE = "article";
     private int page = 1;
 
     @Inject
     ScienceCollectionPresenter presenter;
 
-    public static ScienceCollectionFragment newInstance() {
-        return new ScienceCollectionFragment();
+    public static ScienceCollectionFragmentPager newInstance() {
+        return new ScienceCollectionFragmentPager();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ScienceCollectionFragment extends BaseListFragment<Article> impleme
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(),ScienceDetailActivity.class);
-                        intent.putExtra(ScienceListFragment.ARG_ARTICLE,article);
+                        intent.putExtra(SciencePagerListFragment.ARG_ARTICLE,article);
                         LogUtils.v(".....science list on clicked.................");
                         LogUtils.v(article);
                         startActivity(intent);

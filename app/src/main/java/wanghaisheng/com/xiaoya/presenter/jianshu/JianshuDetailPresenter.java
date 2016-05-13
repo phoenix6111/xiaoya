@@ -75,6 +75,7 @@ public class JianshuDetailPresenter extends BaseDetailPresenter<JianshuDetailVie
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,user-scalable=no\">\n" +
                 "    <meta http-equiv=\"Cache-Control\" content=\"no-siteapp\"/>\n" +
                 "    <link rel=\"stylesheet\" media=\"all\" href=\"jianshu_detail.css\"/>\n" +
+                "<script src=\"jquery.js\"></script><script src=\"disable_a.js\"></script>"+
                 "</head>\n" +
                 "\n" +
                 "<body class=\"post output zh cn win reader-day-mode reader-font2 \">\n" +

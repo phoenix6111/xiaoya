@@ -20,12 +20,10 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.presenter.base.BaseListView;
 import wanghaisheng.com.xiaoya.ui.empty.EmptyLayout;
 
-//import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
-
 /**
- * Created by sheng on 2016/4/14.
+ * Created by sheng on 2016/5/13.
  */
-public abstract class BaseListFragment<T> extends BaseLazyFragment implements BaseListView {
+public abstract class BaseSimpleListFragment<T> extends BaseFragment implements BaseListView {
 
     protected SwipeToLoadLayout swipeToLoadLayout;
     protected RecyclerView myRecyclerView;

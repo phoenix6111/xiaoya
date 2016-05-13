@@ -30,7 +30,7 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
 
     @Override
     public void getDatas(Bundle savedInstanceState) {
-        story = (Story) getIntent().getSerializableExtra(StoryListFragment.ARG_STORY);
+        story = (Story) getIntent().getSerializableExtra(StoryPagerListFragment.ARG_STORY);
     }
 
     @Override
@@ -94,7 +94,6 @@ public class StoryDetailActivity extends BaseDetailActivity implements StoryDeta
         }
 
         super.onDestroy();
-        System.exit(0);
     }
 
     @Override

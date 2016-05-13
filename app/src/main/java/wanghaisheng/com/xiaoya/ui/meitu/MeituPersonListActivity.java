@@ -30,7 +30,7 @@ public class MeituPersonListActivity extends BaseToolbarActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private MeituPersonListFragment mFragment;
+    private MeituPersonPagerListFragment mFragment;
 
     public static final String ARG_TITLE = "arg_title";
     public static final String ARG_URL = "arg_url";
@@ -98,7 +98,7 @@ public class MeituPersonListActivity extends BaseToolbarActivity {
     @Override
     public void initData() {
 
-        mFragment = MeituPersonListFragment.newInstance(groupId,title);
+        mFragment = MeituPersonPagerListFragment.newInstance(groupId,title);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
 
         this.pagerResultView = mFragment;

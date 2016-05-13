@@ -23,14 +23,14 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDec
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.presenter.jianshu.JianshuListPresenter;
 import wanghaisheng.com.xiaoya.presenter.jianshu.JianshuListView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.utils.DateUtils;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 
 /**
  * Created by sheng on 2016/5/10.
  */
-public class JianshuListFragment extends BaseListFragment<JianshuContent> implements JianshuListView{
+public class JianshuPagerListFragment extends BasePagerListFragment<JianshuContent> implements JianshuListView{
     public static final String ARG_CHANNEL = "arg_channel";
 
     private String channel;//频道
@@ -41,8 +41,8 @@ public class JianshuListFragment extends BaseListFragment<JianshuContent> implem
     @Inject
     Navigator navigator;
 
-    public static JianshuListFragment newInstance(String channel) {
-        JianshuListFragment fragment = new JianshuListFragment();
+    public static JianshuPagerListFragment newInstance(String channel) {
+        JianshuPagerListFragment fragment = new JianshuPagerListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_CHANNEL,channel);
         fragment.setArguments(bundle);

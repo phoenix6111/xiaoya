@@ -20,7 +20,7 @@ import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.DividerItemDecoration;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryListView;
 import wanghaisheng.com.xiaoya.presenter.daily.StoryListPresenter;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 
@@ -29,7 +29,7 @@ import wanghaisheng.com.xiaoya.utils.PrefsUtil;
 /**
  * Created by sheng on 2016/4/14.
  */
-public class StoryListFragment extends BaseListFragment<Story> implements StoryListView {
+public class StoryPagerListFragment extends BasePagerListFragment<Story> implements StoryListView {
     public static final String ARG_STORY = "story";
     public static final String ARG_THEME = "theme";
     public static final String ARG_DAILY_LIST_FIRST_LOAD = "daily_list_first_load";
@@ -54,8 +54,8 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
         super.onViewStateRestored(savedInstanceState);
     }
 
-    public static StoryListFragment newInstance(int themeId) {
-        StoryListFragment fragment = new StoryListFragment();
+    public static StoryPagerListFragment newInstance(int themeId) {
+        StoryPagerListFragment fragment = new StoryPagerListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_THEME,themeId);
         fragment.setArguments(bundle);
@@ -116,7 +116,7 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
 
     @Override
     public void initData() {
-//        LogUtils.d("StoryListFragment initData.............");
+//        LogUtils.d("StoryPagerListFragment initData.............");
 
         this.firstLoad = prefsUtil.get(ARG_DAILY_LIST_FIRST_LOAD,false);
 
@@ -134,7 +134,7 @@ public class StoryListFragment extends BaseListFragment<Story> implements StoryL
     }
 
     public String getLoadKey() {
-        return ARG_DAILY_LIST_FIRST_LOAD+StoryListFragment.class.getSimpleName();
+        return ARG_DAILY_LIST_FIRST_LOAD+StoryPagerListFragment.class.getSimpleName();
     }
 
     @Override

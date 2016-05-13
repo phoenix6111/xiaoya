@@ -29,7 +29,7 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private MeiziPersonListFragment mFragment;
+    private MeiziPersonPagerListFragment mFragment;
 
     public static final String ARG_COLOR = "arg_color";
     public static final String ARG_TITLE = "arg_title";
@@ -98,7 +98,7 @@ public class MeiziPersonListActivity extends BaseToolbarActivity {
     @Override
     public void initData() {
 
-        mFragment = MeiziPersonListFragment.newInstance(groupId,title);
+        mFragment = MeiziPersonPagerListFragment.newInstance(groupId,title);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
 
         this.pagerResultView = mFragment;

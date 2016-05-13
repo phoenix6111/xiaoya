@@ -90,12 +90,14 @@ public class MeiziPersonListPresenter extends BaseListPresenter<MeiziPersonListV
     }
 
     public void loadFromCache(String groupId) {
-//        iView.showLoading();
+        LogUtils.d("load from cache");
+        iView.showLoading();
         Subscription subscription = meiziData.loadFromCache(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Content>>() {
                     @Override
                     public void call(List<Content> contents) {
+                        LogUtils.d("meizi list from cache..");
                         if(null != iView) {
                             iView.hideLoading();
                             iView.renderCacheData(contents);

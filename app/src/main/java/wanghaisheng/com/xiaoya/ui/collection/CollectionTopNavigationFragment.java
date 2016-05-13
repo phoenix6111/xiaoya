@@ -28,9 +28,9 @@ public class CollectionTopNavigationFragment extends BaseTopNagigationFragment {
             public Fragment getItem(int position) {
 //                LogUtils.v("position............................"+position);
                 if(position ==0) {
-                    return DailyCollectionFragment.newInstance();
+                    return DailyCollectionFragmentPager.newInstance();
                 }else {
-                    return ScienceCollectionFragment.newInstance();
+                    return ScienceCollectionFragmentPager.newInstance();
                 }
             }
         };

@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         //mFragments.add(BaseDailyFragment.newInstance());
 //        mFragments.add(BaseBeautyMeituFragment.newInstance());
 //        mFragments.add(BaseJianshuFragment.newInstance());
-        //mFragments.add(MovieListFragment.newInstance());
+        //mFragments.add(MoviePagerListFragment.newInstance());
 //        mFragments.add(BaseMeiziFragment.newInstance());
         mFragments.add(BaseFunnyMeituFragment.newInstance());
         mFragments.add(BaseGaoxiaoFragment.newInstance());

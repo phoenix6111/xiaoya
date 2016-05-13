@@ -8,8 +8,9 @@ import wanghaisheng.com.xiaoya.api.Daily.DailyApi;
 import wanghaisheng.com.xiaoya.api.science.ScienceApi;
 import wanghaisheng.com.xiaoya.ui.BaseTopNagigationFragment;
 import wanghaisheng.com.xiaoya.ui.PagerAdapter;
-import wanghaisheng.com.xiaoya.ui.daily.StoryListFragment;
-import wanghaisheng.com.xiaoya.ui.movie.MovieListFragment;
+import wanghaisheng.com.xiaoya.ui.daily.StoryPagerListFragment;
+import wanghaisheng.com.xiaoya.ui.movie.MoviePagerListFragment;
+import wanghaisheng.com.xiaoya.ui.weiarticle.WeiArticleListFragment;
 import wanghaisheng.com.xiaoya.utils.ArrayUtils;
 
 /**
@@ -23,16 +24,19 @@ public class BaseScienceFragment extends BaseTopNagigationFragment {
         List<String> titles = ArrayUtils.arrayToList(ScienceApi.CHANNEL_TITLE);
         titles.add(DailyApi.THEME_NAME[0]);
         titles.add("电影");
+        titles.add("微信精选");
         PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), titles) {
             @Override
             public Fragment getItem(int position) {
                 Fragment fragment = null;
-                if (position==8) {
-                    fragment = StoryListFragment.newInstance(DailyApi.THEME_ID[0]);
-                } else if(position==9){
-                    fragment = MovieListFragment.newInstance();
+                if (position == 8) {
+                    fragment = StoryPagerListFragment.newInstance(DailyApi.THEME_ID[0]);
+                } else if (position == 9) {
+                    fragment = MoviePagerListFragment.newInstance();
+                } else if (position==10){
+                    fragment = WeiArticleListFragment.newInstance();
                 } else {
-                    fragment = ScienceListFragment.newInstance(ScienceApi.CHANNEL_TAG[position]);
+                    fragment = SciencePagerListFragment.newInstance(ScienceApi.CHANNEL_TAG[position]);
                 }
 
                 return fragment;

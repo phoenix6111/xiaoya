@@ -24,7 +24,7 @@ import wanghaisheng.com.xiaoya.db.Group;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziHomeListPresenter;
 import wanghaisheng.com.xiaoya.presenter.meizi.MeiziHomeListView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.utils.ViewUtils;
 import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
@@ -32,7 +32,7 @@ import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
 /**
  * Created by sheng on 2016/5/6.
  */
-public class MeiziHomeListFragment extends BaseListFragment<Group> implements MeiziHomeListView{
+public class MeiziHomePagerListFragment extends BasePagerListFragment<Group> implements MeiziHomeListView{
     private String type;
     private int page = 2;
     private boolean hasload = false;
@@ -46,8 +46,8 @@ public class MeiziHomeListFragment extends BaseListFragment<Group> implements Me
     @Inject
     Navigator navigator;
 
-    public static MeiziHomeListFragment newInstance(String channel) {
-        MeiziHomeListFragment fragment = new MeiziHomeListFragment();
+    public static MeiziHomePagerListFragment newInstance(String channel) {
+        MeiziHomePagerListFragment fragment = new MeiziHomePagerListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_CHANNEL,channel);
         fragment.setArguments(bundle);

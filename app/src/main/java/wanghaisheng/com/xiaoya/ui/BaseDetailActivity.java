@@ -2,7 +2,6 @@ package wanghaisheng.com.xiaoya.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -50,11 +49,10 @@ public abstract class BaseDetailActivity extends BaseSwipeBackActivity implement
 
         mActivityComponent.inject(this);
 
-        webView = new XiaoYaWebView(this);
+        webView = new XiaoYaWebView(getApplicationContext());
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         webView.setLayoutParams(layoutParams);
-        webView.setBackgroundColor(ContextCompat.getColor(mAppContext,R.color.window_color));
         webviewContainer.removeAllViews();
         webviewContainer.addView(webView);
 

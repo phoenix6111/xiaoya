@@ -14,6 +14,7 @@ import wanghaisheng.com.xiaoya.api.meizi.MeiziApi;
 import wanghaisheng.com.xiaoya.api.movie.MovieApi;
 import wanghaisheng.com.xiaoya.api.science.ArticleApi;
 import wanghaisheng.com.xiaoya.api.science.ScienceApi;
+import wanghaisheng.com.xiaoya.api.weixingjingxuan.WeiArticleApi;
 import wanghaisheng.com.xiaoya.cache.CacheManager;
 import wanghaisheng.com.xiaoya.datasource.DailyData;
 import wanghaisheng.com.xiaoya.datasource.GaoxiaoData;
@@ -24,6 +25,7 @@ import wanghaisheng.com.xiaoya.datasource.MeiziHomeData;
 import wanghaisheng.com.xiaoya.datasource.MeiziPersonData;
 import wanghaisheng.com.xiaoya.datasource.MovieData;
 import wanghaisheng.com.xiaoya.datasource.ScienceData;
+import wanghaisheng.com.xiaoya.datasource.WeiArticleData;
 import wanghaisheng.com.xiaoya.db.ContentDao;
 import wanghaisheng.com.xiaoya.db.MeituPictureDao;
 import wanghaisheng.com.xiaoya.utils.RequestHelper;
@@ -142,5 +144,17 @@ public class ApiModule {
     @Singleton
     public GaoxiaoData provideGaoxiaoData(GaoxiaoApi gaoxiaoApi,CacheManager cacheManager) {
         return new GaoxiaoData(gaoxiaoApi,cacheManager);
+    }
+
+    @Provides
+    @Singleton
+    public WeiArticleApi provideWeiArticleApi(OkHttpClient client) {
+        return new WeiArticleApi(client);
+    }
+
+    @Provides
+    @Singleton
+    public WeiArticleData provideWeiArticleData(CacheManager cacheManager,WeiArticleApi weiArticleApi) {
+        return new WeiArticleData(cacheManager,weiArticleApi);
     }
 }

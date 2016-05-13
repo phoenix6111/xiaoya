@@ -1,19 +1,16 @@
 package wanghaisheng.com.xiaoya.ui.meitu;
 
-import android.net.Uri;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.apkfuns.logutils.LogUtils;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -23,37 +20,36 @@ import wanghaisheng.com.xiaoya.api.meitu.MeituGallery;
 import wanghaisheng.com.xiaoya.api.meitu.MeituGalleryResult;
 import wanghaisheng.com.xiaoya.component.baseadapter.ViewHolder;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
-import wanghaisheng.com.xiaoya.component.fresco.MySimpleDraweeView;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
 import wanghaisheng.com.xiaoya.presenter.meitu.MeituHomeListPresenter;
 import wanghaisheng.com.xiaoya.presenter.meitu.MeituHomeListView;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BasePagerListFragment;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
-import wanghaisheng.com.xiaoya.utils.ToastUtil;
+import wanghaisheng.com.xiaoya.utils.ViewUtils;
+import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
 
 /**
  * Created by sheng on 2016/5/11.
  */
-public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> implements MeituHomeListView{
+public class MeituBeautyHomePagerListFragment extends BasePagerListFragment<MeituGallery> implements MeituHomeListView{
 
     private boolean hasload = false;
     private String currentImageUrl;
 
+    private String channel;
     private String tag;
     private int nextIndex;
     public static final String ARG_TAG = "arg_tag";
 
-    public static final String CHANNEL_TAG = MeituApi.CHANNEL_ID[2];
+    public static final String CHANNEL_TAG = MeituApi.CHANNEL_ID[0];
 
     @Inject
     MeituHomeListPresenter presenter;
     @Inject
     Navigator navigator;
-    @Inject
-    ToastUtil toastUtil;
 
-    public static MeituFunnyHomeListFragment newInstance(String tag) {
-        MeituFunnyHomeListFragment fragment = new MeituFunnyHomeListFragment();
+    public static MeituBeautyHomePagerListFragment newInstance(String tag) {
+        MeituBeautyHomePagerListFragment fragment = new MeituBeautyHomePagerListFragment();
         Bundle bundle = new Bundle();
 //        bundle.putString(ARG_CHANNEL,channel);
         bundle.putString(ARG_TAG,tag);
@@ -69,63 +65,42 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
 
     @Override
     public CommonAdapter<MeituGallery> initAdapter() {
-        return new CommonAdapter<MeituGallery>(getActivity(), R.layout.meitu_funny_home_item_layout,mDatas) {
+        return new CommonAdapter<MeituGallery>(getActivity(), R.layout.meitu_home_item_layout,mDatas) {
             @Override
             public void convert(ViewHolder holder, final MeituGallery gallery, int position) {
                 holder.setText(R.id.meizi_tv_title,gallery.getGroupTitle());
-                final MySimpleDraweeView simpleDraweeView = holder.getView(R.id.meizi_img);
-
-                simpleDraweeView.setAutoPlayAnimations(true)
-                            .setDraweeViewUrl(gallery.getImgUrl())
-                            .setWidthAndHeight(gallery.getImgWidth(),gallery.getImgHeight());
-
-                holder.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-
-                        MaterialDialog mDialog = new MaterialDialog.Builder(getActivity()).content("保存图片")
-                                .positiveText("确定")
-                                .negativeText("取消")
-                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        presenter.saveLargePic(gallery.getImgUrl(), gallery.getId());
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                    @Override
-                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-                        return true;
-                    }
-                });
-
-                /*Picasso.with(getActivity()).load(gallery.getImgThumbUrl())
+                final RadioImageView imageView = holder.getView(R.id.meizi_img);
+                imageView.setOriginalSize(gallery.getImgWidth(), gallery.getImgHeight());
+                holder.setText(R.id.total,"共"+gallery.getTotalCount()+" 张");
+                Picasso.with(getActivity()).load(gallery.getImgThumbUrl())
                         .tag("1")
                         .config(Bitmap.Config.RGB_565)
-                        .into(imageView);*/
+                        .into(imageView);
+
+                holder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(),MeituPersonListActivity.class);
+
+                        Bitmap bitmap = null;
+                        BitmapDrawable bd = (BitmapDrawable) imageView.getDrawable();
+                        if (bd != null) {
+                            bitmap = bd.getBitmap();
+                        }
+
+                        intent.putExtra(MeituPersonListActivity.ARG_GROUPID,gallery.getId());
+                        LogUtils.d("meizihomelistfragment....groupid.."+gallery.getId());
+                        intent.putExtra(MeituPersonListActivity.ARG_TITLE,gallery.getGroupTitle());
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeThumbnailScaleUpAnimation(v, bitmap, 0, 0);
+                        navigator.start(getActivity(),intent,options.toBundle());
+                        if (bitmap != null && !bitmap.isRecycled()) {
+                            intent.putExtra(MeituPersonListActivity.ARG_COLOR, ViewUtils.getPaletteColor(bitmap));
+                        }
+
+                    }
+                });
             }
         };
-    }
-
-    //修改图片尺寸
-    public void setSize(String url,int width,int height,SimpleDraweeView mDraweeView) {
-        Uri uri = Uri.parse(url);
-
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-//                .setResizeOptions(new ResizeOptions(width, height))
-
-                .build();
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setOldController(mDraweeView.getController())
-                .setAutoPlayAnimations(true)
-                .setImageRequest(request)
-                .build();
-
-        mDraweeView.setController(controller);
     }
 
     @Override
@@ -200,17 +175,13 @@ public class MeituFunnyHomeListFragment extends BaseListFragment<MeituGallery> i
         onLoadMoreComplete();
         if(null != datas && !ListUtils.isEmpty(datas.getList())) {
             nextIndex = datas.getLastid();
-           addOrReplace(datas.getList());
+            addOrReplace(datas.getList());
         }
     }
 
     @Override
     public void onImageSaved(boolean imgSaved, String imgPath) {
-        if(imgSaved) {
-            toastUtil.showToast(String.format(getString(R.string.msg_image_saved),imgPath));
-        } else {
-            toastUtil.showToast(imgPath);
-        }
+
     }
 
     @Override

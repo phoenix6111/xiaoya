@@ -32,7 +32,7 @@ public class ScienceDetailActivity extends BaseDetailActivity implements Science
 
     @Override
     public void getDatas(Bundle savedInstanceState) {
-        article = (Article) getIntent().getSerializableExtra(ScienceListFragment.ARG_ARTICLE);
+        article = (Article) getIntent().getSerializableExtra(SciencePagerListFragment.ARG_ARTICLE);
     }
 
     @Override

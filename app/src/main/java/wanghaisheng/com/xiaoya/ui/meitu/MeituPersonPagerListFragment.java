@@ -1,4 +1,4 @@
-package wanghaisheng.com.xiaoya.ui.meizi;
+package wanghaisheng.com.xiaoya.ui.meitu;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,32 +20,37 @@ import javax.inject.Inject;
 import wanghaisheng.com.xiaoya.R;
 import wanghaisheng.com.xiaoya.component.baseadapter.ViewHolder;
 import wanghaisheng.com.xiaoya.component.baseadapter.recyclerview.CommonAdapter;
-import wanghaisheng.com.xiaoya.db.Content;
+import wanghaisheng.com.xiaoya.db.MeituPicture;
 import wanghaisheng.com.xiaoya.navigator.Navigator;
-import wanghaisheng.com.xiaoya.presenter.meizi.MeiziPersonListPresenter;
-import wanghaisheng.com.xiaoya.presenter.meizi.MeiziPersonListView;
+import wanghaisheng.com.xiaoya.presenter.meitu.MeituPersonListPresenter;
+import wanghaisheng.com.xiaoya.presenter.meitu.MeituPersonListView;
 import wanghaisheng.com.xiaoya.service.SaveAllImageService;
-import wanghaisheng.com.xiaoya.ui.BaseListFragment;
+import wanghaisheng.com.xiaoya.ui.BaseSimpleListFragment;
+import wanghaisheng.com.xiaoya.ui.meizi.ISaveAllImage;
+import wanghaisheng.com.xiaoya.ui.meizi.MeiziLargePicActivity;
+import wanghaisheng.com.xiaoya.ui.meizi.MeiziPersonListActivity;
+import wanghaisheng.com.xiaoya.ui.meizi.PagerResultView;
 import wanghaisheng.com.xiaoya.utils.ListUtils;
 import wanghaisheng.com.xiaoya.widget.meizi.RadioImageView;
 
 /**
- * Created by sheng on 2016/5/7.
+ * Created by sheng on 2016/5/12.
  */
-public class MeiziPersonListFragment extends BaseListFragment<Content> implements MeiziPersonListView,PagerResultView,ISaveAllImage{
+public class MeituPersonPagerListFragment extends BaseSimpleListFragment<MeituPicture> implements MeituPersonListView,PagerResultView,ISaveAllImage {
+    //    private String url;
     private String groupId;
     private String title;
 
     private boolean hasload = false;
 
     @Inject
-    MeiziPersonListPresenter presenter;
+    MeituPersonListPresenter presenter;
     @Inject
     Navigator navigator;
 
-    public static MeiziPersonListFragment newInstance(String groupId,String title) {
+    public static MeituPersonPagerListFragment newInstance(String groupId, String title) {
         LogUtils.d("MeiziPersonFragment  new groupId...."+groupId);
-        MeiziPersonListFragment fragment = new MeiziPersonListFragment();
+        MeituPersonPagerListFragment fragment = new MeituPersonPagerListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(MeiziPersonListActivity.ARG_GROUPID,groupId);
         bundle.putString(MeiziPersonListActivity.ARG_TITLE,title);
@@ -54,27 +59,27 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     }
 
     @Override
-    public CommonAdapter<Content> initAdapter() {
-        return new CommonAdapter<Content>(getActivity(), R.layout.meizi_person_item_layout,mDatas) {
+    public CommonAdapter<MeituPicture> initAdapter() {
+        return new CommonAdapter<MeituPicture>(getActivity(), R.layout.meizi_person_item_layout,mDatas) {
             @Override
-            public void convert(ViewHolder holder, final Content content, final int position) {
-                if(null != content) {
+            public void convert(ViewHolder holder, final MeituPicture picture, final int position) {
+                if(null != picture) {
                     RadioImageView imageView = holder.getView(R.id.meizi_img);
-                    imageView.setOriginalSize(content.getImagewidth(), content.getImageheight());
-                    Picasso.with(getActivity()).load(content.getUrl())
+                    imageView.setOriginalSize(picture.getPicWidth(), picture.getPicHeight());
+                    Picasso.with(getActivity()).load(picture.getImgThumbUrl())
                             .tag("1").config(Bitmap.Config.RGB_565)
                             .into(imageView);
-                    ViewCompat.setTransitionName(imageView, content.getUrl());
+                    ViewCompat.setTransitionName(imageView, picture.getImgUrl());
 
                     holder.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
                             bundle.putInt(MeiziLargePicActivity.ARG_INEX,position);
-                            bundle.putString(MeiziLargePicActivity.ARG_GROUPID,content.getGroupid());
+                            bundle.putString(MeiziLargePicActivity.ARG_GROUPID,picture.getGroupId());
                             ArrayList<String> urls = new ArrayList<>();
-                            for(Content cont : mDatas) {
-                                urls.add(cont.getUrl());
+                            for(MeituPicture cont : mDatas) {
+                                urls.add(cont.getImgUrl());
                             }
                             bundle.putStringArrayList(MeiziLargePicActivity.ARG_URLS,urls);
                             navigator.openMeiziLargePicActivity(getActivity(),bundle);
@@ -88,20 +93,21 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     @Override
     public void onRefreshData() {
         if(checkNetWork()&&(null !=presenter)) {
-            presenter.loadFromCache(groupId);
+            presenter.refreshData(groupId);
         }
     }
 
     @Override
     public void onLoadMoreData() {
         setCanLoadMore(false);
+
     }
 
     @Override
     public void onReloadClicked() {
         if(checkNetWork()) {
             if(null != presenter) {
-                presenter.loadFromCache(groupId);
+                presenter.refreshData(groupId);
             }
         }
     }
@@ -113,8 +119,9 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
 
     @Override
     public void getSavedBundle(Bundle bundle) {
-        groupId = getArguments().getString(MeiziPersonListActivity.ARG_GROUPID);
-        title = getArguments().getString(MeiziPersonListActivity.ARG_TITLE);
+//        url = getArguments().getString(MeiziPersonListActivity.ARG_URL);
+        groupId = getArguments().getString(MeituPersonListActivity.ARG_GROUPID);
+        title = getArguments().getString(MeituPersonListActivity.ARG_TITLE);
     }
 
     @Override
@@ -131,8 +138,7 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     public void initData() {
         if(null != presenter) {
             presenter.attachView(this);
-
-            presenter.loadFromCache(groupId);
+            presenter.firstLoadData(groupId);
         }
 
         //因为个人的图片信息有限，故是一次全部加载进mdatas，不设置加载更多
@@ -140,33 +146,18 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     }
 
     @Override
-    public void renderNetworkData(Content content) {
-        if(null != content) {
+    public void renderData(List<MeituPicture> datas) {
+        if(!ListUtils.isEmpty(datas)) {
             int lastIndex = mDatas.size();
-            mDatas.add(lastIndex,content);
+            mDatas.addAll(lastIndex,datas);
             mAdapter.notifyItemChanged(lastIndex);
         }
     }
 
-    /**
-     * 先从数据库加载，如数据库没有则从网络加载
-     * @param datas
-     */
     @Override
-    public void renderCacheData(List<Content> datas) {
-        if(!ListUtils.isEmpty(datas)) {
-            mDatas.clear();
-            mDatas.addAll(datas);
-            mAdapter.notifyDataSetChanged();
-        } else {
-            LogUtils.d("db empty........");
-            presenter.loadFromNet(groupId);
-        }
-    }
-
-    @Override
-    public void refreshComplete(List<Content> datas) {
+    public void refreshdata(List<MeituPicture> datas) {
         onRefreshComplete();
+        LogUtils.d("refresh complete");
         if(!ListUtils.isEmpty(datas)) {
             mDatas.clear();
             mDatas.addAll(datas);
@@ -201,8 +192,8 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
     public void saveAllImage() {
         LogUtils.d("fragment 一键保存");
         ArrayList<String> urls = new ArrayList<>();
-        for(Content con : mDatas) {
-            urls.add(con.getUrl());
+        for(MeituPicture con : mDatas) {
+            urls.add(con.getImgUrl());
         }
 
         Intent saveIntent = new Intent(getActivity(),SaveAllImageService.class);
@@ -212,4 +203,5 @@ public class MeiziPersonListFragment extends BaseListFragment<Content> implement
 
         getActivity().startService(saveIntent);
     }
+
 }
